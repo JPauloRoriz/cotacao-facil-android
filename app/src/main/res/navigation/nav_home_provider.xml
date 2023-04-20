@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_home_buyer"
+    app:startDestination="@id/homeFragmentProvider">
+
+    <fragment
+        android:id="@+id/homeFragmentProvider"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.HomeBuyerFragment"
+        android:label="HomeBuyerFragment"
+        tools:layout="@layout/fragment_home_provider">
+
+    </fragment>
+
+
+</navigation>

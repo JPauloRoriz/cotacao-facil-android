@@ -1,0 +1,86 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'com.google.gms.google-services'
+}
+
+android {
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "com.example.cotacaofacil"
+        minSdk 21
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    viewBinding{
+        enabled = true
+    }
+
+}
+
+dependencies {
+
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
+
+
+
+    // Koin main features for Android
+    def koin_version= "3.2.0-beta-1"
+    implementation "io.insert-koin:koin-androidx-navigation:3.2.0"
+    implementation "io.insert-koin:koin-core:$koin_version"
+    implementation "io.insert-koin:koin-android:$koin_version"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
+
+    //Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation("androidx.navigation:navigation-ui-ktx:2.5.3")
+
+    //Firebase
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.4"
+    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+    implementation platform('com.google.firebase:firebase-bom:30.1.0')
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-storage-ktx'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    //Glade
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+
+    //Retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.7.2"
+}

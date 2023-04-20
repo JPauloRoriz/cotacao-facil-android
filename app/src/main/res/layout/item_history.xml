@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="0dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/dimen_5"
+    app:cardElevation="@dimen/dimen_10">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        >
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_icon_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_round"
+            android:padding="4dp"
+            android:tint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_person_add" />
+
+        <View
+            android:id="@+id/view_line_history"
+            android:layout_width="2dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="6dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView_icon_history"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/view_arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-6dp"
+            android:padding="-80dp"
+            android:src="@drawable/ic_arrow_right"
+            app:layout_constraintBottom_toBottomOf="@+id/view_line_history"
+            app:layout_constraintStart_toStartOf="@+id/view_line_history"
+            app:layout_constraintTop_toTopOf="@+id/view_line_history"
+            app:tint="@color/colorPrimary" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_title_history"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:maxLength="31"
+            android:paddingTop="4dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/textView_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_arrow_right"
+            tools:text="Cotação criada" />
+
+        <CheckBox
+            android:id="@+id/checkBox_selected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="4dp"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView_description"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_description"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:paddingVertical="4dp"
+            android:minLines="1"
+            android:textColor="@color/blackAlpha"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_arrow_right"
+            app:layout_constraintEnd_toStartOf="@+id/checkBox_selected"
+            app:layout_constraintStart_toStartOf="@+id/textView_title_history"
+            app:layout_constraintTop_toTopOf="@+id/view_arrow_right"
+            tools:text="Cotação de prioridade média criada" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:gravity="start"
+            android:padding="4dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="10sp"
+            android:textStyle="italic"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_description"
+            tools:text="Data 23/05/2023 às 14h36" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="0.5dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintStart_toEndOf="@+id/view_line_history"
+            app:layout_constraintTop_toBottomOf="@+id/textView_date" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

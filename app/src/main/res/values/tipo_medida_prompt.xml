@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tipo_medida_prompt">Selecione o tipo de medida</string>
+    <string-array name="tipo_medida_options">
+        <item>Caixa</item>
+        <item>Kg</item>
+        <item>Litros</item>
+        <item>Cm</item>
+        <item>Metros</item>
+    </string-array>
+</resources>

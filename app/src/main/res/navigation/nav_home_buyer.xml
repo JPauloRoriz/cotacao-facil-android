@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_home_buyer"
+    app:startDestination="@id/homeFragmentBuyer">
+
+    <fragment
+        android:id="@+id/homeFragmentBuyer"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.HomeBuyerFragment"
+        android:label="HomeBuyerFragment"
+        tools:layout="@layout/fragment_home_buyer">
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyBuyerFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.HistoryFragment"
+        android:label="fragment_history_buyer"
+        tools:layout="@layout/fragment_history" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/priceBuyerFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.PriceBuyerFragment"
+        android:label="fragment_price_buyer"
+        tools:layout="@layout/fragment_price_buyer" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/partnerBuyerFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.PartnerFragment"
+        android:label="PartnerBuyerFragment" >
+
+    </fragment>
+
+
+</navigation>

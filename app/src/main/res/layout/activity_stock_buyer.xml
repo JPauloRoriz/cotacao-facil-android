@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white"
+        android:elevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/arrow"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="20dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textView_historic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:text="@string/Stock"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/arrow"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <ImageButton
+        android:id="@+id/filter_button"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/shape_card_login"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+      />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/shape_card_login"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintEnd_toStartOf="@+id/filter_button"
+        app:layout_constraintTop_toTopOf="@+id/filter_button"
+        app:layout_constraintBottom_toBottomOf="@+id/filter_button"
+        app:searchIcon="@drawable/ic_search"
+        app:queryBackground="@null"
+        app:defaultQueryHint="@string/search_hint"
+        app:iconifiedByDefault="false"
+        app:queryHint="@string/search_hint"
+        app:layout_constraintWidth_default="wrap"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView_history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_button"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="20dp"
+        tools:listitem="@layout/item_product" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageView_error_empty"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/img_find_empty"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_message_error"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_2"
+        android:textColor="@color/red_color"
+        android:textSize="@dimen/text_h2"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_error_empty"
+        tools:text="Não foi encontrado nenhum histórico"
+        tools:visibility="gone" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
