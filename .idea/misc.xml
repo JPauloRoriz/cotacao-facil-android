@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/bottom_navigation_color.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_arrow_back.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_baseline_lock_24.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_baseline_password_24.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.1065" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_buyer.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_close.xml" value="0.1065" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_cotacao_facil.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_cotacao_facil_2.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_history.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_home.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_image_empty.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_info.xml" value="0.1065" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_launcher_foreground.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_partner.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_phone.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_price.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_provider.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_search.xml" value="0.1065" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/ic_user_icon.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/shape_card_login.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/shape_tupe_user_transparent.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/shape_type_user.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/shape_type_user_not selected.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/drawable/tab_color_selector.xml" value="0.112" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/activity_buyer_home.xml" value="0.203125" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/activity_home.xml" value="0.2" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/activity_provider_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_history_buyer.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_home_buyer.xml" value="0.18" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_home_provider.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_login.xml" value="0.22" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_partner_buyer.xml" value="0.18" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_price_buyer.xml" value="0.19010416666666666" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/fragment_register.xml" value="0.25" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/home_provider_fragment.xml" value="0.1675213675213675" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/layout/item_partner.xml" value="0.25" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1115" />
+        <entry key="..\:/Users/joaop/AndroidStudioProjects/CotacaoFacil/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1115" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Embedded JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="SuppressABINotification">
+    <option name="modulesWithSuppressedNotConfigured">
+      <set>
+        <option value="CotacaoFacil.app" />
+      </set>
+    </option>
+  </component>
+</project>

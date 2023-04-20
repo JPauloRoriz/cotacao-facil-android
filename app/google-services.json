@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "575778298267",
+    "project_id": "cotacao-facil",
+    "storage_bucket": "cotacao-facil.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575778298267:android:2a2de5f0d413db4630a93e",
+        "android_client_info": {
+          "package_name": "com.example.cotacaofacil"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "575778298267-ooooqs17chi30q47dqm3639m3pnoc19k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbXcuCoPem4MZKe-Ob19Eg3Amon-fbTBg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575778298267-ooooqs17chi30q47dqm3639m3pnoc19k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
