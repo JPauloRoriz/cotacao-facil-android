@@ -11,24 +11,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.FragmentPartnerBinding
-import com.example.cotacaofacil.domain.model.UserModel
 import com.example.cotacaofacil.domain.usecase.partner.util.TypeDeletePartner
-import com.example.cotacaofacil.presentation.ui.activity.HomeBuyerActivity
-import com.example.cotacaofacil.presentation.ui.activity.HomeProviderActivity
 import com.example.cotacaofacil.presentation.ui.adapter.PartnerAdapter
 import com.example.cotacaofacil.presentation.util.Maks
 import com.example.cotacaofacil.presentation.viewmodel.partner.PartnerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.partner.model.PartnerEvent
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 
 class PartnerFragment : Fragment() {
-    private val userParcelableBuyer by lazy { (activity as? HomeBuyerActivity)?.user }
-    private val userParcelableProvider by lazy { (activity as? HomeProviderActivity)?.user }
-
-    private val viewModel: PartnerViewModel by viewModel { parametersOf(userParcelableBuyer ?: userParcelableProvider) }
+    private val viewModel: PartnerViewModel by viewModel()
 
     private lateinit var binding: FragmentPartnerBinding
     private val adapter by lazy { PartnerAdapter() }

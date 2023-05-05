@@ -2,11 +2,12 @@ package com.example.cotacaofacil.data.repository.product
 
 import android.content.Context
 import com.example.cotacaofacil.data.model.ProductResponse
-import com.example.cotacaofacil.data.model.SpinnerListHelper
+import com.example.cotacaofacil.data.helper.SpinnerListHelper
 import com.example.cotacaofacil.data.repository.product.contract.ProductRepository
 import com.example.cotacaofacil.data.service.product.contract.ProductService
 import com.example.cotacaofacil.domain.Extensions.Companion.toProductModel
 import com.example.cotacaofacil.domain.model.ProductModel
+import java.util.*
 
 class ProductRepositoryImpl(
     val context: Context,
@@ -34,7 +35,8 @@ class ProductRepositoryImpl(
                 brand = brand,
                 typeMeasurement = typeMeasurements,
                 cnpjBuyer = cnpjUser,
-                quantity = quantity
+                quantity = quantity,
+                date = Date().time
             )
         )
     }

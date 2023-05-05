@@ -9,7 +9,7 @@ import com.example.cotacaofacil.domain.model.StatusIsMyPartner
 
 fun BodyCompanyResponse.toBodyCompanyModel(): BodyCompanyModel {
     return BodyCompanyModel(
-        nome, uf, situacao, municipio, fantasia, abertura, status
+        nome, uf, situacao, municipio, fantasia, abertura, status, telefone, email
     )
 }
 

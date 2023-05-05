@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.BottomSheetAddProductBinding
+
 import com.example.cotacaofacil.presentation.viewmodel.product.AddProductViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.model.ProductAddEvent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,6 +26,7 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private val viewModel by viewModel<AddProductViewModel>()
     private var cnpjUser: String? = ""
 
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = BottomSheetAddProductBinding.inflate(inflater, container, false)
         return binding.root
@@ -37,9 +39,11 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
     }
 
     companion object {
-        fun newInstance(cnpjUser: String?): AddProductBottomSheetDialogFragment {
+        private var clickSaveProduct : (() -> Unit)? = null
+        fun newInstance(cnpjUser: String?, clickSaveProduct: () -> Unit): AddProductBottomSheetDialogFragment {
             val addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment()
             addProductBottomSheetDialogFragment.cnpjUser = cnpjUser
+           this.clickSaveProduct = clickSaveProduct
             return addProductBottomSheetDialogFragment
         }
     }
@@ -90,10 +94,12 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     setupSpinner(event.listOptions)
                 }
                 ProductAddEvent.SuccessAddProductAdd -> {
+                    clickSaveProduct?.invoke()
                     binding.tvMessageError.text = ""
                     binding.edtNameProduct.setText("")
                     binding.edtDescription.setText("")
                     binding.edtBrand.setText("")
+                    binding.edtQuantity.setText("")
                     Toast.makeText(requireContext(), getString(R.string.product_add_success), Toast.LENGTH_SHORT).show()
                 }
 

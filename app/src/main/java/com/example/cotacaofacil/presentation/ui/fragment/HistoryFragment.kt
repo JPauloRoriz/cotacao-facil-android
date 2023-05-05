@@ -7,18 +7,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.cotacaofacil.databinding.FragmentHistoryBinding
-import com.example.cotacaofacil.presentation.ui.activity.HomeBuyerActivity
-import com.example.cotacaofacil.presentation.ui.activity.HomeProviderActivity
 import com.example.cotacaofacil.presentation.ui.adapter.HistoricAdapter
 import com.example.cotacaofacil.presentation.viewmodel.history.HistoryViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 
 class HistoryFragment : Fragment() {
-    private val userParcelableBuyer by lazy { (activity as? HomeBuyerActivity)?.user }
-    private val userParcelableProvider by lazy { (activity as? HomeProviderActivity)?.user }
-    private val viewModel: HistoryViewModel by viewModel { parametersOf(userParcelableBuyer ?: userParcelableProvider) }
+    private val viewModel: HistoryViewModel by viewModel()
 
     private lateinit var binding: FragmentHistoryBinding
     private val adapter by lazy { HistoricAdapter() }

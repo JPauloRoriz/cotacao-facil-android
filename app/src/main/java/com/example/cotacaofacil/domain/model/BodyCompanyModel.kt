@@ -11,5 +11,8 @@ data class BodyCompanyModel(
     val municipio : String? = "",
     val fantasia : String? = "",
     val abertura : String? = "",
-    val status : String? = ""
+    val status : String? = "",
+    var telefone : String? = "",
+    @SerializedName("e-mail")
+    var email : String? = "",
 )

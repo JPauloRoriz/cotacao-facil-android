@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cotacaofacil.databinding.ItemProductBinding
 import com.example.cotacaofacil.domain.model.ProductModel
+import com.example.cotacaofacil.presentation.viewmodel.product.model.StockEvent
 
 
-class ProductAdapter(private val products: List<ProductModel>) :
+class ProductAdapter() :
     RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+    var products: List<ProductModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
@@ -22,6 +24,10 @@ class ProductAdapter(private val products: List<ProductModel>) :
     }
 
     override fun getItemCount() = products.size
+    fun updateList(products: MutableList<ProductModel>) {
+        this.products = products
+        notifyDataSetChanged()
+    }
 
     inner class ViewHolder(private val binding: ItemProductBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -30,7 +36,7 @@ class ProductAdapter(private val products: List<ProductModel>) :
             if(product.quantity.isEmpty() || product.typeMeasurement == "Outros"){
                 binding.textViewNameProduct.text = "${product.name} ${product.brand}"
             }else {
-                binding.textViewNameProduct.text = "${product.name} ${product.brand} ${product.typeMeasurement} ${product.quantity}"
+                binding.textViewNameProduct.text = "${product.name} ${product.brand} ${product.quantity} ${product.typeMeasurement} "
             }
             binding.textViewCodeProduct.text = "Cód: ${product.code}"
             binding.textViewTextDescription.text = product.description

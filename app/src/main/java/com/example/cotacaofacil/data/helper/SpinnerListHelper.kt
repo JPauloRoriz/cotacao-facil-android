@@ -1,4 +1,4 @@
-package com.example.cotacaofacil.data.model
+package com.example.cotacaofacil.data.helper
 
 import android.content.Context
 import com.example.cotacaofacil.R

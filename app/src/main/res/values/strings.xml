@@ -130,6 +130,11 @@
     <string name="unity">Unidade(s)</string>
     <string name="bales">Fardo(s)</string>
     <string name="tins">Lata(s)</string>
+    <string name="stock_empty_message">Você não possui nenhum produto no seu estoque</string>
+    <string name="message_error_impossible_load_products_stock">Não foi possível carregar os produtos do Estoque</string>
+    <string name="message_error_text_stock">Não foi possível carregar o estoque</string>
+    <string name="products_empty_toast_add">Você ainda não possui produtos no estoque</string>
+    <string name="product">Produto :</string>
 
 
 </resources>

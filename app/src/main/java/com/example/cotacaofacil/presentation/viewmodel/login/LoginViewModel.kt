@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cotacaofacil.R
+import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.domain.exception.DefaultException
 import com.example.cotacaofacil.domain.exception.EmailOrPasswordInvalidException
 import com.example.cotacaofacil.domain.exception.EmptyFildException
@@ -17,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val validationLoginUseCase: LoginUseCase,
+    private val userHelper : UserHelper,
     private val context: Context
 ) : ViewModel() {
     val stateLiveData = MutableLiveData(LoginState())
@@ -34,6 +36,7 @@ class LoginViewModel(
                 .onSuccess { user ->
                     stateLiveData.setLoadingLogin(false)
                     stateLiveData.setMessageErrorLogin("")
+                    userHelper.user = user
                     if (user.userTypeSelected.userProviderSelected) {
                         eventLiveData.value = LoginEvent.SuccessLoginProvider(user)
                     } else {

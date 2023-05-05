@@ -31,8 +31,10 @@ class ProductServiceImpl(
        return try {
             if (result.documents.isEmpty())
                 Result.failure(ListEmptyException())
-            else
-                Result.success(result.toObjects(ProductResponse::class.java))
+            else {
+                val productsList = result.toObjects(ProductResponse::class.java).filterNotNull().sortedByDescending { it.date }
+                Result.success(productsList.toMutableList())
+            }
         } catch (e: Exception) {
             Result.failure(DefaultException())
         }

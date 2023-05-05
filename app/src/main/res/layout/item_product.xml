@@ -4,36 +4,53 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="4dp">
+    android:padding="4dp"
+    >
 
-    <TextView
-        android:id="@+id/textView_code_product"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Cód: 504784"
-        android:elevation="2dp"
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:textStyle="bold"
-        android:padding="4dp"
-        android:background="@drawable/shape_card_login"
-        />
-
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardView_item_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:layout_constraintStart_toStartOf="@+id/textView_code_product"
-        app:layout_constraintTop_toBottomOf="@+id/textView_code_product"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:focusable="true"
+        app:cardBackgroundColor="@color/white_dark"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="4dp">
+
+            <TextView
+                android:id="@+id/textView_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView_name_product"
+                android:text="@string/product"
+                android:elevation="2dp"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:id="@+id/textView_code_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Cód: 504784"
+                android:elevation="2dp"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:padding="4dp"
+                android:background="@drawable/shape_card_login"
+                />
 
         <TextView
             android:id="@+id/textView_name_product"
@@ -44,21 +61,20 @@
             android:gravity="start"
             android:layout_marginStart="8dp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView_product"
             android:textColor="@color/black"
-            app:layout_constraintEnd_toStartOf="textView_quantity"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_code_product"
             />
 
             <TextView
                 android:id="@+id/textView_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:text="Descrição:"
+                android:text="Descrição:"
                 android:textSize="16sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView_name_product"
+                app:layout_constraintStart_toStartOf="@+id/textView_product"
                 android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@+id/textView_name_product"
                 />
@@ -67,13 +83,13 @@
                 android:id="@+id/textView_text_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                tools:text="Vazio"
+                tools:text="Vazia"
                 android:layout_marginHorizontal="12dp"
                 android:textSize="14sp"
                 android:minLines="2"
                 android:maxLines="2"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/textView_name_product"
+                app:layout_constraintStart_toStartOf="@+id/textView_product"
                 android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@+id/textView_description"
                 />
@@ -81,6 +97,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

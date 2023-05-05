@@ -1,6 +1,5 @@
 package com.example.cotacaofacil.data.repository.user.contract
 
-import com.example.cotacaofacil.domain.model.BodyCompanyModel
 import com.example.cotacaofacil.domain.model.UserModel
 import com.example.cotacaofacil.presentation.viewmodel.register.model.UserTypeSelected
 

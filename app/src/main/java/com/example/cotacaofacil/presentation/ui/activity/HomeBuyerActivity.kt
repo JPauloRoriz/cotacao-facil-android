@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.cotacaofacil.R
+import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.databinding.ActivityBuyerHomeBinding
-import com.example.cotacaofacil.domain.model.UserModel
+import org.koin.android.ext.android.inject
 
 
 class HomeBuyerActivity : AppCompatActivity() {
-    val user by lazy { intent?.extras?.getParcelable<UserModel>(USER)}
+    private val userHelper by inject<UserHelper>()
+    val user by lazy { userHelper.user }
     private lateinit var binding: ActivityBuyerHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,10 +24,9 @@ class HomeBuyerActivity : AppCompatActivity() {
     private fun setupListeners() {
         supportFragmentManager.findFragmentById(R.id.container)?.let {
             binding.bottomNavigation.setupWithNavController(
-              it.findNavController()
+                it.findNavController()
             )
         }
-
     }
 
     companion object {

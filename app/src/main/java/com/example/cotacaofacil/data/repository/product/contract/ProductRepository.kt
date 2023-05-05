@@ -1,6 +1,5 @@
 package com.example.cotacaofacil.data.repository.product.contract
 
-import com.example.cotacaofacil.data.model.SpinnerListHelper
 import com.example.cotacaofacil.domain.model.ProductModel
 
 interface ProductRepository {

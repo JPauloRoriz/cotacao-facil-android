@@ -52,6 +52,7 @@ class Extensions {
                     it.cnpjBuyer,
                     it.code,
                     it.quantity
+
                 )
             }.toMutableList()
         }
