@@ -1,21 +1,33 @@
 package com.example.cotacaofacil.presentation.ui.fragment.buyer
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.FragmentHomeBuyerBinding
-import com.example.cotacaofacil.presentation.ui.activity.HomeBuyerActivity
-import com.example.cotacaofacil.presentation.ui.activity.HomeProviderActivity
+import com.example.cotacaofacil.presentation.util.BottomNavigationListener
+import com.example.cotacaofacil.presentation.ui.activity.StockBuyerActivity
 import com.example.cotacaofacil.presentation.ui.dialog.AddProductBottomSheetDialogFragment
-import com.example.cotacaofacil.presentation.viewmodel.login.LoginViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.home.HomeBuyerViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.home.model.HomeBuyerEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeBuyerFragment : Fragment() {
-    private val viewModel by viewModel<LoginViewModel>()
+class HomeBuyerFragment() : Fragment() {
+    private val viewModel by viewModel<HomeBuyerViewModel>()
     private lateinit var binding: FragmentHomeBuyerBinding
-    private val user by lazy { (activity as? HomeBuyerActivity)?.user }
+    private var backPressedOnce: Boolean = false
+    private var bottomNavigationListener: BottomNavigationListener? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,13 +44,97 @@ class HomeBuyerFragment : Fragment() {
         setupObservers()
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is BottomNavigationListener) {
+            bottomNavigationListener = context
+        } else {
+            throw RuntimeException("$context must implement BottomNavigationListener")
+        }
+    }
+
     private fun setupObservers() {
+        viewModel.homeBuyerEventLiveData.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                HomeBuyerEvent.ErrorLoadListProducts -> {
+                    Toast.makeText(requireContext(), context?.getString(R.string.message_error_impossible_load_products_stock), Toast.LENGTH_SHORT)
+                        .show()
+                }
+                is HomeBuyerEvent.ListEmptyProducts -> {
+                    Toast.makeText(requireContext(), context?.getString(R.string.products_empty_toast_add), Toast.LENGTH_SHORT).show()
+                    val addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment.newInstance(event.user?.cnpj, null,) {
+
+                    }
+                    activity?.supportFragmentManager?.let { it1 -> addProductBottomSheetDialogFragment.show(it1, "") }
+                }
+                is HomeBuyerEvent.SuccessListProducts -> {
+                    val intent = Intent(requireContext(), StockBuyerActivity::class.java)
+                    intent.putExtra(StockBuyerActivity.USER, event.user)
+                    startActivityForResult(intent, REQUEST_QUANTITY_PRODUCTS)
+                }
+                HomeBuyerEvent.AskAgain -> {
+                    backPressedOnce = true
+                    Toast.makeText(requireContext(), getString(R.string.click_again_to_close), Toast.LENGTH_SHORT).show()
+                    Handler(Looper.getMainLooper()).postDelayed({ backPressedOnce = false }, 2000)
+                }
+                HomeBuyerEvent.FinishApp -> {
+                    requireActivity().finishAffinity()
+                }
+                HomeBuyerEvent.ClickPartner -> {
+                    bottomNavigationListener?.onChangeFragmentBottomNavigation(R.id.partnerBuyerFragment)
+                }
+                is HomeBuyerEvent.ErrorLoadInformation -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
+                HomeBuyerEvent.Logout -> activity?.finish()
+            }
+        }
+
+        viewModel.homeBuyerStateLiveData.observe(viewLifecycleOwner) { state ->
+            binding.textViewCorporateName.text = state.nameCorporation
+            binding.textViewFantasyName.text = state.nameFantasy
+            binding.textViewFone.text = state.fone
+            binding.textViewCnpj.text = state.cnpj
+            binding.textViewNumberStock.text = state.quantityProducts
+            binding.textViewNumberOpenPrice.text = state.quantityPrice
+            binding.textViewEmail.text = state.email
+        }
     }
 
     private fun setupListeners() {
-        binding.cardViewStock.setOnClickListener {
-            val addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment.newInstance(user?.cnpj ?: "erro")
-            activity?.supportFragmentManager?.let { it1 -> addProductBottomSheetDialogFragment.show(it1, "") }
+        binding.imageViewEdit.setOnClickListener {
+            viewModel.tapOnLogout()
         }
+
+        binding.constraintLayoutProvider.setOnClickListener {
+            viewModel.tapOnPartner()
+        }
+
+        binding.constraintLayoutInformationCorporation.setOnClickListener {
+            Toast.makeText(requireContext(), "informações pessoais", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.cardViewStock.setOnClickListener {
+            viewModel.tapOnCardStock()
+        }
+
+        binding.arrow.setOnClickListener {
+            viewModel.tapOnArrowBack(backPressedOnce)
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            viewModel.tapOnArrowBack(backPressedOnce)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_QUANTITY_PRODUCTS && resultCode == Activity.RESULT_OK) {
+            lifecycleScope.launchWhenCreated {
+                viewModel.loadDataUser()
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_QUANTITY_PRODUCTS = 222
     }
 }

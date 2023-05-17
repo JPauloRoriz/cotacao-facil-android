@@ -10,7 +10,9 @@
     <color name="color_toolbar">#FF5722</color>
     <color name="transparent">#00F5F5F8</color>
     <color name="colorPrimaryAlpha">#AB0C3394</color>
+    <color name="colorPrimaryAlphaTransparent">#6D034BFF</color>
     <color name="gray">#D3686B81</color>
+    <color name="rippleColorDark">#B3000000</color>
 
 
     <color name="purple_200">#FFBB86FC</color>
@@ -22,6 +24,8 @@
     <color name="yellow">#F1E60A</color>
     <color name="blackAlpha">#86000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green">#0DBF07</color>
+    <color name="white_dark">#FDFBFB</color>
     <color name="white_bottom_navigation">#FAF9F9</color>
     <color name="item_bottom_navigation">#538C8C</color>
 </resources>

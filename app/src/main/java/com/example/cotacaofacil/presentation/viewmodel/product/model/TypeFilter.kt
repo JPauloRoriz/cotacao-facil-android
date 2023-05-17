@@ -1,5 +1,7 @@
 package com.example.cotacaofacil.presentation.viewmodel.product.model
 
-sealed class ProductEvent {
-
+enum class TypeFilter {
+    Code,
+    Name,
+    Brand
 }

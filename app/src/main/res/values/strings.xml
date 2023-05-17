@@ -67,7 +67,7 @@
     <string name="info_corporation">Informações da empresa</string>
     <string name="partern">Parceiros</string>
     <string name="write_cnpj_partner">Digite o cnpj do fornecedor</string>
-    <string name="add_new_partner">Adicionar fornecedor</string>
+    <string name="add_new_partner">Procurar fornecedor</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="not_possible_add_user">Não foi possível fazer o registro</string>
@@ -95,7 +95,8 @@
     <string name="text_title_delete_partner">Parceria finalizada</string>
     <string name="text_title_request_cancel_partner">Solicitação de parceria cancelada</string>
     <string name="text_request_cancel_partner">Sua solicitação de parceria com %s foi cancelada</string>
-    <string name="text_title_request_partner">Solicitação de parceria</string>
+    <string name="text_title_request_partner">Solicitação de parceria enviada</string>
+    <string name="text_title_received_partner">Solicitação de parceria recebida</string>
     <string name="text_send_request_partner">Você enviou uma solicitação de parceria para %s</string>
     <string name="text_title_request_rejected_partner">Solicitação de parceria rejeitada</string>
     <string name="text_request_rejected_partner">Você rejeitou a silicitação de parceria de %s</string>
@@ -106,7 +107,7 @@
     <string name="text_receive_request_partner">%s enviou uma solicitação de parceria para vcoê</string>
     <string name="historic">Histórico</string>
     <string name="message_error_historic_empty">Você ainda não possui nenhum histórico</string>
-    <string name="delete_historic">Excluir históricos</string>
+    <string name="delete_historic">Excluir histórico</string>
     <string name="hint_name_product">Nome*</string>
     <string name="description_product_hint">Descrição</string>
     <string name="brand_hint">Marca</string>
@@ -124,12 +125,39 @@
     <string name="confirmation_save_product_data_empty">Tem certeza que deseja salvar o produto com campo(s) vazios?</string>
     <string name="quantity_measurements">Quantidade:</string>
     <string name="Stock">Estoque de produtos</string>
-    <string name="search_hint">Digite o código do produto</string>
+    <string name="search_hint_code_product">Digite o código do produto</string>
+    <string name="search_hint_name_product">Digite o nome do produto</string>
+    <string name="search_hint_brand_product">Digite a marca do produto</string>
     <string name="grams">Grama(s)</string>
     <string name="tons">Tonelada(s)</string>
     <string name="unity">Unidade(s)</string>
     <string name="bales">Fardo(s)</string>
     <string name="tins">Lata(s)</string>
+    <string name="stock_empty_message">Você não possui nenhum produto no seu estoque</string>
+    <string name="message_error_impossible_load_products_stock">Não foi possível carregar os produtos do Estoque</string>
+    <string name="message_error_text_stock">Não foi possível carregar o estoque</string>
+    <string name="products_empty_toast_add">Você ainda não possui produtos no estoque</string>
+    <string name="product">Produto :</string>
+    <string name="price">Cotações</string>
+    <string name="click_again_to_close">Aperte mais uma vez para sair</string>
+    <string name="select_filter_find">Selecione o tipo de filtro da busca:</string>
+    <string name="code_product">Código</string>
+    <string name="name_product">Nome</string>
+    <string name="brand_product">Marca</string>
+    <string name="back">voltar</string>
+    <string name="error_http_4229">Não foi possível acessar o servidor, tenta daqui alguns minutos</string>
+    <string name="historic_deleted">Histórico deletado</string>
+    <string name="error_delete_historic">Erro ao excluir histórico</string>
+    <string name="all">Todos</string>
+    <string name="favorites">Favoritos</string>
+    <string name="edit_product">Editar produto</string>
+    <string name="impossible_delete_product">Não foi possível excluir o produto</string>
+    <string name="product_deleted_success">Produto excluído com sucesso</string>
+    <string name="delete_product">Tem certeza que deseja excluir esse produto?</string>
+    <string name="email_null">Sem email</string>
+    <string name="name_corporation_null">Nome não encontrado</string>
+    <string name="fantasy_null">Nome não encontrado</string>
+    <string name="fone_null">Telefone não encontrado</string>
 
 
 </resources>

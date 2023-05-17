@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,8 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:clickable="true"
-        android:focusable="true"
-        >
+        android:focusable="true">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageView_icon_history"
@@ -26,21 +26,34 @@
             android:layout_height="wrap_content"
             android:background="@drawable/shape_round"
             android:padding="4dp"
-            android:tint="@color/colorPrimary"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?actionBarItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_person_add" />
 
+
         <View
-            android:id="@+id/view_line_history"
-            android:layout_width="2dp"
+            android:id="@+id/view_line_top_history"
+            android:layout_width="1dp"
             android:layout_height="0dp"
-            android:layout_marginStart="6dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imageView_icon_history"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_icon_history"
+            app:layout_constraintBottom_toTopOf="@+id/imageView_icon_history" />
+
+        <View
+            android:id="@+id/view_line_bottom_history"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
             android:background="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView_icon_history"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="@+id/imageView_icon_history"
+            app:layout_constraintEnd_toEndOf="@+id/imageView_icon_history"
+            app:layout_constraintTop_toBottomOf="@+id/imageView_icon_history" />
 
         <ImageView
             android:id="@+id/view_arrow_right"
@@ -49,9 +62,9 @@
             android:layout_marginStart="-6dp"
             android:padding="-80dp"
             android:src="@drawable/ic_arrow_right"
-            app:layout_constraintBottom_toBottomOf="@+id/view_line_history"
-            app:layout_constraintStart_toStartOf="@+id/view_line_history"
-            app:layout_constraintTop_toTopOf="@+id/view_line_history"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView_icon_history"
+            app:layout_constraintStart_toEndOf="@+id/imageView_icon_history"
+            app:layout_constraintTop_toTopOf="@+id/imageView_icon_history"
             app:tint="@color/colorPrimary" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -61,7 +74,6 @@
             android:layout_marginStart="6dp"
             android:ellipsize="end"
             android:gravity="start"
-            android:maxLength="31"
             android:paddingTop="4dp"
             android:textColor="@color/black"
             android:textSize="16sp"
@@ -111,12 +123,6 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_description"
             tools:text="Data 23/05/2023 às 14h36" />
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="0.5dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintStart_toEndOf="@+id/view_line_history"
-            app:layout_constraintTop_toBottomOf="@+id/textView_date" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

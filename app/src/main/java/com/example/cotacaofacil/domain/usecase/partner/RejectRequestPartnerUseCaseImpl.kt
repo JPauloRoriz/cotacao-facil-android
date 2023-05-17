@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.cotacaofacil.data.repository.bodyCompany.contract.BodyCompanyRepository
 import com.example.cotacaofacil.data.repository.history.contract.HistoryRepository
 import com.example.cotacaofacil.data.repository.partner.contract.PartnerRepository
+import com.example.cotacaofacil.data.service.Date.contract.DateCurrent
 import com.example.cotacaofacil.domain.Extensions.Companion.ifNotEmpty
 import com.example.cotacaofacil.domain.Extensions.Companion.isNetworkConnected
 import com.example.cotacaofacil.domain.exception.NoConnectionInternetException
@@ -17,12 +18,23 @@ import java.util.*
 class RejectRequestPartnerUseCaseImpl(
     private val partnerRepository: PartnerRepository,
     private val historyRepository: HistoryRepository,
-    private val bodyCompanyRepository: BodyCompanyRepository
+    private val bodyCompanyRepository: BodyCompanyRepository,
+    private val dateCurrent: DateCurrent
 ) : RejectRequestPartnerUseCase {
     override suspend fun invoke(cnpj: String, partnerModel: PartnerModel, context: Context, typeDelete: TypeDeletePartner): Result<Boolean> {
         return if (context.isNetworkConnected()) {
             bodyCompanyRepository.getBodyCompanyModel(cnpj).onSuccess { bodyCompanyModel ->
-                val date = Date().time
+                var date = Date().time
+                dateCurrent.invoke()
+                    .onSuccess {
+                         date = it
+                    }
+                    .onFailure {
+                        Result.failure<java.lang.Exception>(it)
+                    }
+
+
+
                 when(typeDelete){
                     TypeDeletePartner.DELETE_PARTNER -> {
                         addHistoryModel(TypeHistory.PARTNER_DELETED, date, partnerModel.nameFantasy.ifNotEmpty(), cnpj)

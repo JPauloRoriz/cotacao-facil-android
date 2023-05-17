@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.ItemPartnerBinding
+import com.example.cotacaofacil.domain.Extensions.Companion.formatCnpj
 import com.example.cotacaofacil.domain.Extensions.Companion.ifNotEmpty
 import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.model.StatusIsMyPartner
@@ -45,7 +46,7 @@ class PartnerAdapter() : RecyclerView.Adapter<PartnerAdapter.PartnerViewHolder>(
                 binding.imageButtonNegative.setOnClickListener {
                     clickRejectPartner?.invoke(partnerModel)
                 }
-                binding.textViewCnpj.text = partnerModel.cnpjCorporation
+                binding.textViewCnpj.text = partnerModel.cnpjCorporation.formatCnpj()
                 binding.textViewNamePartner.text = partnerModel.nameFantasy.ifNotEmpty()
                 binding.textViewNameCompletePartner.text = partnerModel.nameCorporation.ifNotEmpty()
 

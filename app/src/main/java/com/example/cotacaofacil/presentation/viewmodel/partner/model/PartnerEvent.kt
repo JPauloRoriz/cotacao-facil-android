@@ -11,6 +11,7 @@ sealed class PartnerEvent {
     object SuccessDeletePartner : PartnerEvent()
     object SuccessAcceptPartner : PartnerEvent()
     object FindEmpty : PartnerEvent()
+    object TapOnBack : PartnerEvent()
     data class RejectPartner(val partner : PartnerModel) : PartnerEvent()
     data class DeletePartner(val partner : PartnerModel) : PartnerEvent()
     data class CancelRequestPartner(val partner : PartnerModel) : PartnerEvent()

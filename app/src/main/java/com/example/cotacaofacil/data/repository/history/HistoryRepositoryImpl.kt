@@ -17,5 +17,9 @@ class HistoryRepositoryImpl(
         return service.addHistoryResponse(historicModel.toHistoricResponse(), cnpj)
     }
 
+    override suspend fun deleteHistoric(historicModel: HistoryModel): Result<Any?>? {
+        return service.deleteHistoric(historicModel.toHistoricResponse())
+    }
+
 
 }

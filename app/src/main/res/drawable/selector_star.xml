@@ -1,0 +1,11 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:drawable="@drawable/ic_is_favorite" android:state_selected="true" />
+
+
+    <item android:drawable="@drawable/ic_not_favorite" android:state_selected="false" />
+
+
+    <item android:drawable="@drawable/ic_is_favorite" />
+</selector>

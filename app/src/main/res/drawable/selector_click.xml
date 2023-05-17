@@ -1,0 +1,12 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <ripple android:color="@color/colorPrimaryAlpha">
+            <item android:drawable="@drawable/shape_type_user" />
+        </ripple>
+    </item>
+    <item android:state_pressed="false">
+        <ripple android:color="@color/transparent">
+            <item android:drawable="@drawable/shape_type_user" />
+        </ripple>
+    </item>
+</selector>
