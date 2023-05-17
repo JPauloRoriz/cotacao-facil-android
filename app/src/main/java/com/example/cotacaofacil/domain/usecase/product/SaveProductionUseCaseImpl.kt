@@ -17,20 +17,21 @@ class SaveProductionUseCaseImpl(
         brand: String,
         typeMeasurements: String,
         cnpjUser: String,
-        quantity : String,
+        quantity: String,
         context: Context,
-        isConfirmationDataEmpty: Boolean
+        isConfirmationDataEmpty: Boolean,
+        isFavorite: Boolean
     ): Result<Any?> {
         return if (context.isNetworkConnected()) {
             if (name.isEmpty()) {
                 Result.failure<Exception>(EmptyFildException())
             } else if (isConfirmationDataEmpty) {
-                repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity)
+                repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite)
             } else {
                 if (description.isEmpty() || brand.isEmpty()) {
                     Result.failure(SaveDataEmptyConfirmationException())
                 } else {
-                    repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity)
+                    repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite)
                 }
             }
 

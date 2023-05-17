@@ -74,7 +74,7 @@ class PartnerFragment : Fragment() {
         }
 
         binding.arrow.setOnClickListener {
-            Toast.makeText(activity, "voltar", Toast.LENGTH_SHORT).show()
+            viewModel.tapOnArrow()
         }
 
         viewModel.enterCnpj()
@@ -183,6 +183,7 @@ class PartnerFragment : Fragment() {
                 is PartnerEvent.ErrorInternetConnection -> {
                     Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
                 }
+                PartnerEvent.TapOnBack -> activity?.onBackPressed()
             }
         }
 

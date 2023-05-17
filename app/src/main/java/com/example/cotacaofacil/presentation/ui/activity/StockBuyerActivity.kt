@@ -1,8 +1,11 @@
 package com.example.cotacaofacil.presentation.ui.activity
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.ActivityStockBuyerBinding
@@ -11,6 +14,7 @@ import com.example.cotacaofacil.presentation.ui.adapter.ProductAdapter
 import com.example.cotacaofacil.presentation.ui.dialog.AddProductBottomSheetDialogFragment
 import com.example.cotacaofacil.presentation.viewmodel.product.StockBuyerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.model.StockEvent
+import com.google.android.material.tabs.TabLayout
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
@@ -33,11 +37,12 @@ class StockBuyerActivity : AppCompatActivity() {
 
     private fun setupObservers() {
         viewModel.stateLiveData.observe(this) { state ->
-            productAdapter.products = state.productsList
             binding.progressBar.isVisible = state.isLoading
             binding.recycleViewProducts.visibility = state.showListProducts
             binding.textViewMessageError.visibility = state.showError
             binding.imageButtonReload.visibility = state.showError
+            binding.searchView.queryHint = state.hintTextFindProduct
+            productAdapter.updateList(state.productsList)
         }
 
         viewModel.eventLiveData.observe(this) { event ->
@@ -49,29 +54,111 @@ class StockBuyerActivity : AppCompatActivity() {
                 is StockEvent.UpdateList -> {
                     productAdapter.updateList(event.products)
                 }
+                StockEvent.SelectedFilter -> {
+                    binding.searchView.setQuery("", true)
+                }
+                is StockEvent.EditProduct -> {
+                    AddProductBottomSheetDialogFragment.newInstance(user?.cnpj, event.product) { viewModel.initViewModel(true) }
+                        .show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
+                }
+                is StockEvent.DeleteProduct -> {
+                    Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
+                }
+
             }
         }
 
     }
 
     private fun setupListeners() {
+        binding.arrow.setOnClickListener {
+            onBackPressed()
+        }
+        productAdapter.clickFavorite = {
+            viewModel.clickFavorite(it)
+        }
+        productAdapter.clickEditProduct = {
+            viewModel.tapOnProduct(it)
+        }
+        productAdapter.clickDeleteProduct = {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.delete_product))
+            builder.setPositiveButton(R.string.yes) { p0, p1 ->
+                viewModel.tapOnTrash(it)
+            }
+            builder.setNegativeButton(R.string.not) { p0, p1 ->
+            }
+            builder.create().show()
+
+        }
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        viewModel.initViewModel(true)
+                    }
+                    1 -> {
+                        viewModel.initViewModel(false)
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+
+        })
+
         binding.imageButtonReload.setOnClickListener {
-            viewModel.initViewModel()
+            viewModel.initViewModel(true)
         }
 
         binding.floatingButtonAdd.setOnClickListener {
-            AddProductBottomSheetDialogFragment.newInstance(user?.cnpj) { viewModel.initViewModel() }
+            AddProductBottomSheetDialogFragment.newInstance(user?.cnpj, null) { viewModel.initViewModel(true) }
                 .show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
         }
+
+        binding.filterButton.setOnClickListener {
+            val options = arrayOf(getString(R.string.code_product), getString(R.string.name_product), getString(R.string.brand_product))
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle(getString(R.string.select_filter_find))
+            builder.setItems(options) { _, which ->
+                viewModel.tapOnSelectedFilter(which)
+            }
+            builder.create().show()
+        }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                viewModel.performSearch(p0, binding.tabLayout.selectedTabPosition)
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                viewModel.performSearch(p0, binding.tabLayout.selectedTabPosition)
+                return true
+            }
+
+        })
+
+
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
+        setResult(Activity.RESULT_OK)
         finish()
+        super.onBackPressed()
     }
 
     companion object {
         const val USER = "user"
+        const val QUANTITY_PRODUCTS = "QUANTITY_PRODUCTS"
         const val ADD_PRODUCT_BOTTOM_SHEET = "AddProductBottomSheetDialogFragment"
     }
 }

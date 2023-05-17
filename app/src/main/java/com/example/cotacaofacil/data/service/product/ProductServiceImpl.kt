@@ -28,7 +28,7 @@ class ProductServiceImpl(
     override suspend fun getAllProduct(cnpjUser: String): Result<MutableList<ProductResponse>> {
         val result = firebaseFirestore.collection(PRODUCT).document(cnpjUser)
             .collection(MY_PRODUCT).get().await()
-       return try {
+        return try {
             if (result.documents.isEmpty())
                 Result.failure(ListEmptyException())
             else {
@@ -36,6 +36,37 @@ class ProductServiceImpl(
                 Result.success(productsList.toMutableList())
             }
         } catch (e: Exception) {
+            Result.failure(DefaultException())
+        }
+    }
+
+    override suspend fun editProduct(productResponse: ProductResponse): Result<Unit> {
+        val result = firebaseFirestore.collection(PRODUCT)
+            .document(productResponse.cnpjBuyer)
+            .collection(MY_PRODUCT)
+            .document(productResponse.code)
+            .set(productResponse)
+
+        result.await()
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(DefaultException())
+        }
+
+    }
+
+    override suspend fun deleteProduct(productResponse: ProductResponse): Result<Unit>? {
+        val result = firebaseFirestore.collection(PRODUCT)
+            .document(productResponse.cnpjBuyer)
+            .collection(MY_PRODUCT)
+            .document(productResponse.code)
+            .delete()
+
+        result.await()
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
             Result.failure(DefaultException())
         }
     }

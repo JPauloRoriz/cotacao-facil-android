@@ -11,6 +11,7 @@ interface SaveProductionUseCase {
         cnpjUser: String,
         quantity: String,
         context: Context,
-        isConfirmationDataEmpty: Boolean
+        isConfirmationDataEmpty: Boolean,
+        isFavorite: Boolean
     ): Result<Any?>
 }

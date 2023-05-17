@@ -4,12 +4,12 @@ import com.google.gson.annotations.SerializedName
 
 data class BodyCompanyModel(
 //    val atividade_principal: MainActivityResponse = MainActivityResponse("", ""),
-    val nome : String? = "",
+    var nome : String? = "",
     val uf : String? = "",
-   @SerializedName("situacao")
+    @SerializedName("situacao")
     val situacao: String? = "",
     val municipio : String? = "",
-    val fantasia : String? = "",
+    var fantasia : String? = "",
     val abertura : String? = "",
     val status : String? = "",
     var telefone : String? = "",

@@ -12,6 +12,7 @@ data class ProductResponse(
     val cnpjBuyer: String = "",
     var code: String = "",
     val quantity: String = "",
-    val date : Long = 0
+    val date: Long = 0,
+    var favorite: Boolean = false
 
 ) : Parcelable

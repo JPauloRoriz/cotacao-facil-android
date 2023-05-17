@@ -16,6 +16,10 @@ class Extensions {
             return this.replace(Regex("[/.-]"), "")
         }
 
+        fun String.formatCnpj(): String {
+            return "${this.substring(0, 2)}.${this.substring(2, 5)}.${this.substring(5, 8)}/${this.substring(8, 12)}-${this.substring(12)}"
+        }
+
         suspend fun Task<QuerySnapshot>.toResult(): Result<Unit?> {
             return try {
                 if (this.isSuccessful) {
@@ -44,17 +48,37 @@ class Extensions {
 
         fun MutableList<ProductResponse>.toProductModel() :MutableList<ProductModel>{
           return this.map {
-                ProductModel(
-                    it.name,
-                    it.description,
-                    it.brand,
-                    it.typeMeasurement,
-                    it.cnpjBuyer,
-                    it.code,
-                    it.quantity
-
-                )
+               it.toProductModel()
             }.toMutableList()
+        }
+
+        fun ProductResponse.toProductModel() : ProductModel{
+           return ProductModel(
+               name,
+               description,
+               brand,
+               typeMeasurement,
+               cnpjBuyer,
+               code,
+               quantity,
+               favorite,
+               date
+               )
+        }
+
+        fun ProductModel.toProductResponse() : ProductResponse{
+            return ProductResponse(
+                name,
+                description,
+                brand,
+                typeMeasurement,
+                cnpjBuyer,
+                code,
+                quantity,
+                date,
+                isFavorite
+
+            )
         }
 
     }

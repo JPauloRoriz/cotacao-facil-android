@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.cotacaofacil.data.repository.bodyCompany.contract.BodyCompanyRepository
 import com.example.cotacaofacil.data.repository.history.contract.HistoryRepository
 import com.example.cotacaofacil.data.repository.partner.contract.PartnerRepository
+import com.example.cotacaofacil.data.service.Date.contract.DateCurrent
 import com.example.cotacaofacil.domain.Extensions.Companion.ifNotEmpty
 import com.example.cotacaofacil.domain.Extensions.Companion.isNetworkConnected
 import com.example.cotacaofacil.domain.exception.NoConnectionInternetException
@@ -17,13 +18,21 @@ import java.util.*
 class AddRequestRequestPartnerUseCaseImpl(
     private val repositoryPartner: PartnerRepository,
     private val historyRepository: HistoryRepository,
-    private val bodyCompanyRepository: BodyCompanyRepository
+    private val bodyCompanyRepository: BodyCompanyRepository,
+    private val dateCurrent: DateCurrent
 ) : AddRequestPartnerUseCase {
 
     override suspend fun invoke(userModel: UserModel, partner: PartnerModel, context: Context): Result<Unit?> {
         return if (context.isNetworkConnected()) {
             bodyCompanyRepository.getBodyCompanyModel(userModel.cnpj).onSuccess { bodyCompanyModel ->
-                val date = Date().time
+                var date = Date().time
+                dateCurrent.invoke()
+                    .onSuccess {
+                        date = it
+                    }
+                    .onFailure {
+                        Result.failure<java.lang.Exception>(NoConnectionInternetException())
+                    }
                 addHistoryModel(TypeHistory.SEND_REQUEST_PARTNER, date,  partner.nameFantasy.ifNotEmpty(), userModel.cnpj)
                 addHistoryModel(TypeHistory.SEND_RECEIVE_PARTNER, date,  bodyCompanyModel.fantasia.ifNotEmpty(), partner.cnpjCorporation)
             }

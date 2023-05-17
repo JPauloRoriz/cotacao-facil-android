@@ -9,7 +9,6 @@ import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.domain.exception.*
 import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.model.StatusIsMyPartner
-import com.example.cotacaofacil.domain.model.UserModel
 import com.example.cotacaofacil.domain.usecase.partner.contract.*
 import com.example.cotacaofacil.domain.usecase.partner.util.TypeDeletePartner
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
@@ -25,17 +24,18 @@ class PartnerViewModel(
     private val addRequestPartnerUseCase: AddRequestPartnerUseCase,
     private val rejectRequestPartnerUseCase: RejectRequestPartnerUseCase,
     private val acceptRequestPartnerUseCase: AcceptRequestPartnerUseCase,
-    private val userHelper : UserHelper
+    private val userHelper: UserHelper
 ) : ViewModel() {
     val stateLiveData = MutableLiveData(PartnerState())
     val eventLiveData = SingleLiveEvent<PartnerEvent>()
     val user = userHelper.user
+
     init {
         loadListPartnerModel(true)
     }
 
     fun loadListPartnerModel(isAll: Boolean) {
-        stateLiveData.postValue(PartnerState().copy(isLoading = true))
+        stateLiveData.postValue(stateLiveData.value?.copy(isLoading = true))
         viewModelScope.launch(Dispatchers.IO) {
             user?.id?.let {
                 getAllPartnerModelUseCase.invoke(user.userTypeSelected, it, user.cnpj)
@@ -43,9 +43,10 @@ class PartnerViewModel(
                         val listFilter = listPartnersFilter(isAll, listPartnerModel)
                         if (listFilter.isEmpty()) {
                             stateLiveData.postValue(
-                               stateLiveData.value?.copy(
+                                stateLiveData.value?.copy(
                                     showImageError = false,
                                     isLoading = false,
+                                    listPartnerModel = mutableListOf(),
                                     messageError = setMessageError(isAll),
                                     numberNotifications = listPartnersFilter(false, listPartnerModel).size.toString()
                                 )
@@ -90,7 +91,8 @@ class PartnerViewModel(
         stateLiveData.value = PartnerState().copy(textTitleList = setTitleList(true), isLoading = true)
         viewModelScope.launch(Dispatchers.IO) {
             user.let { user ->
-                user?.userTypeSelected?.let {7
+                user?.userTypeSelected?.let {
+                    7
                     validationCnpjUseCase.invoke(it, user, cnpj, context)
                         .onSuccess { partnerModel ->
                             val listPartner = mutableListOf<PartnerModel>()
@@ -222,7 +224,7 @@ class PartnerViewModel(
         eventLiveData.postValue(PartnerEvent.RejectPartner(partner))
     }
 
-    suspend fun deletePartner(){
+    suspend fun deletePartner() {
 
     }
 
@@ -321,5 +323,9 @@ class PartnerViewModel(
                 R.string.request_empty_message_error
             )
         }
+    }
+
+    fun tapOnArrow() {
+        eventLiveData.postValue(PartnerEvent.TapOnBack)
     }
 }
