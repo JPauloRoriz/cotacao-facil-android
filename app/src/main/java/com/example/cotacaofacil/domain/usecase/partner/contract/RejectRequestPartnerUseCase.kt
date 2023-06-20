@@ -5,5 +5,5 @@ import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.usecase.partner.util.TypeDeletePartner
 
 interface RejectRequestPartnerUseCase {
-    suspend fun invoke(cnpj: String, partnerModel: PartnerModel, context: Context, typeDelete: TypeDeletePartner) : Result<Boolean>
+    suspend fun invoke(cnpj: String, partnerModel: PartnerModel, context: Context, typeDelete: TypeDeletePartner, currentDate : Long) : Result<Boolean>
 }

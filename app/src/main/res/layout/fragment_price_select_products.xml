@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white"
+    android:padding="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="@string/create_price"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageButton
+        android:id="@+id/filter_button"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_type_user"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/actionBarItemBackground"
+        android:src="@drawable/ic_filter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_type_user"
+        android:clickable="true"
+        android:focusable="true"
+        android:textSize="12sp"
+        app:defaultQueryHint="@string/search_hint_code_product"
+        app:iconifiedByDefault="false"
+        app:layout_constraintBottom_toBottomOf="@+id/filter_button"
+        app:layout_constraintEnd_toStartOf="@+id/filter_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/filter_button"
+        app:queryBackground="@null"
+        app:queryHint="@string/search_hint_code_product"
+        app:searchIcon="@drawable/ic_search" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_view"
+        app:tabGravity="fill"
+        app:tabIndicatorColor="@color/colorPrimary"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextColor="@color/black">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/favorites" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <TextView
+        android:id="@+id/textView_message_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/message_error_text_stock"
+        android:textColor="@color/red_color"
+        tools:viewBindingIgnore="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycleView_products"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="40dp"
+        android:clipToPadding="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toTopOf="@+id/button_next"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="20dp"
+        tools:listitem="@layout/item_product_select_price"
+        tools:visibility="gone" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/colorPrimary"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_next"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:drawableTint="@color/white"
+        android:text="@string/next"
+        android:textColor="@color/white"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/PrimaryButtonMaterial"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

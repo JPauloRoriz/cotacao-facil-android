@@ -19,7 +19,7 @@ import com.example.cotacaofacil.presentation.util.BottomNavigationListener
 import com.example.cotacaofacil.presentation.ui.activity.StockBuyerActivity
 import com.example.cotacaofacil.presentation.ui.dialog.AddProductBottomSheetDialogFragment
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.HomeBuyerViewModel
-import com.example.cotacaofacil.presentation.viewmodel.buyer.home.model.HomeBuyerEvent
+import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeBuyerFragment() : Fragment() {
@@ -100,7 +100,7 @@ class HomeBuyerFragment() : Fragment() {
     }
 
     private fun setupListeners() {
-        binding.imageViewEdit.setOnClickListener {
+        binding.textViewLogoff.setOnClickListener {
             viewModel.tapOnLogout()
         }
 

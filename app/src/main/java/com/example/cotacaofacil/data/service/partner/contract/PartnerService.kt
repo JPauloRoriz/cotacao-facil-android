@@ -12,7 +12,7 @@ interface PartnerService {
         cnpj: String
     ): Result<BodyCompanyResponse?>
 
-    suspend fun getPartnersByCnpj(cnpjUser: String): MutableList<PartnerResponse>
+    suspend fun getPartnersByCnpj(cnpjUser: String): Result<MutableList<PartnerResponse>>
     suspend fun addRequestPartnerResponse(
         cnpjUser: String,
         partnerResponse: PartnerResponse

@@ -2,14 +2,35 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_home_buyer"
+    android:id="@+id/fragment_provider_buyer"
     app:startDestination="@id/homeFragmentProvider">
 
     <fragment
         android:id="@+id/homeFragmentProvider"
-        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.HomeBuyerFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.provider.HomeProviderFragment"
         android:label="HomeBuyerFragment"
         tools:layout="@layout/fragment_home_provider">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyProviderFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.HistoryFragment"
+        android:label="fragment_history_buyer"
+        tools:layout="@layout/fragment_history" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/priceProviderFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.provider.PriceProviderFragment"
+        android:label="fragment_price_buyer"
+        tools:layout="@layout/fragment_price_provider" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/partnerBuyerFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.PartnerFragment"
+        android:label="PartnerBuyerFragment" >
 
     </fragment>
 

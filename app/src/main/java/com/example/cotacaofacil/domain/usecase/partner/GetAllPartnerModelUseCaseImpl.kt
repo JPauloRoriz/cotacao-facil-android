@@ -16,7 +16,9 @@ class GetAllPartnerModelUseCaseImpl(
         } else if(cnpj.length < 14){
             Result.failure(CnpjIncompleteException())
         } else {
-            repositoryPartner.getAllPartnerModel(userTypeSelected, idUser, cnpj)
+            repositoryPartner.getAllPartnerModel(userTypeSelected, idUser, cnpj).onSuccess { listPartners ->
+                return Result.success(listPartners.sortedByDescending { partner -> partner.date }.toMutableList())
+            }
         }
     }
 }

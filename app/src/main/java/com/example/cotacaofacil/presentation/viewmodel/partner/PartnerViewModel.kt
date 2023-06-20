@@ -9,6 +9,7 @@ import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.domain.exception.*
 import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.model.StatusIsMyPartner
+import com.example.cotacaofacil.domain.usecase.date.contract.DateCurrentUseCase
 import com.example.cotacaofacil.domain.usecase.partner.contract.*
 import com.example.cotacaofacil.domain.usecase.partner.util.TypeDeletePartner
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
@@ -24,6 +25,7 @@ class PartnerViewModel(
     private val addRequestPartnerUseCase: AddRequestPartnerUseCase,
     private val rejectRequestPartnerUseCase: RejectRequestPartnerUseCase,
     private val acceptRequestPartnerUseCase: AcceptRequestPartnerUseCase,
+    private val dateCurrentUseCase: DateCurrentUseCase,
     private val userHelper: UserHelper
 ) : ViewModel() {
     val stateLiveData = MutableLiveData(PartnerState())
@@ -44,7 +46,8 @@ class PartnerViewModel(
                         if (listFilter.isEmpty()) {
                             stateLiveData.postValue(
                                 stateLiveData.value?.copy(
-                                    showImageError = false,
+                                    textTitleList = setTitleList(isAll),
+                                    showImageError = true,
                                     isLoading = false,
                                     listPartnerModel = mutableListOf(),
                                     messageError = setMessageError(isAll),
@@ -88,21 +91,21 @@ class PartnerViewModel(
 
 
     suspend fun tapOnAddNewPartner(cnpj: String) {
-        stateLiveData.value = PartnerState().copy(textTitleList = setTitleList(true), isLoading = true)
+        stateLiveData.value = stateLiveData.value?.copy(textTitleList = setTitleList(true), isLoading = true)
         viewModelScope.launch(Dispatchers.IO) {
             user.let { user ->
-                user?.userTypeSelected?.let {
-                    7
-                    validationCnpjUseCase.invoke(it, user, cnpj, context)
+                user?.userTypeSelected?.let { userType ->
+                    validationCnpjUseCase.invoke(userType, user, cnpj, context)
                         .onSuccess { partnerModel ->
                             val listPartner = mutableListOf<PartnerModel>()
                             partnerModel?.let { listPartner.add(partnerModel) }
                             eventLiveData.postValue(PartnerEvent.GoToAddNewPartnerSuccess)
                             stateLiveData.postValue(
-                                PartnerState().copy(
+                                stateLiveData.value?.copy(
                                     textTitleList = setTitleList(true),
                                     listPartnerModel = listPartner,
-                                    isLoading = false
+                                    isLoading = false,
+                                    showImageError = false
                                 )
                             )
                         }.onFailure { error ->
@@ -113,8 +116,7 @@ class PartnerViewModel(
                                 }
                                 is CnpjOwnException -> {
                                     stateLiveData.postValue(
-                                        PartnerState().copy(
-                                            textTitleList = setTitleList(true),
+                                        stateLiveData.value?.copy(
                                             listPartnerModel = mutableListOf(),
                                             isLoading = false,
                                             messageError = context.getString(R.string.owner_erro_message),
@@ -125,7 +127,7 @@ class PartnerViewModel(
                                 }
                                 is CnpjIncompleteException -> {
                                     stateLiveData.postValue(
-                                        PartnerState().copy(
+                                        stateLiveData.value?.copy(
                                             textTitleList = setTitleList(true),
                                             listPartnerModel = mutableListOf(),
                                             isLoading = false,
@@ -139,7 +141,7 @@ class PartnerViewModel(
                                 }
                                 is UserNotFindException -> {
                                     stateLiveData.postValue(
-                                        PartnerState().copy(
+                                        stateLiveData.value?.copy(
                                             textTitleList = setTitleList(true),
                                             listPartnerModel = mutableListOf(),
                                             isLoading = false,
@@ -150,7 +152,7 @@ class PartnerViewModel(
                                 }
                                 is DefaultException -> {
                                     stateLiveData.postValue(
-                                        PartnerState().copy(
+                                        stateLiveData.value?.copy(
                                             textTitleList = setTitleList(true),
                                             listPartnerModel = mutableListOf(),
                                             isLoading = false,
@@ -172,51 +174,60 @@ class PartnerViewModel(
 
     suspend fun tapOnIconPartner(partner: PartnerModel) {
         viewModelScope.launch(Dispatchers.IO) {
-            when (partner.isMyPartner) {
-                StatusIsMyPartner.FALSE -> {
-                    user?.let {
-                        addRequestPartnerUseCase.invoke(it, partner, context)
-                            .onSuccess {
-                                loadListPartnerModel(true)
-                                eventLiveData.postValue(PartnerEvent.RequestAddPartner)
-                            }
-                            .onFailure {
-                                when (it) {
-                                    is NoConnectionInternetException -> {
-                                        stateLiveData.postValue(
-                                            PartnerState().copy(
-                                                textTitleList = setTitleList(true),
-                                                listPartnerModel = mutableListOf(),
-                                                messageError = context.getString(
-                                                    R.string.not_internet
-                                                )
-                                            )
-                                        )
+            dateCurrentUseCase.invoke()
+                .onSuccess { currentDate ->
+                    when (partner.isMyPartner) {
+                        StatusIsMyPartner.FALSE -> {
+                            user?.let {
+                                addRequestPartnerUseCase.invoke(it, partner, currentDate, context)
+                                    .onSuccess {
+                                        loadListPartnerModel(true)
+                                        eventLiveData.postValue(PartnerEvent.RequestAddPartner)
                                     }
-                                    else -> {
-                                        stateLiveData.postValue(
-                                            PartnerState().copy(
-                                                textTitleList = setTitleList(true),
-                                                messageError = context.getString(
-                                                    R.string.not_possibility_add_partner
+                                    .onFailure {
+                                        when (it) {
+                                            is NoConnectionInternetException -> {
+                                                stateLiveData.postValue(
+                                                    stateLiveData.value?.copy(
+                                                        textTitleList = setTitleList(true),
+                                                        listPartnerModel = mutableListOf(),
+                                                        showImageError = true,
+                                                        messageError = context.getString(
+                                                            R.string.not_internet
+                                                        )
+                                                    )
                                                 )
-                                            )
-                                        )
+                                            }
+                                            else -> {
+                                                stateLiveData.postValue(
+                                                    stateLiveData.value?.copy(
+                                                        textTitleList = setTitleList(true),
+                                                        showImageError = true,
+                                                        messageError = context.getString(
+                                                            R.string.not_possibility_add_partner
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                        }
                                     }
-                                }
                             }
+                        }
+                        StatusIsMyPartner.TRUE -> {
+                            eventLiveData.postValue(PartnerEvent.DeletePartner(partner))
+                        }
+                        StatusIsMyPartner.WAIT_ANSWER -> {
+                            eventLiveData.postValue(PartnerEvent.CancelRequestPartner(partner))
+                        }
+                        StatusIsMyPartner.TO_RESPOND -> {
+                            //Onde muda o constraint para aceitar ou recusar a solicitação
+                        }
                     }
                 }
-                StatusIsMyPartner.TRUE -> {
-                    eventLiveData.postValue(PartnerEvent.DeletePartner(partner))
+                .onFailure {
+                    //todo tratamento para erro de conexão com internet
                 }
-                StatusIsMyPartner.WAIT_ANSWER -> {
-                    eventLiveData.postValue(PartnerEvent.CancelRequestPartner(partner))
-                }
-                StatusIsMyPartner.TO_RESPOND -> {
-                    //Onde muda o constraint para aceitar ou recusar a solicitação
-                }
-            }
+
         }
     }
 
@@ -224,79 +235,102 @@ class PartnerViewModel(
         eventLiveData.postValue(PartnerEvent.RejectPartner(partner))
     }
 
-    suspend fun deletePartner() {
-
-    }
-
     suspend fun tapOnConfirmRejectPartner(partner: PartnerModel, typeDeletePartner: TypeDeletePartner) {
-        stateLiveData.postValue(PartnerState(isLoading = true))
-        user?.cnpj?.let {
-            rejectRequestPartnerUseCase.invoke(it, partner, context, typeDeletePartner)
-                .onSuccess {
-                    eventLiveData.postValue(PartnerEvent.SuccessRejectPartner)
-                    loadListPartnerModel(true)
-                }.onFailure {
-                    when (it) {
-                        is NoConnectionInternetException -> {
-                            stateLiveData.postValue(
-                                PartnerState().copy(
-                                    textTitleList = setTitleList(true),
-                                    listPartnerModel = mutableListOf(),
-                                    messageError = context.getString(
-                                        R.string.not_internet
+        stateLiveData.postValue(stateLiveData.value?.copy(textTitleList = setTitleList(true), isLoading = true))
+        dateCurrentUseCase.invoke()
+            .onSuccess { currentDate ->
+                user?.cnpj?.let {
+                    rejectRequestPartnerUseCase.invoke(it, partner, context, typeDeletePartner, currentDate)
+                        .onSuccess {
+                            eventLiveData.postValue(PartnerEvent.SuccessRejectPartner)
+                            loadListPartnerModel(true)
+                        }.onFailure {
+                            when (it) {
+                                is NoConnectionInternetException -> {
+                                    stateLiveData.postValue(
+                                        stateLiveData.value?.copy(
+                                            textTitleList = setTitleList(true),
+                                            listPartnerModel = mutableListOf(),
+                                            showImageError = true,
+                                            messageError = context.getString(
+                                                R.string.not_internet
+                                            )
+                                        )
                                     )
-                                )
-                            )
-                        }
-                        else -> {
-                            stateLiveData.postValue(
-                                PartnerState(
-                                    isLoading = true, messageError = context.getString(
-                                        R.string.inpossible_reject_request_partner
+                                }
+                                else -> {
+                                    stateLiveData.postValue(
+                                        stateLiveData.value?.copy(
+                                            isLoading = true,
+                                            messageError = context.getString(
+                                                R.string.inpossible_reject_request_partner
+                                            ),
+                                            showImageError = true
+                                        )
                                     )
-                                )
-                            )
+                                }
+                            }
                         }
-                    }
                 }
-        }
+            }
+            .onFailure {
+
+            }
     }
 
     suspend fun tapOnConfirmDeletePartner(partner: PartnerModel) {
-        stateLiveData.postValue(PartnerState(isLoading = true))
-        user?.cnpj?.let {
-            rejectRequestPartnerUseCase.invoke(it, partner, context, TypeDeletePartner.DELETE_PARTNER)
-                .onSuccess {
-                    eventLiveData.postValue(PartnerEvent.SuccessDeletePartner)
-                    loadListPartnerModel(true)
-                }.onFailure {
-                    stateLiveData.postValue(
-                        PartnerState(
-                            isLoading = true, messageError = context.getString(
-                                R.string.inpossible_delete_partner, partner.nameFantasy
+        stateLiveData.postValue(
+            stateLiveData.value?.copy(
+                textTitleList = setTitleList(true), isLoading = true
+            )
+        )
+        dateCurrentUseCase.invoke()
+            .onSuccess { currentDate ->
+                user?.cnpj?.let {
+                    rejectRequestPartnerUseCase.invoke(it, partner, context, TypeDeletePartner.DELETE_PARTNER, currentDate)
+                        .onSuccess {
+                            eventLiveData.postValue(PartnerEvent.SuccessDeletePartner)
+                            loadListPartnerModel(true)
+                        }.onFailure {
+                            stateLiveData.postValue(
+                                stateLiveData.value?.copy(
+                                    textTitleList = setTitleList(true), isLoading = true, showImageError = true, messageError = context.getString(
+                                        R.string.inpossible_delete_partner, partner.nameFantasy
+                                    )
+                                )
                             )
-                        )
-                    )
+                        }
                 }
-        }
+            }
+            .onFailure {
+
+            }
+
     }
 
     suspend fun tapOnAcceptPartner(partner: PartnerModel) {
-        user?.cnpj?.let {
-            acceptRequestPartnerUseCase.invoke(it, partner)
-                .onSuccess {
-                    eventLiveData.postValue(PartnerEvent.SuccessAcceptPartner)
-                    loadListPartnerModel(false)
-                }.onFailure {
-                    stateLiveData.postValue(
-                        PartnerState(
-                            isLoading = true, messageError = context.getString(
-                                R.string.inpossible_accept_request_partner
+        dateCurrentUseCase.invoke()
+            .onSuccess { currentDate ->
+                user?.cnpj?.let {
+                    acceptRequestPartnerUseCase.invoke(it, partner, currentDate)
+                        .onSuccess {
+                            eventLiveData.postValue(PartnerEvent.SuccessAcceptPartner)
+                            loadListPartnerModel(false)
+                        }.onFailure {
+                            stateLiveData.postValue(
+                                stateLiveData.value?.copy(
+                                    textTitleList = setTitleList(true), isLoading = true, showImageError = true, messageError = context.getString(
+                                        R.string.inpossible_accept_request_partner
+                                    )
+                                )
                             )
-                        )
-                    )
+                        }
                 }
-        }
+            }
+            .onFailure {
+                //todo tratamento para sem conexão
+            }
+
     }
 
     private fun listRequests(listAllPartners: MutableList<PartnerModel>): MutableList<PartnerModel> {
@@ -307,7 +341,11 @@ class PartnerViewModel(
 
     private fun setTitleList(isAll: Boolean): String {
         return if (isAll) {
-            context.getString(R.string.providers)
+            if (user?.userTypeSelected?.userBuyerSelected == true) {
+                context.getString(R.string.providers)
+            } else {
+                context.getString(R.string.buyers)
+            }
         } else {
             context.getString(R.string.request)
         }
@@ -315,9 +353,13 @@ class PartnerViewModel(
 
     private fun setMessageError(isAll: Boolean): String {
         return if (isAll) {
-            context.getString(
-                R.string.partner_empty_message_error
-            )
+            if (user?.userTypeSelected?.userBuyerSelected == true) {
+                context.getString(
+                    R.string.partner_empty_message_error_buyer
+                )
+            } else {
+                context.getString(R.string.partner_empty_message_error_provider)
+            }
         } else {
             context.getString(
                 R.string.request_empty_message_error

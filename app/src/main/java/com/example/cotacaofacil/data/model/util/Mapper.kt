@@ -13,14 +13,15 @@ fun BodyCompanyResponse.toBodyCompanyModel(): BodyCompanyModel {
     )
 }
 
-fun BodyCompanyResponse.toPartnerModel(idUser: String, cnpj: String): PartnerModel {
+fun BodyCompanyResponse.toPartnerModel(idUser: String, cnpj: String, date: Long): PartnerModel {
     return PartnerModel(
         id = "",
         idUser = idUser,
         nameCorporation = this.nome,
         nameFantasy = fantasia,
         cnpjCorporation = cnpj,
-        isMyPartner = StatusIsMyPartner.TRUE
+        isMyPartner = StatusIsMyPartner.TRUE,
+        date = date
     )
 }
 

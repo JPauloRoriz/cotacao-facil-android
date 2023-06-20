@@ -20,18 +20,19 @@ class SaveProductionUseCaseImpl(
         quantity: String,
         context: Context,
         isConfirmationDataEmpty: Boolean,
-        isFavorite: Boolean
+        isFavorite: Boolean,
+        currentDate : Long
     ): Result<Any?> {
         return if (context.isNetworkConnected()) {
             if (name.isEmpty()) {
                 Result.failure<Exception>(EmptyFildException())
             } else if (isConfirmationDataEmpty) {
-                repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite)
+                repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite, currentDate)
             } else {
                 if (description.isEmpty() || brand.isEmpty()) {
                     Result.failure(SaveDataEmptyConfirmationException())
                 } else {
-                    repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite)
+                    repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite, currentDate)
                 }
             }
 

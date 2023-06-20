@@ -44,21 +44,11 @@ class PartnerServiceImpl(
         }
     }
 
-    override suspend fun getPartnersByCnpj(cnpjUser: String): MutableList<PartnerResponse> {
-        val listPartnerResponse = mutableListOf<PartnerResponse>()
-        val request =
-            firestore.collection(PARTNER).document(cnpjUser).collection(MY_PARTNERS).get()
-                .await().documents
-        request.forEach {
-            val partnerResponse = PartnerResponse("", cnpjRequestingUser = cnpjUser)
-            it.data?.getValue("approved")?.let { it1 -> partnerResponse.approved = it1 as Boolean }
-            it.data?.getValue("cnpjUser")?.let { it1 -> partnerResponse.cnpjUser = it1 as String }
-            it.data?.getValue("cnpjRequestingUser")
-                ?.let { it1 -> partnerResponse.cnpjRequestingUser = it1 as String }
-            listPartnerResponse.add(partnerResponse)
+    override suspend fun getPartnersByCnpj(cnpjUser: String): Result<MutableList<PartnerResponse>> {
+        return runCatching {
+           firestore.collection(PARTNER).document(cnpjUser).collection(MY_PARTNERS).get()
+                .await().toObjects(PartnerResponse::class.java)
         }
-
-        return listPartnerResponse
     }
 
     override suspend fun addRequestPartnerResponse(
@@ -75,7 +65,7 @@ class PartnerServiceImpl(
                 firestore.collection(PARTNER).document(partnerResponse.cnpjUser)
                     .collection(MY_PARTNERS)
                     .document(cnpjUser)
-                    .set(PartnerResponse(cnpjUser, false, cnpjRequestingUser = cnpjUser))
+                    .set(PartnerResponse(cnpjUser, false, cnpjRequestingUser = cnpjUser, date = partnerResponse.date))
 
             result.await()
             secoundResult.await()
@@ -90,7 +80,7 @@ class PartnerServiceImpl(
     }
 
     override suspend fun isMyPartner(cnpjUser: String, cnpjFind: String): StatusIsMyPartner {
-        val partner = getPartnersByCnpj(cnpjUser)
+        val partner = getPartnersByCnpj(cnpjUser).getOrNull()?: emptyList()
         val partnerSelected = partner.filter { it.cnpjUser == cnpjFind }
         return if (partner.isNotEmpty() && (partnerSelected.isNotEmpty() || cnpjFind.isEmpty())) {
             val partnerFind = partnerSelected.ifEmpty { partner }
@@ -145,7 +135,7 @@ class PartnerServiceImpl(
                 firestore.collection(PARTNER).document(partnerResponse.cnpjUser)
                     .collection(MY_PARTNERS)
                     .document(cnpj)
-                    .set(PartnerResponse(cnpj, true, cnpjRequestingUser = partnerResponse.cnpjUser))
+                    .set(PartnerResponse(cnpj, true, cnpjRequestingUser = partnerResponse.cnpjUser, date = partnerResponse.date))
             result.await()
             secoundResult.await()
             if (result.isSuccessful && secoundResult.isSuccessful) {

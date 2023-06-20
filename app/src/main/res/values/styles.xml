@@ -20,5 +20,10 @@
         <item name="android:background">@drawable/bottom_sheet_background</item>
     </style>
 
+    <style name="CustomScrollViewStyle">
+        <item name="android:scrollbarThumbVertical">@color/colorPrimary</item>
+
+    </style>
+
 
 </resources>

@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.cotacaofacil.data.repository.bodyCompany.contract.BodyCompanyRepository
 import com.example.cotacaofacil.data.repository.history.contract.HistoryRepository
 import com.example.cotacaofacil.data.repository.partner.contract.PartnerRepository
-import com.example.cotacaofacil.data.service.Date.contract.DateCurrent
 import com.example.cotacaofacil.domain.Extensions.Companion.ifNotEmpty
 import com.example.cotacaofacil.domain.Extensions.Companion.isNetworkConnected
 import com.example.cotacaofacil.domain.exception.NoConnectionInternetException
@@ -13,38 +12,25 @@ import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.model.TypeHistory
 import com.example.cotacaofacil.domain.usecase.partner.contract.RejectRequestPartnerUseCase
 import com.example.cotacaofacil.domain.usecase.partner.util.TypeDeletePartner
-import java.util.*
 
 class RejectRequestPartnerUseCaseImpl(
     private val partnerRepository: PartnerRepository,
     private val historyRepository: HistoryRepository,
-    private val bodyCompanyRepository: BodyCompanyRepository,
-    private val dateCurrent: DateCurrent
+    private val bodyCompanyRepository: BodyCompanyRepository
 ) : RejectRequestPartnerUseCase {
-    override suspend fun invoke(cnpj: String, partnerModel: PartnerModel, context: Context, typeDelete: TypeDeletePartner): Result<Boolean> {
+    override suspend fun invoke(cnpj: String, partnerModel: PartnerModel, context: Context, typeDelete: TypeDeletePartner, currentDate : Long): Result<Boolean> {
         return if (context.isNetworkConnected()) {
             bodyCompanyRepository.getBodyCompanyModel(cnpj).onSuccess { bodyCompanyModel ->
-                var date = Date().time
-                dateCurrent.invoke()
-                    .onSuccess {
-                         date = it
-                    }
-                    .onFailure {
-                        Result.failure<java.lang.Exception>(it)
-                    }
-
-
-
                 when(typeDelete){
                     TypeDeletePartner.DELETE_PARTNER -> {
-                        addHistoryModel(TypeHistory.PARTNER_DELETED, date, partnerModel.nameFantasy.ifNotEmpty(), cnpj)
+                        addHistoryModel(TypeHistory.PARTNER_DELETED, currentDate, partnerModel.nameFantasy.ifNotEmpty(), cnpj)
                     }
                     TypeDeletePartner.REJECT_PARTNER -> {
-                        addHistoryModel(TypeHistory.REQUEST_PARTNER_REJECT, date, partnerModel.nameFantasy.ifNotEmpty(), cnpj)
-                        addHistoryModel(TypeHistory.MY_REQUEST_PARTNER_REJECT, date, bodyCompanyModel.fantasia.ifNotEmpty(), partnerModel.cnpjCorporation)
+                        addHistoryModel(TypeHistory.REQUEST_PARTNER_REJECT, currentDate, partnerModel.nameFantasy.ifNotEmpty(), cnpj)
+                        addHistoryModel(TypeHistory.MY_REQUEST_PARTNER_REJECT, currentDate, bodyCompanyModel.fantasia.ifNotEmpty(), partnerModel.cnpjCorporation)
                     }
                     TypeDeletePartner.CANCEL_REQUEST_PARTNER -> {
-                        addHistoryModel(TypeHistory.REQUEST_PARTNER_CANCEL, date, partnerModel.nameFantasy.ifNotEmpty(), cnpj)
+                        addHistoryModel(TypeHistory.REQUEST_PARTNER_CANCEL, currentDate, partnerModel.nameFantasy.ifNotEmpty(), cnpj)
                     }
                 }
             }

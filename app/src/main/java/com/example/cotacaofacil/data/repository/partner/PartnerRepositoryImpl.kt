@@ -47,12 +47,12 @@ class PartnerRepositoryImpl(
         idUser: String,
         cnpjUser: String
     ): Result<MutableList<PartnerModel>> {
-        val listPartners = partnerService.getPartnersByCnpj(cnpjUser)
+        val listPartners = partnerService.getPartnersByCnpj(cnpjUser).getOrNull() ?: emptyList()
         val listBodyPartnerModel: MutableList<PartnerModel> = mutableListOf()
         listPartners.forEach { patnerResponse ->
-            partnerService.getBodyCompanyFirebaseByCnpj(userTypeSelected ,"", patnerResponse.cnpjUser)
+            partnerService.getBodyCompanyFirebaseByCnpj(userTypeSelected, "", patnerResponse.cnpjUser)
                 .onSuccess {
-                    val partnerModel = it?.cnpj?.let { it1 -> it.toPartnerModel(idUser, cnpj = it1) }
+                    val partnerModel = it?.cnpj?.let { it1 -> it.toPartnerModel(idUser, cnpj = it1, patnerResponse.date) }
                     partnerModel?.isMyPartner = partnerService.isMyPartner(cnpjUser, patnerResponse.cnpjUser)
                     partnerModel?.let { it1 -> listBodyPartnerModel.add(it1) }
                 }
@@ -61,9 +61,9 @@ class PartnerRepositoryImpl(
     }
 
     override suspend fun addRequestPartner(cnpj: String, partner: PartnerModel): Result<Unit?> {
-        val partnerResponse = partner.mapperPartner(cnpj)
-        return partnerService.addRequestPartnerResponse(cnpj, partnerResponse)
-    }
+            val partnerResponse = partner.mapperPartner(cnpj)
+            return partnerService.addRequestPartnerResponse(cnpj, partnerResponse)
+        }
 
     override suspend fun rejectPartner(cnpj: String, partnerModel: PartnerModel): Result<Boolean> {
         return partnerService.rejectPartner(
@@ -72,7 +72,7 @@ class PartnerRepositoryImpl(
         )
     }
 
-    override suspend fun acceptPartner(cnpj : String, partner: PartnerModel): Result<Boolean> {
+    override suspend fun acceptPartner(cnpj: String, partner: PartnerModel): Result<Boolean> {
         return partnerService.acceptPartner(
             cnpj,
             partner.mapperPartner(partner.cnpjCorporation.convertCnpj())

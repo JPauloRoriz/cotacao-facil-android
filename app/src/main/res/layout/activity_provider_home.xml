@@ -13,12 +13,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_provider"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_home_provider"  />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        android:id="@+id/bottom_navigation_provider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,7 +28,7 @@
         app:itemIconTint="@drawable/tab_color_selector"
         app:labelVisibilityMode="labeled"
         app:itemBackground="@color/white"
-        app:menu="@menu/bottom_nav_menu">
+        app:menu="@menu/bottom_nav_menu_provider">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 

@@ -57,6 +57,7 @@
     <string name="cnpj_invalid_exception">Por favor, insira um CNPJ válido</string>
     <string name="default_exception">Erro ao registrar</string>
     <string name="error">ERROR</string>
+    <string name="buyers">Compradores</string>
     <string name="buyer">Comprador</string>
     <string name="provider">Fornecedor</string>
     <string name="user_type_emptu">Selecione a opção de negócio que deseja realizar</string>
@@ -76,7 +77,7 @@
     <string name="not_cnpj_find">Este CNPJ não foi encontrado</string>
     <string name="default_exception_find">Não foi possível fazer a busca</string>
     <string name="not_possibility_add_partner">Não foi possível enviar essa solicitação</string>
-    <string name="partner_empty_message_error">Você ainda não possui nenhum fornecedor</string>
+    <string name="partner_empty_message_error_buyer">Você ainda não possui nenhum fornecedor</string>
     <string name="request_send">Solicitação enviada</string>
     <string name="text_reject_partner">Tem certeza que deseja rejeitar a solicitação de %s?</string>
     <string name="text_to_give_up_partner">Tem certeza que desistir da solicitação de parceria com %s?</string>
@@ -158,6 +159,37 @@
     <string name="name_corporation_null">Nome não encontrado</string>
     <string name="fantasy_null">Nome não encontrado</string>
     <string name="fone_null">Telefone não encontrado</string>
+    <string name="settings">Preferências</string>
+    <string name="add_price">Criar cotação</string>
+    <string name="create_price">Criar cotação</string>
+    <string name="finish_price_auto">Encerrar automaticamente</string>
+    <string name="permission_all_partner">Permitir todos seus parceiros</string>
+    <string name="date_finish_price">Data e Hora de Encerramento:</string>
+    <string name="high">Alta</string>
+    <string name="average">Média</string>
+    <string name="low">Baixa</string>
+    <string name="priority">Grau de prioridade: </string>
+    <string name="Select_date">Editar data e hora</string>
+    <string name="next">Próximio</string>
+    <string name="all_partners">Todos</string>
+    <string name="write_cnpj">Digite o CNPJ</string>
+    <string name="not_find_partner">Não foi encontrado nenhum fornecedor</string>
+    <string name="message_error_find_partners">Erro ao buscar fornecedors</string>
+    <string name="select_provider_go_price">Selecione os fornecedores que poderão participar:</string>
+    <string name="settings_price">Definições da cotação:</string>
+    <string name="settings_the_day">Defina o dia:</string>
+    <string name="settings_the_hour">Defina a hora:</string>
+    <string name="date_and_hout_save">Data e hora salva</string>
+    <string name="not_possible_adjust_date">Não é possível ajustar a data para o passado</string>
+    <string name="not_possible_adjust_date_on_hour_later">A cotação deve durar no mínimo %s hora(s)</string>
+    <string name="date_finish_price_delivery">Data limite para entrega dos produtos:</string>
+    <string name="priority_is_empty">Selecione uma prioridade para a cotação</string>
+    <string name="min_two_partners">A cotação deve ter pelo menos dois fornecedores</string>
+    <string name="select_partners">Fornecedores:</string>
+    <string name="partner_empty_message_error_provider">Você ainda não possui nenhum comprador</string>
+    <string name="select_products_price">Selecione os produtos da cotação:</string>
+    <string name="other">Outros</string>
+    <string name="min_one_product_price">É necessário selecionar pelo menos um produto para a cotação</string>
 
 
 </resources>

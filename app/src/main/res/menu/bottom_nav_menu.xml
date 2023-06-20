@@ -11,19 +11,19 @@
             android:id="@+id/homeFragmentBuyer"
             android:checked="true"
             android:icon="@drawable/ic_home"
-            android:title="Home" />
+            android:title="@string/home" />
         <item
             android:id="@+id/partnerBuyerFragment"
             android:icon="@drawable/ic_partner"
-            android:title="Parceiros" />
+            android:title="@string/partern" />
         <item
             android:id="@+id/historyBuyerFragment"
             android:icon="@drawable/ic_history"
-            android:title="Histórico" />
+            android:title="@string/historic" />
 
         <item
             android:id="@+id/priceBuyerFragment"
             android:icon="@drawable/ic_price"
-            android:title="Cotação" />
+            android:title="@string/price" />
     </group>
 </menu>

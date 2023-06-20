@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_create_price_buyer"
+    app:startDestination="@id/createPriceFragment">
+
+    <fragment
+        android:id="@+id/createPriceFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.CreatePriceFragment"
+        android:label="CreatePriceFragment"
+        tools:layout="@layout/fragment_create_price">
+        <action
+            android:id="@+id/action_createPriceFragment_to_createPriceSelectProductsFragment"
+            app:destination="@id/createPriceSelectProductsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPriceSelectProductsFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.CreatePriceSelectProductsFragment"
+        android:label="CreatePriceSelectProductsFragment"
+        tools:layout="@layout/fragment_price_select_products"/>
+</navigation>

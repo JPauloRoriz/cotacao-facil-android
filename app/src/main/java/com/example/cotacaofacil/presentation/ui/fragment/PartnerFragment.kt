@@ -192,8 +192,9 @@ class PartnerFragment : Fragment() {
             binding.recycleViewPartner.adapter = adapter
             binding.tvMessageError.text = state.messageError
             binding.imageViewErrorEmpty.isVisible = state.showImageError
+            binding.tvMessageError.isVisible = state.showImageError
             binding.progressBar.isVisible = state.isLoading
-            binding.textViewNumberNotificawtions.text = state.numberNotifications
+            binding.textViewNumberNotifications.text = state.numberNotifications
             binding.textViewNameList.text = state.textTitleList
         }
     }

@@ -12,6 +12,7 @@ interface SaveProductionUseCase {
         quantity: String,
         context: Context,
         isConfirmationDataEmpty: Boolean,
-        isFavorite: Boolean
+        isFavorite: Boolean,
+        currentDate : Long
     ): Result<Any?>
 }
