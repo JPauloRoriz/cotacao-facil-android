@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="0dp"
+    app:cardBackgroundColor="@color/white_bottom_navigation"
+    app:cardCornerRadius="@dimen/dimen_5"
+    app:cardElevation="@dimen/dimen_10"
+    app:cardUseCompatPadding="true"
+  >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_name_partner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:maxLength="15"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:paddingVertical="2dp"
+            app:layout_constraintBottom_toBottomOf="@+id/checkBox_isSelected"
+            app:layout_constraintStart_toEndOf="@+id/checkBox_isSelected"
+            app:layout_constraintTop_toTopOf="@+id/checkBox_isSelected"
+            tools:text="Super-mercado Comper" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_name_complete_partner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackAlpha"
+            android:ellipsize="end"
+            android:layout_marginStart="6dp"
+            android:maxLength="29"
+            android:textSize="8sp"
+            app:layout_constraintStart_toStartOf="@+id/checkBox_isSelected"
+            app:layout_constraintTop_toBottomOf="@+id/checkBox_isSelected"
+            tools:text="Super-mercado Comper" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_cnpj"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/blackAlpha"
+            android:textSize="8sp"
+            android:paddingBottom="4dp"
+            app:layout_constraintStart_toStartOf="@+id/textView_name_complete_partner"
+            app:layout_constraintTop_toBottomOf="@+id/textView_name_complete_partner"
+            tools:text="000.000.020/0001-25" />
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/checkBox_isSelected"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            tools:checked="true"
+            android:layout_marginStart="2dp"
+            android:buttonTint="@color/colorPrimary"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:shadowColor="@color/colorPrimary"
+            android:padding="4dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>

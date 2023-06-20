@@ -23,7 +23,7 @@ fun BodyCompanyResponse.mapperPartner(cnpj: String?, idUser: String): PartnerMod
         idUser,
         this.fantasia,
         nameCorporation = this.nome,
-        cnpjCorporation = cnpj?: "",
+        cnpjCorporation = cnpj ?: "",
         isMyPartner = StatusIsMyPartner.FALSE
     )
 }
@@ -58,9 +58,11 @@ fun PartnerModel.mapperPartner(cnpj: String): PartnerResponse {
     return PartnerResponse(
         this.cnpjCorporation,
         false,
+        this.date,
         cnpj
     )
 }
+
 fun HistoryModel.toHistoricResponse(): HistoricResponse {
     return HistoricResponse(
         this.typeHistory,

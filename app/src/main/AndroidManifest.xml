@@ -43,6 +43,12 @@
             android:exported="true"
             android:theme="@style/Theme.CotacaoFacil">
         </activity>
+
+        <activity
+            android:name=".presentation.ui.activity.CreatePriceActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CotacaoFacil">
+        </activity>
     </application>
 
 </manifest>

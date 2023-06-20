@@ -12,7 +12,7 @@ import com.example.cotacaofacil.domain.exception.ListEmptyException
 import com.example.cotacaofacil.domain.model.ProductModel
 import com.example.cotacaofacil.domain.usecase.product.contract.ChangeFavoriteProductUseCase
 import com.example.cotacaofacil.domain.usecase.product.contract.DeleteProductUseCase
-import com.example.cotacaofacil.domain.usecase.product.contract.GetAllProductsUseCase
+import com.example.cotacaofacil.domain.usecase.product.contract.GetAllByCnpjProductsUseCase
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
 import com.example.cotacaofacil.presentation.viewmodel.product.model.StockEvent
 import com.example.cotacaofacil.presentation.viewmodel.product.model.StockState
@@ -21,7 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class StockBuyerViewModel(
-    private val getAllProductsUseCase: GetAllProductsUseCase,
+    private val getAllProductsUseCase: GetAllByCnpjProductsUseCase,
     private val changeFavoriteProductUseCase: ChangeFavoriteProductUseCase,
     private val deleteProductUseCase: DeleteProductUseCase,
     private val userHelper: UserHelper,
@@ -40,7 +40,7 @@ class StockBuyerViewModel(
 
     fun initViewModel(isAllProducts: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
-            stateLiveData.postValue(StockState().copy(isLoading = true))
+            stateLiveData.postValue(stateLiveData.value?.copy(isLoading = true))
             user?.cnpj?.let {
                 val listProducts: MutableList<ProductModel>
                 getAllProductsUseCase.invoke(it)
@@ -48,7 +48,7 @@ class StockBuyerViewModel(
                         listProducts = if (!isAllProducts) it.filter { it.isFavorite }.toMutableList() else it
                         listProducts.sortByDescending { it.date }
                         stateLiveData.postValue(
-                            StockState().copy(
+                            stateLiveData.value?.copy(
                                 productsList = listProducts,
                                 messageError = "",
                                 isLoading = false,

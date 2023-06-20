@@ -27,6 +27,9 @@
         android:label="fragment_price_buyer"
         tools:layout="@layout/fragment_price_buyer" >
 
+        <action
+            android:id="@+id/action_priceBuyerFragment_to_createPriceFragment"
+            app:destination="@id/createPriceFragment" />
     </fragment>
     <fragment
         android:id="@+id/partnerBuyerFragment"
@@ -34,6 +37,7 @@
         android:label="PartnerBuyerFragment" >
 
     </fragment>
+
 
 
 </navigation>

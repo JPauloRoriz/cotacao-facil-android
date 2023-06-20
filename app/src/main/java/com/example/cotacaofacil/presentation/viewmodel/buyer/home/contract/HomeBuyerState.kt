@@ -1,7 +1,7 @@
-package com.example.cotacaofacil.presentation.viewmodel.buyer.home.model
+package com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract
 
 data class HomeBuyerState(
-     val isLoading : Boolean,
+     val isLoading : Boolean = false,
      val fone : String = "",
      val email : String = "",
      val nameFantasy : String = "",

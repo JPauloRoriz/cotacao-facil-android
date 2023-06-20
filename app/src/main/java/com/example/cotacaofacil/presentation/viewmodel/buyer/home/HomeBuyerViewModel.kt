@@ -1,28 +1,30 @@
 package com.example.cotacaofacil.presentation.viewmodel.buyer.home
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.helper.BodyCompanyHelper
 import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.data.sharedPreferences.SharedPreferencesHelper
+import com.example.cotacaofacil.domain.Extensions.Companion.emailNotIsEmpty
+import com.example.cotacaofacil.domain.Extensions.Companion.foneNotIsEmpty
 import com.example.cotacaofacil.domain.Extensions.Companion.formatCnpj
+import com.example.cotacaofacil.domain.Extensions.Companion.nameCorporationNotIsEmpty
+import com.example.cotacaofacil.domain.Extensions.Companion.nomeFantasyNotIsEmpty
 import com.example.cotacaofacil.domain.exception.DefaultException
 import com.example.cotacaofacil.domain.exception.ListEmptyException
 import com.example.cotacaofacil.domain.usecase.home.contract.GetBodyCompanyModelUseCase
-import com.example.cotacaofacil.domain.usecase.product.contract.GetAllProductsUseCase
+import com.example.cotacaofacil.domain.usecase.product.contract.GetAllByCnpjProductsUseCase
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
-import com.example.cotacaofacil.presentation.viewmodel.buyer.home.model.HomeBuyerEvent
-import com.example.cotacaofacil.presentation.viewmodel.buyer.home.model.HomeBuyerState
+import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerEvent
+import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class HomeBuyerViewModel(
-    private val getAllProductsUseCase: GetAllProductsUseCase,
+    private val getAllProductsUseCase: GetAllByCnpjProductsUseCase,
     private val userHelper: UserHelper,
     private val getBodyCompanyModelUseCase: GetBodyCompanyModelUseCase,
     private val sharedPreferences: SharedPreferencesHelper,
@@ -31,7 +33,7 @@ class HomeBuyerViewModel(
 ) : ViewModel() {
 
     val homeBuyerEventLiveData = SingleLiveEvent<HomeBuyerEvent>()
-    val homeBuyerStateLiveData = MutableLiveData<HomeBuyerState>()
+    val homeBuyerStateLiveData = MutableLiveData(HomeBuyerState())
 
     init {
         userHelper.user?.let { loadDataUser() }
@@ -42,27 +44,24 @@ class HomeBuyerViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             user?.cnpj?.let {
                 getBodyCompanyModelUseCase.invoke(it)
-                    .onSuccess {
-                        homeBuyerStateLiveData.postValue(it.fantasia?.let { nameFantasy ->
-                            it.nome?.let { nameCorporation ->
-                                it.telefone?.let { fone ->
-                                    it.email?.let { email ->
-                                        HomeBuyerState(
-                                            false,
-                                            fone,
-                                            email,
-                                            nameFantasy,
-                                            nameCorporation,
-                                            user.cnpj.formatCnpj()
-                                        )
-                                    }
-                                }
+                    .onSuccess { bodyCompanyModel ->
+                        getAllProductsUseCase.invoke(user.cnpj)
+                            .onSuccess {productsModelList ->
+                                homeBuyerStateLiveData.postValue(
+                                    homeBuyerStateLiveData.value?.copy(
+                                        false,
+                                        bodyCompanyModel.telefone.foneNotIsEmpty(context),
+                                        bodyCompanyModel.email.emailNotIsEmpty(context),
+                                        bodyCompanyModel.fantasia.nomeFantasyNotIsEmpty(context),
+                                        bodyCompanyModel.nome.nameCorporationNotIsEmpty(context),
+                                        user.cnpj.formatCnpj(),
+                                        quantityProducts = productsModelList.size.toString()
+                                    )
+                                )
+                            }.onFailure {
+                                //todo tratamento de erros
                             }
-                        })
-                        bodyCompanyHelper.bodyCompany?.email = homeBuyerStateLiveData.value?.email?:context.getString(R.string.email_null)
-                        bodyCompanyHelper.bodyCompany?.nome = homeBuyerStateLiveData.value?.nameCorporation?:context.getString(R.string.name_corporation_null)
-                        bodyCompanyHelper.bodyCompany?.fantasia = homeBuyerStateLiveData.value?.nameFantasy?:context.getString(R.string.fantasy_null)
-                        bodyCompanyHelper.bodyCompany?.telefone = homeBuyerStateLiveData.value?.fone?:context.getString(R.string.fone_null)
+
                     }
                     .onFailure {
                         when (it) {
@@ -71,31 +70,18 @@ class HomeBuyerViewModel(
 //                                    HomeBuyerEvent.ErrorLoadInformation(context.getString(R.string.error_http_4229))
 //                                )
                                 homeBuyerStateLiveData.postValue(
-                                    bodyCompanyHelper.bodyCompany?.telefone?.let { fone ->
-                                        bodyCompanyHelper.bodyCompany?.email?.let { email ->
-                                            bodyCompanyHelper.bodyCompany?.fantasia?.let { nameFantasy ->
-                                                bodyCompanyHelper.bodyCompany?.nome?.let { nameCorporation ->
-                                                    homeBuyerStateLiveData.value?.copy(
-                                                        fone = fone,
-                                                        nameFantasy = nameFantasy,
-                                                        nameCorporation = nameCorporation,
-                                                        cnpj = user.cnpj,
-                                                        email = email
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
+                                    homeBuyerStateLiveData.value?.copy(
+                                        isLoading = false,
+                                        fone = bodyCompanyHelper.bodyCompany?.telefone.foneNotIsEmpty(context),
+                                        email = bodyCompanyHelper.bodyCompany?.email.emailNotIsEmpty(context),
+                                        nameFantasy = bodyCompanyHelper.bodyCompany?.fantasia.nomeFantasyNotIsEmpty(context),
+                                        nameCorporation = bodyCompanyHelper.bodyCompany?.nome.nameCorporationNotIsEmpty(context),
+                                        cnpj = user.cnpj.formatCnpj()
+                                    )
                                 )
+
                             }
                         }
-
-                    }
-                getAllProductsUseCase.invoke(user.cnpj)
-                    .onSuccess {
-                        homeBuyerStateLiveData.postValue(homeBuyerStateLiveData.value?.copy(quantityProducts = it.size.toString()))
-                    }.onFailure {
-
                     }
             }
         }

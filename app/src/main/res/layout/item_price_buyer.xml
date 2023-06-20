@@ -1,0 +1,136 @@
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="8dp"
+    android:clickable="true"
+    app:cardBackgroundColor="@color/white"
+    android:focusable="true"
+    app:cardElevation="4dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvCompanyName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/black"
+            android:textIsSelectable="true"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Cotação 50068" />
+
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:id="@+id/ivExpand"-->
+<!--            android:layout_width="36dp"-->
+<!--            android:layout_height="36dp"-->
+<!--            android:clickable="true"-->
+<!--            android:padding="4dp"-->
+<!--            android:tint="@color/colorPrimary"-->
+<!--            android:src="@drawable/ic_edit"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/tvCompanyName"-->
+<!--            app:layout_constraintEnd_toEndOf="parent" />-->
+
+
+        <TextView
+            android:id="@+id/tvClosingDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textSize="10sp"
+            tools:text="Criada em 10/05/2023 10:14"
+            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/tvCompanyName" />
+
+        <TextView
+            android:id="@+id/tvStatusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="Status: "
+            android:textSize="10sp"
+            android:textIsSelectable="true"
+            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/tvClosingDateLabel" />
+
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textAllCaps="true"
+            android:textColor="@android:color/holo_green_dark"
+            android:textIsSelectable="true"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/tvStatusLabel"
+            app:layout_constraintTop_toTopOf="@id/tvStatusLabel"
+            app:layout_constraintBottom_toBottomOf="@id/tvStatusLabel"
+            tools:text="ABERTA" />
+
+        <TextView
+            android:id="@+id/tvProductQuantityLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="Quantidade de produtos:"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/tvClosureTypeLabel" />
+
+        <TextView
+            android:id="@+id/tvProductQuantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/tvProductQuantityLabel"
+            app:layout_constraintTop_toTopOf="@id/tvProductQuantityLabel"
+            tools:text="23" />
+
+        <TextView
+            android:id="@+id/tvCreationDateLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textSize="10sp"
+            tools:text="Encerra em 15/10/2013 10:14"
+            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/tvStatusLabel" />
+
+        <TextView
+            android:id="@+id/tvClosureTypeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            tools:text="Fornecedores:"
+            android:textSize="10sp"
+            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintTop_toBottomOf="@id/tvCreationDateLabel" />
+
+        <TextView
+            android:id="@+id/tvClosureType"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@id/tvClosureTypeLabel"
+            app:layout_constraintTop_toTopOf="@id/tvClosureTypeLabel"
+            tools:layout_editor_absoluteX="16dp"
+            tools:layout_editor_absoluteY="352dp"
+            tools:text="6" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

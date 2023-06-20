@@ -6,6 +6,7 @@
     <color name="colorSecundary">#5F86E8</color>
     <color name="red_color">#F60707</color>
     <color name="slow_gray">#94E3E3ED</color>
+    <color name="slow_gray_button">#C8E3E3ED</color>
     <color name="color_primary_light">#fff</color>
     <color name="color_toolbar">#FF5722</color>
     <color name="transparent">#00F5F5F8</color>
@@ -26,6 +27,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="green">#0DBF07</color>
     <color name="white_dark">#FDFBFB</color>
+    <color name="white_dark_button">#CAC3C3</color>
     <color name="white_bottom_navigation">#FAF9F9</color>
     <color name="item_bottom_navigation">#538C8C</color>
 </resources>

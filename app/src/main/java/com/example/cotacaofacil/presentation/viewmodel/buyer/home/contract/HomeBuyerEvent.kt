@@ -1,4 +1,4 @@
-package com.example.cotacaofacil.presentation.viewmodel.buyer.home.model
+package com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract
 
 import com.example.cotacaofacil.domain.model.UserModel
 

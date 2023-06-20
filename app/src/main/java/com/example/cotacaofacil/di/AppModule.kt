@@ -4,12 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
-import androidx.security.crypto.MasterKeys
 import com.example.cotacaofacil.data.helper.BodyCompanyHelper
 import com.example.cotacaofacil.data.helper.SpinnerListHelper
 import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.data.repository.bodyCompany.BodyCompanyRepositoryImpl
 import com.example.cotacaofacil.data.repository.bodyCompany.contract.BodyCompanyRepository
+import com.example.cotacaofacil.data.repository.dete.DateCurrentRepositoryImpl
+import com.example.cotacaofacil.data.repository.dete.contract.DateCurrentRepository
 import com.example.cotacaofacil.data.repository.history.HistoryRepositoryImpl
 import com.example.cotacaofacil.data.repository.history.contract.HistoryRepository
 import com.example.cotacaofacil.data.repository.partner.PartnerRepositoryImpl
@@ -18,11 +19,11 @@ import com.example.cotacaofacil.data.repository.product.ProductRepositoryImpl
 import com.example.cotacaofacil.data.repository.product.contract.ProductRepository
 import com.example.cotacaofacil.data.repository.user.UserRepositoryImpl
 import com.example.cotacaofacil.data.repository.user.contract.UserRepository
-import com.example.cotacaofacil.data.service.Date.DateCurrentImpl
-import com.example.cotacaofacil.data.service.Date.contract.DateCurrent
 import com.example.cotacaofacil.data.service.cnpj.BodyCompanyServiceImpl
 import com.example.cotacaofacil.data.service.cnpj.CnpjServiceImpl
 import com.example.cotacaofacil.data.service.cnpj.contract.BodyCompanyService
+import com.example.cotacaofacil.data.service.date.DateCurrentServiceServiceImpl
+import com.example.cotacaofacil.data.service.date.contract.DateCurrentService
 import com.example.cotacaofacil.data.service.history.HistoryServiceImpl
 import com.example.cotacaofacil.data.service.history.contract.HistoryService
 import com.example.cotacaofacil.data.service.partner.PartnerServiceImpl
@@ -33,6 +34,12 @@ import com.example.cotacaofacil.data.service.settings.retrofitConfig
 import com.example.cotacaofacil.data.service.user.UserFirebaseService
 import com.example.cotacaofacil.data.service.user.contract.UserService
 import com.example.cotacaofacil.data.sharedPreferences.SharedPreferencesHelper
+import com.example.cotacaofacil.domain.usecase.date.CalculationDateFinishPriceUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.date.DateCurrentUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.date.ValidationNextCreatePriceUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.date.contract.CalculationDateFinishPriceUseCase
+import com.example.cotacaofacil.domain.usecase.date.contract.DateCurrentUseCase
+import com.example.cotacaofacil.domain.usecase.date.contract.ValidationNextCreatePriceUseCase
 import com.example.cotacaofacil.domain.usecase.history.DeleteHistoricUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.history.GetAllItemHistoryUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.history.contract.DeleteHistoricUseCase
@@ -48,11 +55,16 @@ import com.example.cotacaofacil.domain.usecase.product.contract.*
 import com.example.cotacaofacil.domain.usecase.register.RegisterUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.register.contract.RegisterUseCase
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.HomeBuyerViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.CreatePriceViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.EditDateHourViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.PriceBuyerViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.SelectProductsViewModel
 import com.example.cotacaofacil.presentation.viewmodel.history.HistoryViewModel
 import com.example.cotacaofacil.presentation.viewmodel.login.LoginViewModel
 import com.example.cotacaofacil.presentation.viewmodel.partner.PartnerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.AddProductViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.StockBuyerViewModel
+import com.example.cotacaofacil.presentation.viewmodel.provider.home.HomeProviderViewModel
 import com.example.cotacaofacil.presentation.viewmodel.register.RegisterViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -69,10 +81,15 @@ val appModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
     viewModel { HistoryViewModel(get(), get(), get(), get()) }
-    viewModel { PartnerViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { AddProductViewModel(get(), get(), get(), get(), get()) }
+    viewModel { PartnerViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { AddProductViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { StockBuyerViewModel(get(), get(), get(), get(), get()) }
     viewModel { HomeBuyerViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { HomeProviderViewModel(get(), get(), get(), get(), get()) }
+    viewModel { PriceBuyerViewModel() }
+    viewModel { CreatePriceViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { EditDateHourViewModel(get(), get()) }
+    viewModel { SelectProductsViewModel(get(), get(), get()) }
 
 
     //useCase
@@ -80,18 +97,21 @@ val appModule = module {
     factory<LoginUseCase> { LoginUseCaseImpl(get(), get()) }
     factory<ValidationCnpjUseCase> { ValidationCnpjUseCaseImpl(get()) }
     factory<GetAllPartnerModelUseCase> { GetAllPartnerModelUseCaseImpl(get()) }
-    factory<AddRequestPartnerUseCase> { AddRequestRequestPartnerUseCaseImpl(get(), get(), get(), get()) }
-    factory<RejectRequestPartnerUseCase> { RejectRequestPartnerUseCaseImpl(get(), get(), get(), get()) }
-    factory<AcceptRequestPartnerUseCase> { AcceptRequestPartnerUseCaseImpl(get(), get(), get(), get()) }
+    factory<AddRequestPartnerUseCase> { AddRequestRequestPartnerUseCaseImpl(get(), get(), get()) }
+    factory<RejectRequestPartnerUseCase> { RejectRequestPartnerUseCaseImpl(get(), get(), get()) }
+    factory<AcceptRequestPartnerUseCase> { AcceptRequestPartnerUseCaseImpl(get(), get(), get()) }
     factory<GetAllItemHistoryUseCase> { GetAllItemHistoryUseCaseImpl(get()) }
     factory<GetAllListSpinnerOptionsUseCase> { GetAllListSpinnerOptionsUseCaseImpl(get()) }
     factory<SaveProductionUseCase> { SaveProductionUseCaseImpl(get()) }
-    factory<GetAllProductsUseCase> { GetAllProductsUseCaseImpl(get()) }
+    factory<GetAllByCnpjProductsUseCase> { GetAllByCnpjProductsUseCaseImpl(get()) }
     factory<GetBodyCompanyModelUseCase> { GetBodyCompanyModelUseCaseImpl(get()) }
     factory<DeleteHistoricUseCase> { DeleteHistoricUseCaseImpl(get()) }
     factory<ChangeFavoriteProductUseCase> { ChangeFavoriteProductUseCaseImpl(get()) }
     factory<EditProductUseCase> { EditProductUseCaseImpl(get()) }
     factory<DeleteProductUseCase> { DeleteProductUseCaseImpl(get()) }
+    factory<DateCurrentUseCase> { DateCurrentUseCaseImpl(get()) }
+    factory<CalculationDateFinishPriceUseCase> { CalculationDateFinishPriceUseCaseImpl() }
+    factory<ValidationNextCreatePriceUseCase> { ValidationNextCreatePriceUseCaseImpl() }
 
 
     //repository
@@ -99,7 +119,8 @@ val appModule = module {
     factory<BodyCompanyRepository> { BodyCompanyRepositoryImpl(get(), get()) }
     factory<PartnerRepository> { PartnerRepositoryImpl(get()) }
     factory<HistoryRepository> { HistoryRepositoryImpl(get()) }
-    factory<ProductRepository> { ProductRepositoryImpl(get(), get(), get(), get()) }
+    factory<ProductRepository> { ProductRepositoryImpl(get(), get(), get()) }
+    factory<DateCurrentRepository> { DateCurrentRepositoryImpl(get()) }
 
 
     //service
@@ -108,7 +129,7 @@ val appModule = module {
     single<BodyCompanyService> { BodyCompanyServiceImpl(get()) }
     single<HistoryService> { HistoryServiceImpl(get(), get()) }
     single<ProductService> { ProductServiceImpl(get()) }
-    single<DateCurrent> { DateCurrentImpl() }
+    single<DateCurrentService> { DateCurrentServiceServiceImpl() }
 
     //helper
     single { SpinnerListHelper() }

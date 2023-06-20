@@ -12,7 +12,8 @@ interface ProductRepository {
         typeMeasurements: String,
         cnpjUser: String,
         quantity: String,
-        isFavorite: Boolean
+        isFavorite: Boolean,
+        currentDate : Long
     ): Result<Any?>
     suspend fun getAllProducts(cnpjUser : String) : Result<MutableList<ProductModel>>
     suspend fun editProduct(product: ProductModel): Result<Unit>
