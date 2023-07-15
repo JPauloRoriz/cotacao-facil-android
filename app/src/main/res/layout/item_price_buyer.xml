@@ -17,14 +17,14 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvCompanyName"
+            android:id="@+id/tvCodePrice"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textColor="@color/black"
             android:textIsSelectable="true"
             android:textStyle="bold"
-            android:textSize="14sp"
+            android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Cotação 50068" />
@@ -46,20 +46,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="10sp"
+            android:textSize="8sp"
             tools:text="Criada em 10/05/2023 10:14"
-            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
-            app:layout_constraintTop_toBottomOf="@id/tvCompanyName" />
+            app:layout_constraintStart_toStartOf="@id/tvCodePrice"
+            app:layout_constraintTop_toBottomOf="@id/tvCodePrice" />
 
         <TextView
             android:id="@+id/tvStatusLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            tools:text="Status: "
+            android:text="@string/status"
             android:textSize="10sp"
             android:textIsSelectable="true"
-            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintStart_toStartOf="@id/tvCodePrice"
             app:layout_constraintTop_toBottomOf="@id/tvClosingDateLabel" />
 
         <TextView
@@ -68,22 +68,22 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textAllCaps="true"
-            android:textColor="@android:color/holo_green_dark"
+            android:textColor="@color/blackAlpha"
             android:textIsSelectable="true"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@id/tvStatusLabel"
             app:layout_constraintTop_toTopOf="@id/tvStatusLabel"
             app:layout_constraintBottom_toBottomOf="@id/tvStatusLabel"
-            tools:text="ABERTA" />
+            tools:text="Aberto" />
 
         <TextView
             android:id="@+id/tvProductQuantityLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            tools:text="Quantidade de produtos:"
+            android:text="@string/quantity_products"
             android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintStart_toStartOf="@id/tvCodePrice"
             app:layout_constraintTop_toBottomOf="@id/tvClosureTypeLabel" />
 
         <TextView
@@ -92,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:textColor="@color/black"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@id/tvProductQuantityLabel"
             app:layout_constraintTop_toTopOf="@id/tvProductQuantityLabel"
             tools:text="23" />
@@ -102,9 +102,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="10sp"
+            android:textSize="8sp"
             tools:text="Encerra em 15/10/2013 10:14"
-            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintStart_toStartOf="@id/tvCodePrice"
             app:layout_constraintTop_toBottomOf="@id/tvStatusLabel" />
 
         <TextView
@@ -112,9 +112,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            tools:text="Fornecedores:"
+            android:text="@string/partners"
             android:textSize="10sp"
-            app:layout_constraintStart_toStartOf="@id/tvCompanyName"
+            app:layout_constraintStart_toStartOf="@id/tvCodePrice"
             app:layout_constraintTop_toBottomOf="@id/tvCreationDateLabel" />
 
         <TextView
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textColor="@color/black"
-            android:textSize="12sp"
+            android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@id/tvClosureTypeLabel"
             app:layout_constraintTop_toTopOf="@id/tvClosureTypeLabel"
             tools:layout_editor_absoluteX="16dp"

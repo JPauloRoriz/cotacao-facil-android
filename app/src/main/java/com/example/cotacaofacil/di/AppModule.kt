@@ -15,6 +15,8 @@ import com.example.cotacaofacil.data.repository.history.HistoryRepositoryImpl
 import com.example.cotacaofacil.data.repository.history.contract.HistoryRepository
 import com.example.cotacaofacil.data.repository.partner.PartnerRepositoryImpl
 import com.example.cotacaofacil.data.repository.partner.contract.PartnerRepository
+import com.example.cotacaofacil.data.repository.price.PriceRepository
+import com.example.cotacaofacil.data.repository.price.PriceRepositoryImpl
 import com.example.cotacaofacil.data.repository.product.ProductRepositoryImpl
 import com.example.cotacaofacil.data.repository.product.contract.ProductRepository
 import com.example.cotacaofacil.data.repository.user.UserRepositoryImpl
@@ -28,37 +30,43 @@ import com.example.cotacaofacil.data.service.history.HistoryServiceImpl
 import com.example.cotacaofacil.data.service.history.contract.HistoryService
 import com.example.cotacaofacil.data.service.partner.PartnerServiceImpl
 import com.example.cotacaofacil.data.service.partner.contract.PartnerService
+import com.example.cotacaofacil.data.service.price.PriceServiceImpl
+import com.example.cotacaofacil.data.service.price.contract.PriceService
 import com.example.cotacaofacil.data.service.product.ProductServiceImpl
 import com.example.cotacaofacil.data.service.product.contract.ProductService
 import com.example.cotacaofacil.data.service.settings.retrofitConfig
 import com.example.cotacaofacil.data.service.user.UserFirebaseService
 import com.example.cotacaofacil.data.service.user.contract.UserService
 import com.example.cotacaofacil.data.sharedPreferences.SharedPreferencesHelper
+import com.example.cotacaofacil.domain.model.PriceModel
 import com.example.cotacaofacil.domain.usecase.date.CalculationDateFinishPriceUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.date.DateCurrentUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.date.ValidationNextCreatePriceUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.date.contract.CalculationDateFinishPriceUseCase
 import com.example.cotacaofacil.domain.usecase.date.contract.DateCurrentUseCase
 import com.example.cotacaofacil.domain.usecase.date.contract.ValidationNextCreatePriceUseCase
-import com.example.cotacaofacil.domain.usecase.history.DeleteHistoricUseCaseImpl
-import com.example.cotacaofacil.domain.usecase.history.GetAllItemHistoryUseCaseImpl
-import com.example.cotacaofacil.domain.usecase.history.contract.DeleteHistoricUseCase
-import com.example.cotacaofacil.domain.usecase.history.contract.GetAllItemHistoryUseCase
+import com.example.cotacaofacil.domain.usecase.historic.AddHistoricUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.historic.DeleteHistoricUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.historic.GetAllItemHistoricUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.historic.contract.AddHistoricUseCase
+import com.example.cotacaofacil.domain.usecase.historic.contract.DeleteHistoricUseCase
+import com.example.cotacaofacil.domain.usecase.historic.contract.GetAllItemHistoricUseCase
 import com.example.cotacaofacil.domain.usecase.home.GetBodyCompanyModelUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.home.contract.GetBodyCompanyModelUseCase
 import com.example.cotacaofacil.domain.usecase.login.LoginUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.login.contract.LoginUseCase
 import com.example.cotacaofacil.domain.usecase.partner.*
 import com.example.cotacaofacil.domain.usecase.partner.contract.*
+import com.example.cotacaofacil.domain.usecase.price.CreatePriceUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.price.GetPricesBuyerUserCaseImpl
+import com.example.cotacaofacil.domain.usecase.price.contract.CreatePriceUseCase
+import com.example.cotacaofacil.domain.usecase.price.contract.GetPricesBuyerUserCase
 import com.example.cotacaofacil.domain.usecase.product.*
 import com.example.cotacaofacil.domain.usecase.product.contract.*
 import com.example.cotacaofacil.domain.usecase.register.RegisterUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.register.contract.RegisterUseCase
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.HomeBuyerViewModel
-import com.example.cotacaofacil.presentation.viewmodel.buyer.price.CreatePriceViewModel
-import com.example.cotacaofacil.presentation.viewmodel.buyer.price.EditDateHourViewModel
-import com.example.cotacaofacil.presentation.viewmodel.buyer.price.PriceBuyerViewModel
-import com.example.cotacaofacil.presentation.viewmodel.buyer.price.SelectProductsViewModel
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.*
 import com.example.cotacaofacil.presentation.viewmodel.history.HistoryViewModel
 import com.example.cotacaofacil.presentation.viewmodel.login.LoginViewModel
 import com.example.cotacaofacil.presentation.viewmodel.partner.PartnerViewModel
@@ -86,10 +94,11 @@ val appModule = module {
     viewModel { StockBuyerViewModel(get(), get(), get(), get(), get()) }
     viewModel { HomeBuyerViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { HomeProviderViewModel(get(), get(), get(), get(), get()) }
-    viewModel { PriceBuyerViewModel() }
+    viewModel { PriceBuyerViewModel(get(), get(), get()) }
     viewModel { CreatePriceViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { EditDateHourViewModel(get(), get()) }
-    viewModel { SelectProductsViewModel(get(), get(), get()) }
+    viewModel { (priceModel: PriceModel) -> SelectProductsViewModel(get(), get(), get(), get(), priceModel = priceModel) }
+    viewModel { (priceModel: PriceModel) -> ReportInitPriceViewModel(priceModel = priceModel, get(), get(), get()) }
 
 
     //useCase
@@ -100,7 +109,7 @@ val appModule = module {
     factory<AddRequestPartnerUseCase> { AddRequestRequestPartnerUseCaseImpl(get(), get(), get()) }
     factory<RejectRequestPartnerUseCase> { RejectRequestPartnerUseCaseImpl(get(), get(), get()) }
     factory<AcceptRequestPartnerUseCase> { AcceptRequestPartnerUseCaseImpl(get(), get(), get()) }
-    factory<GetAllItemHistoryUseCase> { GetAllItemHistoryUseCaseImpl(get()) }
+    factory<GetAllItemHistoricUseCase> { GetAllItemHistoricUseCaseImpl(get()) }
     factory<GetAllListSpinnerOptionsUseCase> { GetAllListSpinnerOptionsUseCaseImpl(get()) }
     factory<SaveProductionUseCase> { SaveProductionUseCaseImpl(get()) }
     factory<GetAllByCnpjProductsUseCase> { GetAllByCnpjProductsUseCaseImpl(get()) }
@@ -112,6 +121,9 @@ val appModule = module {
     factory<DateCurrentUseCase> { DateCurrentUseCaseImpl(get()) }
     factory<CalculationDateFinishPriceUseCase> { CalculationDateFinishPriceUseCaseImpl() }
     factory<ValidationNextCreatePriceUseCase> { ValidationNextCreatePriceUseCaseImpl() }
+    factory<CreatePriceUseCase> { CreatePriceUseCaseImpl(get()) }
+    factory<AddHistoricUseCase> { AddHistoricUseCaseImpl(get()) }
+    factory<GetPricesBuyerUserCase> { GetPricesBuyerUserCaseImpl(get()) }
 
 
     //repository
@@ -121,6 +133,7 @@ val appModule = module {
     factory<HistoryRepository> { HistoryRepositoryImpl(get()) }
     factory<ProductRepository> { ProductRepositoryImpl(get(), get(), get()) }
     factory<DateCurrentRepository> { DateCurrentRepositoryImpl(get()) }
+    factory<PriceRepository> { PriceRepositoryImpl(get()) }
 
 
     //service
@@ -130,6 +143,7 @@ val appModule = module {
     single<HistoryService> { HistoryServiceImpl(get(), get()) }
     single<ProductService> { ProductServiceImpl(get()) }
     single<DateCurrentService> { DateCurrentServiceServiceImpl() }
+    single<PriceService> { PriceServiceImpl(get(), get()) }
 
     //helper
     single { SpinnerListHelper() }

@@ -1,5 +1,6 @@
 package com.example.cotacaofacil.domain.usecase.date
 
+import com.example.cotacaofacil.domain.Extensions.Companion.verifyAutoClose
 import com.example.cotacaofacil.domain.exception.*
 import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.model.PriceModel
@@ -15,7 +16,8 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
         date: Long?,
         dateDelivery: Long,
         partners: MutableList<PartnerModel>,
-        priority: Int,
+        description: String,
+        priority: PriorityPrice?,
         currentDate: Long
     ): Result<PriceModel> {
         var exception: Exception? = null
@@ -34,7 +36,7 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
             }
         } else if (partnersSelect.size < 2) {
             exception = MinTwoProvidersInPriceException()
-        } else if (priority == -1) {
+        } else if (priority == null) {
             exception = PriorityIsEmptyException()
         }
         if (exception == null) {
@@ -53,16 +55,17 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
             Result.success(
                 PriceModel(
                     code = "",
-                    mutableListOf(),
-                    partners,
-                    currentDate,
-                    date,
-                    PriorityPrice.AVERAGE,
-                    "",
-                    autoClose,
-                    allowAllPartners,
-                    dateDelivery,
-                    StatusPrice.OPEN
+                    productsPrice = mutableListOf(),
+                    partnersAuthorized = partners,
+                    dateStartPrice = currentDate,
+                    dateFinishPrice = date?.verifyAutoClose(autoClose),
+                    priority = PriorityPrice.AVERAGE,
+                    cnpjBuyerCreator = "",
+                    closeAutomatic = autoClose,
+                    allowAllProvider = allowAllPartners,
+                    deliveryDate = dateDelivery,
+                    description = description,
+                    status = StatusPrice.OPEN
 
                 )
             )

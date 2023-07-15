@@ -1,4 +1,4 @@
-package com.example.cotacaofacil.domain.usecase.history.contract
+package com.example.cotacaofacil.domain.usecase.historic.contract
 
 import com.example.cotacaofacil.domain.model.HistoryModel
 

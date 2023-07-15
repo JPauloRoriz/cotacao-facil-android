@@ -8,8 +8,8 @@ import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.domain.exception.HistoricEmptyException
 import com.example.cotacaofacil.domain.model.HistoryModel
-import com.example.cotacaofacil.domain.usecase.history.contract.DeleteHistoricUseCase
-import com.example.cotacaofacil.domain.usecase.history.contract.GetAllItemHistoryUseCase
+import com.example.cotacaofacil.domain.usecase.historic.contract.DeleteHistoricUseCase
+import com.example.cotacaofacil.domain.usecase.historic.contract.GetAllItemHistoricUseCase
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
 import com.example.cotacaofacil.presentation.viewmodel.history.model.HistoryEvent
 import com.example.cotacaofacil.presentation.viewmodel.history.model.HistoryState
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class HistoryViewModel(
     private val context: Context,
-    private val getAllItemHistoryUseCase: GetAllItemHistoryUseCase,
+    private val getAllItemHistoricUseCase: GetAllItemHistoricUseCase,
     private val deleteHistoricUseCase: DeleteHistoricUseCase,
     private val userHelper: UserHelper
 ) : ViewModel() {
@@ -32,10 +32,10 @@ class HistoryViewModel(
     }
 
     fun getAllItemHistory() {
-        stateLiveData.postValue(stateLiveData.value?.copy(isLoading = true, "", showImageError = false))
+        stateLiveData.postValue(stateLiveData.value?.copy(isLoading = true, messageError = "", showImageError = false))
         viewModelScope.launch(Dispatchers.IO) {
             user?.cnpj?.let {
-                getAllItemHistoryUseCase.invoke(it)
+                getAllItemHistoricUseCase.invoke(it)
                     .onSuccess {
                         val historyModelList = mutableListOf<HistoryModel>()
                         historyModelList.addAll(it as MutableList<HistoryModel>)

@@ -82,7 +82,6 @@ class CreatePriceFragment : Fragment() {
                         .setExitAnim(R.anim.slide_out_left)
                         .setPopEnterAnim(R.anim.slide_out_right)
                         .setPopExitAnim(R.anim.slide_in_left)
-                        .setRestoreState(true)
                         .build()
                     val bundle = Bundle()
                     bundle.putParcelable(PRICE_MODEL, event.priceModel)
@@ -107,11 +106,12 @@ class CreatePriceFragment : Fragment() {
         binding.buttonNext.setOnClickListener {
             val autoClose = binding.switchAutoClose.isChecked
             val allowAllPartners = binding.switchAllPartner.isChecked
-            val date = binding.buttonDateAndHour.text.toString().toDateTimeLong()
+            val dateFinish = binding.buttonDateAndHour.text.toString().toDateTimeLong()
             val dateDelivery = binding.buttonDateAndHourDelivery.text.toString().toDateTimeLong()
             val quantityPartners = adapter.listPartner
-            val priority = binding.radioGroupPriority.checkedRadioButtonId
-            viewModel.tapOnButtonNext(autoClose, allowAllPartners, date, dateDelivery, quantityPartners, priority)
+            val priority = viewModel.selectPriority(binding.radioButton.isChecked, binding.radioButton2.isChecked, binding.radioButton3.isChecked)
+            val description = binding.editTextDescription.text.toString()
+            viewModel.tapOnButtonNext(autoClose, allowAllPartners, dateFinish, dateDelivery, quantityPartners, description, priority)
         }
 
         adapter.clickPartner = {

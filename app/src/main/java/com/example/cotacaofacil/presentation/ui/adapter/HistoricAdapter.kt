@@ -71,13 +71,15 @@ class HistoricAdapter : RecyclerView.Adapter<HistoricAdapter.HistoricViewHolder>
             historyModel.isSelected = binding.checkBoxSelected.isSelected
             when (historyModel.typeHistory) {
                 CANCEL_PRICE -> {
-                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_history)
+                    binding.imageViewIconHistory.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_price));
+                    binding.textViewTitleHistory.text = binding.root.context.getString(R.string.text_title_add_price)
+                    binding.textViewDescription.text = binding.root.context.getString(R.string.text_add_price, historyModel.nameAssistant)
                 }
                 FINISH_PRICE -> {
-                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_history)
+                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_price)
                 }
                 CREATE_PRICE -> {
-                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_history)
+                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_price)
                 }
                 NEW_PARTNER_ADD -> {
                     binding.imageViewIconHistory.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_add_accepted));

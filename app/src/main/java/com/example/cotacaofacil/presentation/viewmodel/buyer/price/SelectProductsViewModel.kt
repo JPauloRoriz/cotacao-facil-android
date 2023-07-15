@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.domain.Extensions.Companion.toProductPriceModel
+import com.example.cotacaofacil.domain.model.PriceModel
+import com.example.cotacaofacil.domain.model.ProductModel
 import com.example.cotacaofacil.domain.model.ProductPriceModel
 import com.example.cotacaofacil.domain.usecase.product.contract.GetAllByCnpjProductsUseCase
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
@@ -18,7 +20,9 @@ import kotlinx.coroutines.launch
 class SelectProductsViewModel(
     private val userHelper: UserHelper,
     private val productsUseCase: GetAllByCnpjProductsUseCase,
-    private val context: Context
+    private val getAllProductsUseCase: GetAllByCnpjProductsUseCase,
+    private val context: Context,
+    private val priceModel: PriceModel
 ) : ViewModel() {
     val stateLiveData = MutableLiveData(SelectProductsState())
     val eventLiveData = SingleLiveEvent<SelectProductsEvent>()
@@ -48,7 +52,7 @@ class SelectProductsViewModel(
                                     showMessageError = true,
                                     isLoading = false,
 
-                                )
+                                    )
                             )
                         } else {
                             listAllProductsPrice = listProductModel.toProductPriceModel()
@@ -58,7 +62,7 @@ class SelectProductsViewModel(
                                     products = listAllProductsPrice,
                                     showMessageError = false,
                                     isLoading = false,
-                                    )
+                                )
                             )
                         }
                     }
@@ -70,23 +74,45 @@ class SelectProductsViewModel(
         }
     }
 
-    fun filterList(position: Int?) {
+    fun filterList(position: Int?, textSearch: String) {
         if (position == 1) {
-            stateLiveData.postValue(stateLiveData.value?.products?.filter { it.productModel.isFavorite }?.toMutableList()
-                ?.let { stateLiveData.value?.copy(products = it) })
+            val listFavorites = stateLiveData.value?.products?.filter { it.productModel.isFavorite }?.toMutableList()
+
+            if (textSearch.isNotEmpty()) {
+                val result = mutableListOf<ProductPriceModel>()
+                listFavorites?.forEach { productModel ->
+                    if (productModel.productModel.code.contains(textSearch, true)) {
+                        result.add(productModel)
+                    }
+                }
+                stateLiveData.postValue(stateLiveData.value?.copy(products = result))
+            } else {
+                listFavorites?.let { stateLiveData.value?.copy(products = it) }
+            }
         } else {
-            stateLiveData.postValue(stateLiveData.value?.products?.filter { it.productModel.isFavorite }?.toMutableList()
-                ?.let { stateLiveData.value?.copy(products = listAllProductsPrice, messageError = "") })
+            if (textSearch.isNotEmpty()) {
+                val result = mutableListOf<ProductPriceModel>()
+                listAllProductsPrice.forEach { productModel ->
+                    if (productModel.productModel.code.contains(textSearch, true)) {
+                        result.add(productModel)
+                    }
+                }
+                stateLiveData.postValue(stateLiveData.value?.copy(products = result))
+            } else {
+                stateLiveData.postValue(stateLiveData.value?.products?.filter { it.productModel.isFavorite }?.toMutableList()
+                    ?.let { stateLiveData.value?.copy(products = listAllProductsPrice, messageError = "") })
+            }
         }
     }
 
     fun tapOnNext() {
-        val listSelects = listAllProductsPrice.filter { it.isSelected }
+        val listSelects = listAllProductsPrice.filter { it.isSelected }.toMutableList()
         if (listSelects.isEmpty()) {
+//            stateLiveData.postValue(stateLiveData.value?.copy(products =  listSelects) )
             eventLiveData.postValue(SelectProductsEvent.ErrorSelectMinOneProduct(context.getString(R.string.min_one_product_price)))
         } else {
-            stateLiveData.postValue(stateLiveData.value?.copy(messageError = ""))
-            eventLiveData.postValue(SelectProductsEvent.Next)
+            priceModel.productsPrice = listSelects.toMutableList()
+            eventLiveData.postValue(SelectProductsEvent.Next(priceModel))
         }
     }
 
@@ -101,6 +127,48 @@ class SelectProductsViewModel(
 
     fun tapOnSelectProduct(it: ProductPriceModel) {
         verifyButton()
+    }
+
+    fun updateListProducts(listProductsPrice : MutableList<ProductPriceModel>){
+        eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listProductsPrice))
+    }
+
+    fun performSearch(query: String?, selectedTabPosition: Int, products: MutableList<ProductPriceModel>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            userHelper.user?.cnpj?.let {
+                var newListProducts: MutableList<ProductModel>?
+                getAllProductsUseCase.invoke(it)
+                    .onSuccess { listProducts ->
+                        if (query?.isNotEmpty() == true) {
+                            newListProducts = if (selectedTabPosition == 1) {
+                                listProducts.filter { it.isFavorite }.toMutableList()
+                            } else {
+                                listProducts
+                            }
+                            val result = mutableListOf<ProductModel>()
+                            newListProducts?.forEach {
+                                if (it.code.contains(query, true)) {
+                                    result.add(it)
+                                }
+
+                            }
+                            eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(result.toProductPriceModel()))
+                        } else {
+                            if (selectedTabPosition == 1) {
+                                val listFavorites = listProducts.filter { it.isFavorite }.toMutableList()
+                                eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listFavorites.toProductPriceModel()))
+                            } else {
+                                eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listProducts.toProductPriceModel()))
+                            }
+
+                        }
+                    }.onFailure {
+                        stateLiveData.postValue(stateLiveData.value?.copy(messageError = context.getString(R.string.message_error_impossible_load_products_stock)))
+                    }
+            }
+        }
+
+
     }
 
 }

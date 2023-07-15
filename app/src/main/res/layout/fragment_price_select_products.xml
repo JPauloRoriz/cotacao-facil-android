@@ -21,21 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-    <ImageButton
-        android:id="@+id/filter_button"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="8dp"
-        android:background="@drawable/shape_type_user"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?android:attr/actionBarItemBackground"
-        android:src="@drawable/ic_filter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
-
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="0dp"
@@ -48,10 +33,10 @@
         android:textSize="12sp"
         app:defaultQueryHint="@string/search_hint_code_product"
         app:iconifiedByDefault="false"
-        app:layout_constraintBottom_toBottomOf="@+id/filter_button"
-        app:layout_constraintEnd_toStartOf="@+id/filter_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/filter_button"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
         app:queryBackground="@null"
         app:queryHint="@string/search_hint_code_product"
         app:searchIcon="@drawable/ic_search" />

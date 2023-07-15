@@ -2,4 +2,5 @@ package com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractPric
 
 sealed class PriceEvent {
     object CreatePrice : PriceEvent()
+    data class ShowDialogSuccess(val code : String) : PriceEvent()
 }

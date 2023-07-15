@@ -5,16 +5,17 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PriceModel(
-    val code : String = "",
-    val productSPrice : MutableList<ProductPriceModel> = mutableListOf(),
+    var code : String = "",
+    var productsPrice : MutableList<ProductPriceModel> = mutableListOf(),
     val partnersAuthorized : MutableList<PartnerModel> = mutableListOf(),
     val dateStartPrice : Long = 0,
-    val dateFinishPrice : Long? = null,
-    val priority : PriorityPrice = PriorityPrice.AVERAGE,
-    val cnpjBuyerCreator : String = "",
-    val isCloseAutomatic : Boolean = true,
-    val allowAllProvider : Boolean = false,
+    val dateFinishPrice : Long? = 0,
+    var priority : PriorityPrice = PriorityPrice.AVERAGE,
+    var cnpjBuyerCreator : String = "",
+    var closeAutomatic : Boolean = true,
+    var allowAllProvider : Boolean = false,
     val deliveryDate : Long = 0,
+    val description : String = "",
     var status : StatusPrice = StatusPrice.OPEN
 ) : Parcelable
 

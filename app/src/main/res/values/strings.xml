@@ -50,9 +50,6 @@
     <string name="camera">Usar a camera</string>
     <string name="gallery">Acessar a galeria</string>
     <string name="remove_photo">Remover foto</string>
-    <string name="error_loading_trainings">Ocorreu um erro ao carregar os treinos</string>
-    <string name="error_loading_exercises">Erro ao carregar os exercicios deste treino</string>
-    <string name="error_upload_image">Não foi possível cadastrar o exercício, por favor tente novamente mais tarde</string>
     <string name="register_cnpj">Digite seu CNPJ</string>
     <string name="cnpj_invalid_exception">Por favor, insira um CNPJ válido</string>
     <string name="default_exception">Erro ao registrar</string>
@@ -103,7 +100,9 @@
     <string name="text_request_rejected_partner">Você rejeitou a silicitação de parceria de %s</string>
     <string name="text_MY_request_rejected_partner">%S rejeitou sua silicitação de parceria</string>
     <string name="text_title_add_partner">Parceiro adicionado</string>
+    <string name="text_title_add_price">Cotação iniciada</string>
     <string name="text_add_partner">%s foi adicionado aos seus parceiros</string>
+    <string name="text_add_price">A cotação de código %s foi iniciada</string>
     <string name="text_delete_partner_adapter">Você deletou %s dos seus parceiros</string>
     <string name="text_receive_request_partner">%s enviou uma solicitação de parceria para vcoê</string>
     <string name="historic">Histórico</string>
@@ -163,6 +162,7 @@
     <string name="add_price">Criar cotação</string>
     <string name="create_price">Criar cotação</string>
     <string name="finish_price_auto">Encerrar automaticamente</string>
+    <string name="finish_price_not_auto">Encerramento manual</string>
     <string name="permission_all_partner">Permitir todos seus parceiros</string>
     <string name="date_finish_price">Data e Hora de Encerramento:</string>
     <string name="high">Alta</string>
@@ -190,6 +190,29 @@
     <string name="select_products_price">Selecione os produtos da cotação:</string>
     <string name="other">Outros</string>
     <string name="min_one_product_price">É necessário selecionar pelo menos um produto para a cotação</string>
+    <string name="init_price">Iniciar cotação</string>
+    <string name="write_quantity_products_price_description">Escolha a quantidade de cada produto que será inserido na cotação:</string>
+    <string name="total_products">Total de produtos:</string>
+    <string name="total_variables_products">Variações de produtos:</string>
+    <string name="date_init_price">Início da cotação:</string>
+    <string name="date_delivery_price">Data da entrega do produto</string>
+    <string name="default_date">Não foi possível buscar essa informação</string>
+    <string name="date_finish_price_table">Data de encerramento:</string>
+    <string name="not_description">Sem descrição.</string>
+    <string name="text_continue">Continuar</string>
+    <string name="continue_description">A cotação de código %s foi criada com sucesso. Os fornecedores já podem colocar preço nos produtos</string>
+    <string name="price_empty_message_error">Ainda não há nenhuma cotação</string>
+    <string name="code_adapter_price">Cotação %s</string>
+    <string name="date_init_price_adapter_price">Criada em %s</string>
+    <string name="date_finish_price_adapter_price">Encerra em %s</string>
+    <string name="message_error_default_price">Não foi possível buscar suas cotações</string>
+    <string name="status">Status:</string>
+    <string name="partners">"Fornecedores: "</string>
+    <string name="quantity_products">Qtd. de produtos:</string>
+    <string name="open">Aberto</string>
+    <string name="canceled">Cancelado</string>
+    <string name="finished">Finalizado</string>
+    <string name="price_init_created">Cotação iniciada</string>
 
 
 </resources>

@@ -341,12 +341,32 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <View
-                android:id="@+id/line_hourDelivery"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/gray"
-                app:layout_constraintBottom_toBottomOf="@+id/constraintLayout_edit_date_and_hour_delivery" />
+            <TextView
+                android:id="@+id/textView_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="@+id/constraintLayout_edit_date_and_hour_delivery"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout_edit_date_and_hour_delivery"
+                android:text="@string/description"
+                />
+
+            <EditText
+                android:id="@+id/editText_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:gravity="top|start"
+                android:lines="4"
+                android:maxLines="4"
+                android:minLines="4"
+                android:background="@drawable/edittext_lines"
+                app:layout_constraintTop_toBottomOf="@+id/textView_description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

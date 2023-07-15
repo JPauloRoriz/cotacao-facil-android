@@ -26,6 +26,7 @@
     <color name="blackAlpha">#86000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#0DBF07</color>
+    <color name="greenButton">#0DAC58</color>
     <color name="white_dark">#FDFBFB</color>
     <color name="white_dark_button">#CAC3C3</color>
     <color name="white_bottom_navigation">#FAF9F9</color>

@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.isGone
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.BottomSheetAddProductBinding
 import com.example.cotacaofacil.domain.model.ProductModel
-
 import com.example.cotacaofacil.presentation.viewmodel.product.AddProductViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.model.ProductAddEvent
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -21,14 +21,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.component.getScopeId
 
 class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: BottomSheetAddProductBinding
     private val viewModel by viewModel<AddProductViewModel>()
-    private var cnpjUser: String? = ""
-    private var productModel: ProductModel? = null
+    var cnpjUser: String? = ""
+    var productModel: ProductModel? = null
+    var updateListProducts: (() -> Unit)? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,15 +42,9 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     }
 
-    companion object {
-        private var updateListProducts: (() -> Unit)? = null
-        fun newInstance(cnpjUser: String?, productModel: ProductModel?, clickSaveProduct: () -> Unit): AddProductBottomSheetDialogFragment {
-            val addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment()
-            addProductBottomSheetDialogFragment.cnpjUser = cnpjUser
-            addProductBottomSheetDialogFragment.productModel = productModel
-            this.updateListProducts = clickSaveProduct
-            return addProductBottomSheetDialogFragment
-        }
+    override fun show(manager: FragmentManager, tag: String?) {
+        if (isAdded) return
+        super.show(manager, tag)
     }
 
 

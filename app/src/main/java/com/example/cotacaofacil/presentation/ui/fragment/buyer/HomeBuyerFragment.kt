@@ -17,6 +17,7 @@ import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.FragmentHomeBuyerBinding
 import com.example.cotacaofacil.presentation.util.BottomNavigationListener
 import com.example.cotacaofacil.presentation.ui.activity.StockBuyerActivity
+import com.example.cotacaofacil.presentation.ui.activity.StockBuyerActivity.Companion.ADD_PRODUCT_BOTTOM_SHEET
 import com.example.cotacaofacil.presentation.ui.dialog.AddProductBottomSheetDialogFragment
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.HomeBuyerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerEvent
@@ -27,6 +28,7 @@ class HomeBuyerFragment() : Fragment() {
     private lateinit var binding: FragmentHomeBuyerBinding
     private var backPressedOnce: Boolean = false
     private var bottomNavigationListener: BottomNavigationListener? = null
+    private var addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment()
 
 
     override fun onCreateView(
@@ -62,9 +64,10 @@ class HomeBuyerFragment() : Fragment() {
                 }
                 is HomeBuyerEvent.ListEmptyProducts -> {
                     Toast.makeText(requireContext(), context?.getString(R.string.products_empty_toast_add), Toast.LENGTH_SHORT).show()
-                    val addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment.newInstance(event.user?.cnpj, null,) {
-
-                    }
+                    addProductBottomSheetDialogFragment.cnpjUser = event.user?.cnpj
+                    addProductBottomSheetDialogFragment.productModel =  null
+                    addProductBottomSheetDialogFragment.updateListProducts = { }
+                    addProductBottomSheetDialogFragment.show(childFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
                     activity?.supportFragmentManager?.let { it1 -> addProductBottomSheetDialogFragment.show(it1, "") }
                 }
                 is HomeBuyerEvent.SuccessListProducts -> {

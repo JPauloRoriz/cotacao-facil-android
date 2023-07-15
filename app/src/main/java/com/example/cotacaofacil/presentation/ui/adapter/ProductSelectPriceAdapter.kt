@@ -25,7 +25,8 @@ class ProductSelectPriceAdapter : RecyclerView.Adapter<ProductSelectPriceAdapter
     override fun getItemCount() = products.size
 
     fun updateList(products: MutableList<ProductPriceModel>) {
-        this.products = products
+        this.products.clear()
+        this.products.addAll(products)
         notifyDataSetChanged()
     }
 

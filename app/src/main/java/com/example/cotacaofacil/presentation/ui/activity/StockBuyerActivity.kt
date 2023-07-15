@@ -23,6 +23,7 @@ class StockBuyerActivity : AppCompatActivity() {
     val user by lazy { intent?.extras?.getParcelable<UserModel>(USER) }
     private val viewModel: StockBuyerViewModel by viewModel { parametersOf(user) }
     private val productAdapter = ProductAdapter()
+    private val addProductBottomSheetDialogFragment by lazy { AddProductBottomSheetDialogFragment() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStockBuyerBinding.inflate(layoutInflater)
@@ -58,8 +59,10 @@ class StockBuyerActivity : AppCompatActivity() {
                     binding.searchView.setQuery("", true)
                 }
                 is StockEvent.EditProduct -> {
-                    AddProductBottomSheetDialogFragment.newInstance(user?.cnpj, event.product) { viewModel.initViewModel(true) }
-                        .show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
+                    addProductBottomSheetDialogFragment.cnpjUser = user?.cnpj
+                    addProductBottomSheetDialogFragment.productModel =  event.product
+                    addProductBottomSheetDialogFragment.updateListProducts = { viewModel.initViewModel(true) }
+                    addProductBottomSheetDialogFragment.show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
                 }
                 is StockEvent.DeleteProduct -> {
                     Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
@@ -119,8 +122,10 @@ class StockBuyerActivity : AppCompatActivity() {
         }
 
         binding.floatingButtonAdd.setOnClickListener {
-            AddProductBottomSheetDialogFragment.newInstance(user?.cnpj, null) { viewModel.initViewModel(true) }
-                .show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
+            addProductBottomSheetDialogFragment.cnpjUser = user?.cnpj
+            addProductBottomSheetDialogFragment.productModel =  null
+            addProductBottomSheetDialogFragment.updateListProducts = { viewModel.initViewModel(true) }
+            addProductBottomSheetDialogFragment.show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
         }
 
         binding.filterButton.setOnClickListener {

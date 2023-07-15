@@ -1,0 +1,122 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:elevation="4dp">
+
+    <!-- Linha superior -->
+    <View
+        android:id="@+id/viewTopLine"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewTopEndLine"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        android:elevation="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/viewBottomLine"
+        app:layout_constraintEnd_toEndOf="@+id/editText_Quantity"
+        app:layout_constraintTop_toTopOf="@id/viewTopLine" />
+
+
+    <View
+        android:id="@+id/viewStartLine"
+        android:layout_width="2dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView_index"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_quantity_shape"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:textColor="@color/black"
+        android:textIsSelectable="true"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/viewBottomLine"
+        app:layout_constraintEnd_toStartOf="@id/tvNameProduct"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewTopLine"
+        tools:text="001" />
+
+    <TextView
+        android:id="@+id/tvNameProduct"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLength="34"
+        android:maxLines="1"
+        android:minLines="1"
+        android:padding="8dp"
+        android:textIsSelectable="true"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/editText_Quantity"
+        app:layout_constraintStart_toEndOf="@+id/textView_index"
+        app:layout_constraintTop_toBottomOf="@id/viewTopLine"
+        tools:text="Arroz Rei - 2 kg" />
+
+    <View
+        android:id="@+id/viewEndTextNameProductLine"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvNameProduct"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewEndLine"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Quantidade -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editText_Quantity"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_quantity_shape"
+        android:backgroundTint="@color/colorSecundary"
+        android:gravity="center"
+        android:inputType="number"
+        android:maxLength="4"
+        android:padding="8dp"
+        style="@style/EditTextCursor"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/viewBottomLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/viewTopLine" />
+
+    <!-- Linha inferior -->
+    <View
+        android:id="@+id/viewBottomLine"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNameProduct" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

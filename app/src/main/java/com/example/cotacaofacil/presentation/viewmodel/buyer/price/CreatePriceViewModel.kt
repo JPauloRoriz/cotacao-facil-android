@@ -185,46 +185,30 @@ class CreatePriceViewModel(
         date: Long,
         dateDelivery: Long,
         partners: MutableList<PartnerModel>,
-        priority: Int
+        description: String,
+        priority: PriorityPrice?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             currentDateUseCase.invoke()
                 .onSuccess { currentDate ->
-                    val dateFinish: Long? = if (autoClose) null else date
                     validationNextCreatePriceUseCase.invoke(
                         autoClose,
                         allowAllPartners,
-                        dateFinish,
+                        date,
                         dateDelivery,
                         partners,
+                        description,
                         priority,
                         currentDate
                     )
-                        .onSuccess {
-                            val priorityPrice: PriorityPrice = when (priority) {
-                                0 -> {
-                                    PriorityPrice.HIGH
+                        .onSuccess { priceModel ->
+                            val priorityPrice: PriorityPrice? = priority
+                            user?.cnpj?.let { cnpj ->
+                                priorityPrice?.let { priority ->
+                                    priceModel.cnpjBuyerCreator = cnpj
+                                    priceModel.priority = priority
+                                    priceModel
                                 }
-                                1 -> {
-                                    PriorityPrice.AVERAGE
-                                }
-                                2 -> {
-                                    PriorityPrice.LOW
-                                }
-                                else -> {
-                                    PriorityPrice.AVERAGE
-                                }
-                            }
-                            val priceModel = user?.cnpj?.let { cnpj ->
-                                PriceModel(
-                                    code = "",
-                                    productSPrice = mutableListOf(),
-                                    partnersAuthorized = partners,
-                                    dateStartPrice = currentDate,
-                                    dateFinishPrice = dateFinish,
-                                    priority = priorityPrice,
-                                    cnpjBuyerCreator = cnpj
-                                )
                             } ?: PriceModel()
                             createPriceEventLiveData.postValue(CreatePriceEvent.SuccessNext(priceModel))
 
@@ -287,11 +271,23 @@ class CreatePriceViewModel(
 
     }
 
-    fun updateHourFinishPrice(hour: Long, isFinishPrice : Boolean) {
-        if(isFinishPrice){
+    fun updateHourFinishPrice(hour: Long, isFinishPrice: Boolean) {
+        if (isFinishPrice) {
             createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(dateFinishPrice = hour.toFormattedDateTime()))
         } else {
             createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(dateDelivery = hour.toFormattedDateTime()))
+        }
+    }
+
+    fun selectPriority(checkHigh: Boolean, checkAverage: Boolean, checkLow: Boolean): PriorityPrice? {
+        return if (checkHigh) {
+            PriorityPrice.HIGH
+        } else if (checkAverage) {
+            PriorityPrice.AVERAGE
+        } else if (checkLow) {
+            PriorityPrice.LOW
+        } else {
+            null
         }
     }
 }

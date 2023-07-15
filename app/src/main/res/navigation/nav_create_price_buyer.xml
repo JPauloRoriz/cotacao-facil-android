@@ -18,5 +18,13 @@
         android:id="@+id/createPriceSelectProductsFragment"
         android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.CreatePriceSelectProductsFragment"
         android:label="CreatePriceSelectProductsFragment"
-        tools:layout="@layout/fragment_price_select_products"/>
+        tools:layout="@layout/fragment_price_select_products">
+        <action
+            android:id="@+id/action_createPriceSelectProductsFragment_to_reportInitPriceFragment"
+            app:destination="@id/reportInitPriceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/reportInitPriceFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.buyer.ReportInitPriceFragment"
+        android:label="ReportInitPriceFragment" />
 </navigation>

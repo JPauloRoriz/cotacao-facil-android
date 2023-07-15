@@ -25,5 +25,12 @@
 
     </style>
 
+    <style name="EditTextCursor" parent="Widget.AppCompat.EditText">
+        <item name="android:textCursorDrawable">@drawable/custom_cursor</item>
+    </style>
+
+    <style name="RoundedCornersDialog" parent="@style/Theme.MaterialComponents.Dialog">
+        <item name="dialogCornerRadius">20dp</item>
+    </style>
 
 </resources>

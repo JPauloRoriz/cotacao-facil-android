@@ -1,0 +1,71 @@
+package com.example.cotacaofacil.presentation.viewmodel.buyer.price
+
+import android.content.Context
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cotacaofacil.R
+import com.example.cotacaofacil.domain.exception.NotCreatePriceException
+import com.example.cotacaofacil.domain.model.PriceModel
+import com.example.cotacaofacil.domain.model.ProductPriceModel
+import com.example.cotacaofacil.domain.usecase.historic.contract.AddHistoricUseCase
+import com.example.cotacaofacil.domain.usecase.price.contract.CreatePriceUseCase
+import com.example.cotacaofacil.presentation.ui.extension.*
+import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractReportInitPrice.EventReportInitPriceLiveData
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractReportInitPrice.StateReportInitPriceLiveData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+class ReportInitPriceViewModel(
+    private val priceModel: PriceModel,
+    private val createPriceUseCase: CreatePriceUseCase,
+    private val historicUseCase: AddHistoricUseCase,
+    private val context: Context
+) : ViewModel() {
+    val stateLiveData = MutableLiveData(StateReportInitPriceLiveData())
+    val eventLiveData = SingleLiveEvent<EventReportInitPriceLiveData>()
+
+    init {
+        eventLiveData.postValue(EventReportInitPriceLiveData.UpdateListProducts(priceModel.productsPrice))
+        stateLiveData.postValue(
+            stateLiveData.value?.copy(
+                textValueVariablesProducts = priceModel.productsPrice.size.toString(),
+                textValueQuantityProducts = priceModel.productsPrice.size.toString(),
+                textDateDeliveryPrice = priceModel.deliveryDate.toFormattedDateTime(),
+                textDateInitPrice = priceModel.dateStartPrice.toFormattedDateTime(),
+                textDateFinishPrice = priceModel.dateFinishPrice?.dateEmpty(context, priceModel.closeAutomatic)
+                    ?: context.getString(R.string.default_date),
+                colorPriorityPrice = priceModel.priority.toColorPriority(context) ?: ContextCompat.getDrawable(context, R.drawable.ic_ball_yellow),
+                textPriorityPrice = priceModel.priority.toTextPriority(context),
+                descriptionPrice = priceModel.description.notEmpty(context)
+            )
+        )
+    }
+
+    fun updateValuesTotal(productPriceModelList: MutableList<ProductPriceModel>) {
+        var count = 0
+        productPriceModelList.forEach {
+            count += it.quantityProducts
+        }
+        stateLiveData.postValue(stateLiveData.value?.copy(textValueQuantityProducts = count.toString()))
+    }
+
+    fun tapOnInitPrice() {
+        viewModelScope.launch(Dispatchers.IO) {
+            createPriceUseCase.invoke(priceModel)
+                .onSuccess { codePrice ->
+                    historicUseCase.addHistoricAddPrice(priceModel.dateStartPrice, priceModel.cnpjBuyerCreator, codePrice)
+                    eventLiveData.postValue(EventReportInitPriceLiveData.SuccessAddPrice(codePrice))
+                }
+                .onFailure {
+                    when (it) {
+                        is NotCreatePriceException -> {}
+                        else -> {}
+                    }
+                }
+        }
+
+    }
+}

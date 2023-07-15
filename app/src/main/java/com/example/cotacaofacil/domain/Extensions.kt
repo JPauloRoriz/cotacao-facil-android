@@ -108,5 +108,9 @@ class Extensions {
             return listProductPriceModel
         }
 
+        fun Long.verifyAutoClose(autoClose : Boolean) : Long{
+           return if(autoClose) -1L else this
+        }
+
     }
 }

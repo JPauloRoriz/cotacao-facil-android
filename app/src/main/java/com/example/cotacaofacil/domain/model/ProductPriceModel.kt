@@ -7,5 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class ProductPriceModel(
      val productModel: ProductModel = ProductModel(),
      val usersPrice: MutableList<UserPrice> = mutableListOf(),
-     var isSelected : Boolean = false
+     var isSelected : Boolean = false,
+     var quantityProducts : Int = 1
 ) : Parcelable

@@ -13,4 +13,8 @@ class CreatePriceActivity : AppCompatActivity() {
         setContentView(binding.root)
     }
 
+    companion object{
+        const val SUCCESS_CREATE_PRICE = 2606
+    }
+
 }
