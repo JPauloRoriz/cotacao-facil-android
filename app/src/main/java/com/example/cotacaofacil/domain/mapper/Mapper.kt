@@ -12,7 +12,8 @@ fun Result<UserResponse>.mapperUser(): Result<UserModel> {
             id = it.id,
             cnpj = it.cnpj,
             email = it.email,
-            userTypeSelected = it.userTypeSelected
+            userTypeSelected = it.userTypeSelected,
+            nameCorporation = it.nameCorporation
         )
     }
 }
@@ -69,4 +70,31 @@ fun HistoryModel.toHistoricResponse(): HistoricResponse {
         this.date,
         this.nameAssistant
     )
+}
+
+fun PriceModel.toPriceEditModel(cnpjPartner : String): PriceEditModel {
+    return PriceEditModel(
+        code = code,
+        dateFinishPrice = dateFinishPrice,
+        productsEdit = productsPrice.toProductEditPrice(cnpjPartner),
+        cnpjBuyer = cnpjBuyerCreator
+    )
+}
+
+fun MutableList<ProductPriceModel>.toProductEditPrice(cnpj: String): MutableList<ProductPriceEditPriceModel> {
+    return map { productPriceModel ->
+        productPriceModel.toProductEditPriceModel(cnpj = cnpj)
+    }.toMutableList()
+}
+
+fun ProductPriceModel.toProductEditPriceModel(cnpj: String): ProductPriceEditPriceModel {
+    return ProductPriceEditPriceModel(
+        productModel = productModel,
+        price = usersPrice.toPriceByUser(cnpj = cnpj),
+        quantityProducts = quantityProducts
+    )
+}
+
+fun MutableList<UserPrice>.toPriceByUser(cnpj: String): Double {
+    return find { it.cnpjProvider == cnpj }?.price ?: 0.0
 }

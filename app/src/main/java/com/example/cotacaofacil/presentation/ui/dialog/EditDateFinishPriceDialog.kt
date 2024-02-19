@@ -11,6 +11,7 @@ import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.DialogDateHourBinding
 import com.example.cotacaofacil.presentation.viewmodel.buyer.price.EditDateHourViewModel
 import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractDateHourPrice.DateEvent
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractDateHourPrice.TimeOfDay
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
 
@@ -34,6 +35,9 @@ class EditDateFinishPriceDialog : DialogFragment() {
         }
     }
 
+    override fun getTheme(): Int {
+        return R.style.RoundedCornersThemeDialog
+    }
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DialogDateHourBinding.inflate(inflater, container, false)
         return binding?.root
@@ -47,7 +51,8 @@ class EditDateFinishPriceDialog : DialogFragment() {
     }
 
     private fun setupView() {
-        viewModel.setupView(dateFinishPrice, hour)
+        dateFinishPrice?.let { viewModel.setupView(it, hour) }
+        (dateFinishPrice?.let { Date(it) })?.hours?.let { viewModel.changeHour(it) }
     }
 
     private fun setupListeners() {
@@ -85,8 +90,14 @@ class EditDateFinishPriceDialog : DialogFragment() {
             when (event) {
                 is DateEvent.UpdateDate -> {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        binding?.timePicker?.hour = event.hour.get(Calendar.HOUR_OF_DAY)
-                        binding?.timePicker?.minute = event.hour.get(Calendar.MINUTE)
+                        val calendar = Calendar.getInstance()
+                        calendar.timeInMillis = event.hour.time
+                        val year = calendar.get(Calendar.YEAR)
+                        val month = calendar.get(Calendar.MONTH)
+                        val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH)
+                        binding?.datePicker?.updateDate(year, month, dayOfMonth)
+                        binding?.timePicker?.hour = event.hour.hours
+                        binding?.timePicker?.minute = event.hour.minutes
                     }
 
                 }
@@ -98,6 +109,7 @@ class EditDateFinishPriceDialog : DialogFragment() {
             }
 
         }
+
         viewModel.state.observe(viewLifecycleOwner) { state ->
             binding?.textViewMessageError?.text = state.messageError
 //            binding?.datePicker?.updateDate(
@@ -107,20 +119,32 @@ class EditDateFinishPriceDialog : DialogFragment() {
 //            )
 
             val empty = 0
-            if (state.isNight)
-                binding?.textViewIconHour?.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    R.drawable.icon_night,
-                    empty,
-                    empty,
-                    empty
-                )
-            else
-                binding?.textViewIconHour?.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                    R.drawable.icon_sun,
-                    empty,
-                    empty,
-                    empty
-                )
+            when (state.periodDay){
+                TimeOfDay.NIGHT -> {
+                    binding?.textViewIconHour?.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.icon_night,
+                        empty,
+                        empty,
+                        empty
+                    )
+                }
+                TimeOfDay.MORNING -> {
+                    binding?.textViewIconHour?.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.icon_sun,
+                        empty,
+                        empty,
+                        empty
+                    )
+                }
+                TimeOfDay.AFTERNOON -> {
+                    binding?.textViewIconHour?.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        R.drawable.afternoon,
+                        empty,
+                        empty,
+                        empty
+                    )
+                }
+            }
         }
     }
 

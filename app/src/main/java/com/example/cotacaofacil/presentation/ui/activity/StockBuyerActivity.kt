@@ -23,7 +23,8 @@ class StockBuyerActivity : AppCompatActivity() {
     val user by lazy { intent?.extras?.getParcelable<UserModel>(USER) }
     private val viewModel: StockBuyerViewModel by viewModel { parametersOf(user) }
     private val productAdapter = ProductAdapter()
-    private val addProductBottomSheetDialogFragment by lazy { AddProductBottomSheetDialogFragment() }
+    private val fragmentManager = supportFragmentManager
+    private var isShowDialog = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStockBuyerBinding.inflate(layoutInflater)
@@ -59,10 +60,15 @@ class StockBuyerActivity : AppCompatActivity() {
                     binding.searchView.setQuery("", true)
                 }
                 is StockEvent.EditProduct -> {
-                    addProductBottomSheetDialogFragment.cnpjUser = user?.cnpj
-                    addProductBottomSheetDialogFragment.productModel =  event.product
-                    addProductBottomSheetDialogFragment.updateListProducts = { viewModel.initViewModel(true) }
-                    addProductBottomSheetDialogFragment.show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
+                    if (!isShowDialog){
+                        AddProductBottomSheetDialogFragment.newInstance(
+                            cnpjUser = user?.cnpj,
+                            productModel = event.product,
+                            updateListProducts = { viewModel.initViewModel(true) },
+                            dismissDialog = { isShowDialog = false }
+                        ).show(fragmentManager, EDIT_PRODUCT_BOTTOM_SHEET)
+                    }
+                    isShowDialog = true
                 }
                 is StockEvent.DeleteProduct -> {
                     Toast.makeText(this, event.message, Toast.LENGTH_SHORT).show()
@@ -122,10 +128,15 @@ class StockBuyerActivity : AppCompatActivity() {
         }
 
         binding.floatingButtonAdd.setOnClickListener {
-            addProductBottomSheetDialogFragment.cnpjUser = user?.cnpj
-            addProductBottomSheetDialogFragment.productModel =  null
-            addProductBottomSheetDialogFragment.updateListProducts = { viewModel.initViewModel(true) }
-            addProductBottomSheetDialogFragment.show(supportFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
+            if(!isShowDialog){
+                AddProductBottomSheetDialogFragment.newInstance(
+                    cnpjUser = user?.cnpj,
+                    productModel = null,
+                    updateListProducts = { viewModel.initViewModel(true) },
+                    dismissDialog = { isShowDialog = false }
+                ).show(fragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
+            }
+            isShowDialog = true
         }
 
         binding.filterButton.setOnClickListener {
@@ -161,9 +172,18 @@ class StockBuyerActivity : AppCompatActivity() {
         super.onBackPressed()
     }
 
+    override fun onResume() {
+        if (user == null) {
+            //criar uma viewmodel e se for nulo buscar o user da mesma forma que o login buscou para passar para cá
+            finish()
+        }
+        super.onResume()
+    }
+
     companion object {
         const val USER = "user"
         const val QUANTITY_PRODUCTS = "QUANTITY_PRODUCTS"
         const val ADD_PRODUCT_BOTTOM_SHEET = "AddProductBottomSheetDialogFragment"
+        const val EDIT_PRODUCT_BOTTOM_SHEET = "EditProductBottomSheetDialogFragment"
     }
 }

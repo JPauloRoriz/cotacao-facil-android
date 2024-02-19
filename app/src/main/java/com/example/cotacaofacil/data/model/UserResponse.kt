@@ -9,5 +9,6 @@ data class UserResponse(
     val userTypeSelected : UserTypeSelected = UserTypeSelected(
         userProviderSelected = true,
         userBuyerSelected = false
-    )
+    ),
+    val nameCorporation : String = ""
 )

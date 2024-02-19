@@ -9,7 +9,7 @@ class AddHistoricUseCaseImpl(
     private val repository: HistoryRepository
 ) : AddHistoricUseCase{
     override suspend fun addHistoricAddPrice(date: Long, cnpjUser: String, codePrice: String) {
-        addHistoryModel(TypeHistory.CREATE_PRICE, date, "", cnpjUser)
+        addHistoryModel(TypeHistory.CREATE_PRICE, date, codePrice, cnpjUser)
     }
 
     private suspend fun addHistoryModel(typeHistory: TypeHistory, date: Long, codePrice: String, cnpj: String) {

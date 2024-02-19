@@ -4,6 +4,7 @@ import com.example.cotacaofacil.data.model.util.toBodyCompanyModel
 import com.example.cotacaofacil.data.repository.bodyCompany.contract.BodyCompanyRepository
 import com.example.cotacaofacil.data.service.cnpj.CnpjServiceImpl
 import com.example.cotacaofacil.data.service.cnpj.contract.BodyCompanyService
+import com.example.cotacaofacil.domain.exception.DefaultException
 import com.example.cotacaofacil.domain.mapper.mapper
 import com.example.cotacaofacil.domain.model.BodyCompanyModel
 import com.example.cotacaofacil.presentation.viewmodel.register.model.UserTypeSelected
@@ -19,7 +20,7 @@ class BodyCompanyRepositoryImpl(
             Result.success(cnpjService.getCompanyByCnpj(cnpj).toBodyCompanyModel())
 
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(DefaultException())
         }
 
     }

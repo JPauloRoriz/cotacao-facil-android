@@ -137,6 +137,7 @@
     <string name="message_error_impossible_load_products_stock">Não foi possível carregar os produtos do Estoque</string>
     <string name="message_error_text_stock">Não foi possível carregar o estoque</string>
     <string name="products_empty_toast_add">Você ainda não possui produtos no estoque</string>
+    <string name="products_empty_find">Nenhum produto encontrado</string>
     <string name="product">Produto :</string>
     <string name="price">Cotações</string>
     <string name="click_again_to_close">Aperte mais uma vez para sair</string>
@@ -151,6 +152,7 @@
     <string name="all">Todos</string>
     <string name="favorites">Favoritos</string>
     <string name="edit_product">Editar produto</string>
+    <string name="edited_product">Produto modificado com sucesso</string>
     <string name="impossible_delete_product">Não foi possível excluir o produto</string>
     <string name="product_deleted_success">Produto excluído com sucesso</string>
     <string name="delete_product">Tem certeza que deseja excluir esse produto?</string>
@@ -162,14 +164,15 @@
     <string name="add_price">Criar cotação</string>
     <string name="create_price">Criar cotação</string>
     <string name="finish_price_auto">Encerrar automaticamente</string>
-    <string name="finish_price_not_auto">Encerramento manual</string>
+    <string name="finish_price_not_auto">Sem data para encerramento</string>
+    <string name="finish_price_not_auto_description">Manual</string>
     <string name="permission_all_partner">Permitir todos seus parceiros</string>
     <string name="date_finish_price">Data e Hora de Encerramento:</string>
     <string name="high">Alta</string>
     <string name="average">Média</string>
     <string name="low">Baixa</string>
     <string name="priority">Grau de prioridade: </string>
-    <string name="Select_date">Editar data e hora</string>
+    <string name="Select_date">Salvar data</string>
     <string name="next">Próximio</string>
     <string name="all_partners">Todos</string>
     <string name="write_cnpj">Digite o CNPJ</string>
@@ -206,13 +209,39 @@
     <string name="date_init_price_adapter_price">Criada em %s</string>
     <string name="date_finish_price_adapter_price">Encerra em %s</string>
     <string name="message_error_default_price">Não foi possível buscar suas cotações</string>
+    <string name="message_error_not_find_price">Não foi possível encontrar essa cotação</string>
     <string name="status">Status:</string>
     <string name="partners">"Fornecedores: "</string>
     <string name="quantity_products">Qtd. de produtos:</string>
-    <string name="open">Aberto</string>
-    <string name="canceled">Cancelado</string>
-    <string name="finished">Finalizado</string>
+    <string name="quantity_products_editable">Quantidade : %d</string>
+    <string name="qtd">Qtd.</string>
+    <string name="open">ABERTA</string>
+    <string name="canceled">CANCELADA</string>
+    <string name="finished">FINALIZADA</string>
     <string name="price_init_created">Cotação iniciada</string>
+    <string name="error_date_finish_before_date_delivery">A data de entrega deve ser posterior a data de encerramento da cotação</string>
+    <string name="price_finished_date">Finalizada em %s</string>
+    <string name="price_finish_date">Finaliza em %s</string>
+    <string name="price_canceled_date">Cancelada em %s</string>
+    <string name="tab_price_open">Cotações abertas</string>
+    <string name="tab_price_all">Todas cotações</string>
+    <string name="save_value_price">Salvar preços</string>
+    <string name="edit_price_example">Cotação 606999</string>
+    <string name="price_number">Cotação %s</string>
+    <string name="value_total_by_product">Valor total: R$ %s</string>
+    <string name="value_total_by_product_empty">Valor total: R$ 0,00</string>
+    <string name="ccd_product">Cód: %s</string>
+    <string name="value_real_empty">"R$ 0.00"</string>
+    <string name="value_unit">Valor unitário:</string>
+    <string name="save_price">Registrar preços</string>
+    <string name="edit_price_success">Seus preços na cotação %s foram salvos</string>
+    <string name="produtos_price_title">Produtos da Cotação</string>
+    <string name="real">R$</string>
+    <string name="error_edit_price">É necessário editar pelo menos um preço para salvar as alterações</string>
+    <string name="participate">Participando</string>
+    <string name="cancel_price">Cancelar Cotação</string>
+    <string name="finish_price">Fechar cotação</string>
+    <string name="finish_price_manual">Sem data para encerramento</string>
 
 
 </resources>

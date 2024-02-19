@@ -34,9 +34,9 @@ class ProductSelectPriceAdapter : RecyclerView.Adapter<ProductSelectPriceAdapter
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(productPrice: ProductPriceModel, position: Int) {
-            binding.checkBoxIsSelected.isChecked = productPrice.isSelected
             binding.textViewCodeProduct.text = "Cód: ${productPrice.productModel.code}"
             binding.textViewTextDescription.text = productPrice.productModel.description
+            binding.checkBoxIsSelected.isChecked = productPrice.isSelected
 
             binding.cardViewItemProduct.setOnClickListener {
                 productPrice.isSelected = !productPrice.isSelected
@@ -56,8 +56,6 @@ class ProductSelectPriceAdapter : RecyclerView.Adapter<ProductSelectPriceAdapter
                 binding.textViewNameProduct.text =
                     "${productPrice.productModel.name} ${productPrice.productModel.brand} - ${productPrice.productModel.quantity} ${productPrice.productModel.typeMeasurement} "
             }
-
-
         }
     }
 }

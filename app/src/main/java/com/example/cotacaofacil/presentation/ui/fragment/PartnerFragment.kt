@@ -55,22 +55,17 @@ class PartnerFragment : Fragment() {
         }
 
         adapter.clickPartner = { partner ->
-            lifecycleScope.launch {
                 viewModel.tapOnIconPartner(partner)
 
-            }
         }
 
         adapter.clickAcceptPartner = { partner ->
-            lifecycleScope.launch {
                 viewModel.tapOnAcceptPartner(partner)
-            }
+
         }
 
         adapter.clickRejectPartner = { partner ->
-            lifecycleScope.launch {
                 viewModel.tapOnRejectPartner(partner)
-            }
         }
 
         binding.arrow.setOnClickListener {

@@ -10,7 +10,6 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.lifecycleScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.BottomSheetAddProductBinding
 import com.example.cotacaofacil.domain.model.ProductModel
@@ -19,7 +18,6 @@ import com.example.cotacaofacil.presentation.viewmodel.product.model.ProductAddE
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
@@ -29,6 +27,7 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
     var cnpjUser: String? = ""
     var productModel: ProductModel? = null
     var updateListProducts: (() -> Unit)? = null
+    var dismissDialog: (() -> Unit)? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -42,6 +41,17 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     }
 
+    companion object {
+        fun newInstance(cnpjUser: String?, productModel: ProductModel?, updateListProducts: () -> Unit, dismissDialog : () -> Unit): AddProductBottomSheetDialogFragment {
+            val addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment()
+            addProductBottomSheetDialogFragment.cnpjUser = cnpjUser
+            addProductBottomSheetDialogFragment.productModel = productModel
+            addProductBottomSheetDialogFragment.updateListProducts = updateListProducts
+            addProductBottomSheetDialogFragment.dismissDialog = dismissDialog
+            return addProductBottomSheetDialogFragment
+        }
+    }
+
     override fun show(manager: FragmentManager, tag: String?) {
         if (isAdded) return
         super.show(manager, tag)
@@ -52,7 +62,7 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
         val dialog = BottomSheetDialog(requireContext(), theme)
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.behavior.skipCollapsed = true
-        dialog.behavior.isHideable = true
+//        dialog.behavior.isHideable = true
         dialog.behavior.isDraggable = true
 
         return dialog
@@ -69,15 +79,25 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
         viewModel.createOrEdit(productModel)
     }
 
-    private fun setupSpinner(listOptions: MutableList<String>) {
+    private fun setupSpinner(listOptions: MutableList<String>, typeMeasurements: String) {
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, listOptions)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
+        if(typeMeasurements.isNotEmpty()){
+            binding.spinner.setSelection(listOptions.indexOf(typeMeasurements))
+        }
     }
 
     private fun setupListeners() {
         binding.imageViewFavorite.setOnClickListener {
-            viewModel.tapOnIconFavorite(binding.imageViewFavorite.isSelected)
+            viewModel.tapOnIconFavorite(
+                binding.imageViewFavorite.isSelected,
+                productModel, binding.edtNameProduct.text.toString(),
+                binding.edtDescription.text.toString(),
+                binding.edtBrand.text.toString(),
+                binding.spinner.selectedItem.toString(),
+                binding.edtQuantity.text.toString()
+                )
         }
 
         binding.btnSaveProduct.setOnClickListener {
@@ -105,18 +125,12 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
             builder.setNegativeButton(R.string.not) { p0, p1 ->
             }
             builder.create().show()
-
-
         }
     }
 
     private fun setupObservers() {
         viewModel.eventLiveData.observe(viewLifecycleOwner) { event ->
             when (event) {
-                is ProductAddEvent.GetListSpinner -> {
-                    setupSpinner(event.listOptions)
-                }
-
                 is ProductAddEvent.ShowDialogConfirmationDataEmpty -> {
                     val alert = AlertDialog.Builder(requireContext(), R.style.MyDialogTheme)
                     alert.setMessage(
@@ -128,7 +142,6 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     ) { dialog, int -> }.setPositiveButton(
                         R.string.yes
                     ) { dialog, int ->
-                        lifecycleScope.launch {
                             viewModel.tapOnSaveProduct(
                                 event.name,
                                 event.description,
@@ -140,8 +153,6 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
                                 binding.imageViewFavorite.isSelected,
                                 productModel
                             )
-
-                        }
                     }.show()
                 }
 
@@ -155,6 +166,7 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         viewModel.stateLiveData.observe(viewLifecycleOwner) { state ->
+            setupSpinner(state.listSpinner, state.typeMeasurement)
             binding.titleAddProduct.text = state.titleBottomNavigation
             binding.tvMessageError.text = state.messageError
             binding.edtNameProduct.setText(state.nameText)
@@ -165,6 +177,16 @@ class AddProductBottomSheetDialogFragment : BottomSheetDialogFragment() {
             binding.imageViewFavorite.isSelected = state.isFavorite
             binding.imageViewTrash.isGone = state.trashIsGone
         }
+    }
+
+    override fun dismiss() {
+        dismissDialog?.invoke()
+        super.dismiss()
+    }
+
+    override fun onDestroy() {
+        dismissDialog?.invoke()
+        super.onDestroy()
     }
 
 }

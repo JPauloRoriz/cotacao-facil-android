@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class UserPrice(
-    private val cnpjProvider : String = "",
-    private val price : Long = 0
+    val cnpjProvider : String = "",
+    var price : Double = 0.00
 ) : Parcelable

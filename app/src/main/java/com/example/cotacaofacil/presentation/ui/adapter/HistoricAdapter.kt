@@ -37,7 +37,10 @@ class HistoricAdapter : RecyclerView.Adapter<HistoricAdapter.HistoricViewHolder>
             MY_REQUEST_PARTNER_REJECT -> ContextCompat.getColor(context, R.color.red_color)
             SEND_REQUEST_PARTNER -> ContextCompat.getColor(context, R.color.gray)
             SEND_RECEIVE_PARTNER -> ContextCompat.getColor(context, R.color.gray)
-            else -> ContextCompat.getColor(context, R.color.colorPrimary)
+            CREATE_PRICE -> ContextCompat.getColor(context, R.color.colorPrimary)
+            CANCEL_PRICE -> ContextCompat.getColor(context, R.color.colorPrimary)
+            FINISH_PRICE -> ContextCompat.getColor(context, R.color.colorPrimary)
+//            else -> ContextCompat.getColor(context, R.color.colorPrimary)
         }
 
         holder.binding.imageViewIconHistory.setColorFilter(backgroundColor)
@@ -49,7 +52,7 @@ class HistoricAdapter : RecyclerView.Adapter<HistoricAdapter.HistoricViewHolder>
             holder.binding.viewLineTopHistory.visibility = View.VISIBLE
         }
         if (position == listHistoric.size - 1) {
-            holder. binding.viewLineBottomHistory.visibility = View.INVISIBLE
+            holder.binding.viewLineBottomHistory.visibility = View.INVISIBLE
         } else {
             holder.binding.viewLineBottomHistory.visibility = View.VISIBLE
         }
@@ -63,23 +66,28 @@ class HistoricAdapter : RecyclerView.Adapter<HistoricAdapter.HistoricViewHolder>
     inner class HistoricViewHolder(val binding: ItemHistoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(historyModel: HistoryModel, position: Int) {
             binding.textViewDate.text = historyModel.date.formatDateHistoric()
-            
-            binding.imageViewIconHistory.setOnClickListener {
+
+            binding.constraintLayout.setOnLongClickListener {
                 clickIconHistoric?.invoke(historyModel)
+                false
             }
 
             historyModel.isSelected = binding.checkBoxSelected.isSelected
             when (historyModel.typeHistory) {
                 CANCEL_PRICE -> {
                     binding.imageViewIconHistory.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_price));
-                    binding.textViewTitleHistory.text = binding.root.context.getString(R.string.text_title_add_price)
-                    binding.textViewDescription.text = binding.root.context.getString(R.string.text_add_price, historyModel.nameAssistant)
+                    binding.textViewTitleHistory.text = "teste"
+                    binding.textViewDescription.text = "teste"
                 }
                 FINISH_PRICE -> {
-                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_price)
+                    binding.imageViewIconHistory.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_price));
+                    binding.textViewTitleHistory.text = "teste"
+                    binding.textViewDescription.text = "teste"
                 }
                 CREATE_PRICE -> {
-                    binding.imageViewIconHistory.setBackgroundResource(R.drawable.ic_price)
+                    binding.imageViewIconHistory.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_price));
+                    binding.textViewTitleHistory.text = binding.root.context.getString(R.string.text_title_add_price)
+                    binding.textViewDescription.text = binding.root.context.getString(R.string.text_add_price, historyModel.nameAssistant)
                 }
                 NEW_PARTNER_ADD -> {
                     binding.imageViewIconHistory.setImageDrawable(ContextCompat.getDrawable(binding.root.context, R.drawable.ic_add_accepted));

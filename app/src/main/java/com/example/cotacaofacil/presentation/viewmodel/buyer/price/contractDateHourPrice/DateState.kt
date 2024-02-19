@@ -4,6 +4,12 @@ import java.util.*
 
 data class DateState(
     var messageError: String = "",
-    val date: Calendar = Calendar.getInstance(),
-    val isNight: Boolean = false,
+    val date: Long = Date().time,
+    val periodDay: TimeOfDay = TimeOfDay.MORNING,
 )
+
+enum class TimeOfDay {
+    NIGHT,
+    MORNING,
+    AFTERNOON
+}

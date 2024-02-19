@@ -54,7 +54,7 @@ class CreatePriceFragment : Fragment() {
 
                 }
                 CreatePriceEvent.CreatePrice -> {
-                    Toast.makeText(context, "proxmo", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "proximo", Toast.LENGTH_SHORT).show()
                 }
                 is CreatePriceEvent.UpdateListEvent -> {
                     adapter.updateList(event.partnerList)

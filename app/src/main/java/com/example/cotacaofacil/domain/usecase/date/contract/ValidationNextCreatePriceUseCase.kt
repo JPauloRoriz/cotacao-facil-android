@@ -8,11 +8,12 @@ interface ValidationNextCreatePriceUseCase {
     fun invoke(
         autoClose: Boolean,
         allowAllPartners: Boolean,
-        date: Long?,
+        date: Long,
         dateDelivery: Long,
         partners: MutableList<PartnerModel>,
         description: String,
         priority: PriorityPrice?,
-        currentDate: Long
+        currentDate: Long,
+        nameCompanyCreator : String
     ): Result<PriceModel>
 }

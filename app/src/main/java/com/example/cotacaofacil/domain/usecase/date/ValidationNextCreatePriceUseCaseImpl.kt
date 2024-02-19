@@ -13,17 +13,18 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
     override fun invoke(
         autoClose: Boolean,
         allowAllPartners: Boolean,
-        date: Long?,
+        date: Long,
         dateDelivery: Long,
         partners: MutableList<PartnerModel>,
         description: String,
         priority: PriorityPrice?,
-        currentDate: Long
+        currentDate: Long,
+        nameCompanyCreator : String
     ): Result<PriceModel> {
         var exception: Exception? = null
         val partnersSelect = partners.filter { it.isChecked }
 
-        if (autoClose && date != null) {
+        if (autoClose) {
             val currentDateOneHourLater = Calendar.getInstance()
             currentDateOneHourLater.timeInMillis = currentDate
             currentDateOneHourLater.add(Calendar.HOUR_OF_DAY, 1)
@@ -31,14 +32,20 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
                 ScheduleDateForPastException()
             } else if (date < currentDateOneHourLater.timeInMillis) {
                 StLeastOneHourException()
-            } else {
+            }else if (dateDelivery < date) {
+                 DateDeliveryBeforeDateFinishPriceException()
+            }
+            else {
                 null
             }
-        } else if (partnersSelect.size < 2) {
-            exception = MinTwoProvidersInPriceException()
-        } else if (priority == null) {
+        }
+        if (priority == null) {
             exception = PriorityIsEmptyException()
         }
+        if (partnersSelect.size < 2) {
+            exception = MinTwoProvidersInPriceException()
+        }
+
         if (exception == null) {
             val currentDateOneHourLater = Calendar.getInstance()
             currentDateOneHourLater.timeInMillis = currentDate
@@ -51,6 +58,7 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
                 null
             }
         }
+
         return if (exception == null) {
             Result.success(
                 PriceModel(
@@ -58,15 +66,15 @@ class ValidationNextCreatePriceUseCaseImpl : ValidationNextCreatePriceUseCase {
                     productsPrice = mutableListOf(),
                     partnersAuthorized = partners,
                     dateStartPrice = currentDate,
-                    dateFinishPrice = date?.verifyAutoClose(autoClose),
+                    dateFinishPrice = date.verifyAutoClose(autoClose),
                     priority = PriorityPrice.AVERAGE,
                     cnpjBuyerCreator = "",
                     closeAutomatic = autoClose,
                     allowAllProvider = allowAllPartners,
                     deliveryDate = dateDelivery,
                     description = description,
-                    status = StatusPrice.OPEN
-
+                    status = StatusPrice.OPEN,
+                    nameCompanyCreator = nameCompanyCreator
                 )
             )
         } else {

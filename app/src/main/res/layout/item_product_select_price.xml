@@ -6,8 +6,10 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
+    android:layout_marginTop="4dp"
     app:cardBackgroundColor="@color/white_dark"
     app:cardCornerRadius="8dp"
+    android:elevation="0dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
@@ -73,7 +75,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_description"
             tools:text="Vazia" />
 
-        <androidx.appcompat.widget.AppCompatCheckBox
+        <CheckBox
             android:id="@+id/checkBox_isSelected"
             android:layout_width="30dp"
             android:layout_height="30dp"

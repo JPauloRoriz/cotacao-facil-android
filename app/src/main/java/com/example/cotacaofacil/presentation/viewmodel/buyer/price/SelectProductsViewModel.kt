@@ -51,11 +51,10 @@ class SelectProductsViewModel(
                                     messageError = context.getString(R.string.products_empty_toast_add),
                                     showMessageError = true,
                                     isLoading = false,
-
                                     )
                             )
                         } else {
-                            listAllProductsPrice = listProductModel.toProductPriceModel()
+                            stateLiveData.value?.products?.let { it1 -> listAllProductsPrice = listProductModel.toProductPriceModel(it1) }
                             stateLiveData.postValue(
                                 stateLiveData.value?.copy(
                                     messageError = "",
@@ -85,9 +84,11 @@ class SelectProductsViewModel(
                         result.add(productModel)
                     }
                 }
-                stateLiveData.postValue(stateLiveData.value?.copy(products = result))
+                stateLiveData.postValue(stateLiveData.value?.copy(products = result, messageError = ""))
             } else {
-                listFavorites?.let { stateLiveData.value?.copy(products = it) }
+                listFavorites?.let {
+                    stateLiveData.postValue(stateLiveData.value?.copy(products = it, messageError = ""))
+                }
             }
         } else {
             if (textSearch.isNotEmpty()) {
@@ -97,10 +98,9 @@ class SelectProductsViewModel(
                         result.add(productModel)
                     }
                 }
-                stateLiveData.postValue(stateLiveData.value?.copy(products = result))
+                stateLiveData.postValue(stateLiveData.value?.copy(products = result, messageError = ""))
             } else {
-                stateLiveData.postValue(stateLiveData.value?.products?.filter { it.productModel.isFavorite }?.toMutableList()
-                    ?.let { stateLiveData.value?.copy(products = listAllProductsPrice, messageError = "") })
+                stateLiveData.postValue(stateLiveData.value?.copy(products = listAllProductsPrice, messageError = context.getString(R.string.products_empty_find)))
             }
         }
     }
@@ -129,7 +129,7 @@ class SelectProductsViewModel(
         verifyButton()
     }
 
-    fun updateListProducts(listProductsPrice : MutableList<ProductPriceModel>){
+    fun updateListProducts(listProductsPrice: MutableList<ProductPriceModel>) {
         eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listProductsPrice))
     }
 
@@ -150,15 +150,14 @@ class SelectProductsViewModel(
                                 if (it.code.contains(query, true)) {
                                     result.add(it)
                                 }
-
                             }
-                            eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(result.toProductPriceModel()))
+                            stateLiveData.value?.products?.let { it1 -> eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(result.toProductPriceModel(it1)))}
                         } else {
                             if (selectedTabPosition == 1) {
                                 val listFavorites = listProducts.filter { it.isFavorite }.toMutableList()
-                                eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listFavorites.toProductPriceModel()))
+                                stateLiveData.value?.products?.let { it1 -> eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listFavorites.toProductPriceModel(it1)))}
                             } else {
-                                eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listProducts.toProductPriceModel()))
+                                stateLiveData.value?.products?.let { it1 -> eventLiveData.postValue(SelectProductsEvent.UpdateListProducts(listProducts.toProductPriceModel(it1)))}
                             }
 
                         }

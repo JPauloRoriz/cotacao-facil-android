@@ -71,6 +71,14 @@ class ProductServiceImpl(
         }
     }
 
+    override suspend fun getProductsByCode(cnpjUser: String, codeProduct: String): Result<ProductResponse>{
+        val productsRef = firebaseFirestore.collection(PRODUCT).document(cnpjUser).collection(MY_PRODUCT)
+
+       return productsRef.document(codeProduct).get().await().toObject(ProductResponse::class.java).runCatching {
+           this ?: throw DefaultException()
+       }
+    }
+
     private suspend fun createProductCode(cnpjBuyer: String): String {
         var productCode = Random.nextInt(100000, 999999)
         val productsRef = firebaseFirestore.collection(PRODUCT).document(cnpjBuyer).collection(MY_PRODUCT)

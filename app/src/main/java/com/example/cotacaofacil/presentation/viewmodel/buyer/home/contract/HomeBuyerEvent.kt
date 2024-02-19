@@ -11,6 +11,7 @@ sealed class HomeBuyerEvent{
     object FinishApp : HomeBuyerEvent()
     object Logout : HomeBuyerEvent()
     object AskAgain : HomeBuyerEvent()
+    object ClickCardPrices : HomeBuyerEvent()
 
 
 }

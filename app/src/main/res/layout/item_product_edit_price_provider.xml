@@ -1,0 +1,144 @@
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView_item_product"
+    android:layout_width="230dp"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:clickable="true"
+    android:elevation="0dp"
+    android:focusable="true"
+    app:cardBackgroundColor="@color/color_product_edit"
+    app:cardCornerRadius="6dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="6dp">
+
+        <ImageView
+            android:id="@+id/imageView_isSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:visibility="gone"
+            android:tint="@color/green"
+            android:src="@drawable/ic_baseline_check_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_code_product"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Cód: 504784" />
+
+
+        <TextView
+            android:id="@+id/textView_name_product"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginTop="6dp"
+            app:layout_constraintStart_toStartOf="@id/textView_code_product"
+            app:layout_constraintTop_toBottomOf="@+id/textView_code_product"
+            tools:text="Leite Condensado Itambé 250ml" />
+
+        <TextView
+            android:id="@+id/textView_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/description"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_name_product" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_text_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textStyle="italic"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/imageView_isSelected"
+            app:layout_constraintStart_toStartOf="@+id/textView_description"
+            app:layout_constraintTop_toBottomOf="@+id/textView_description"
+            tools:text="Vazivvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvsssssssssssssssssssssssssssssvvvvvvvvvvvvvvvvvvvvvvvvva" />
+
+        <TextView
+            android:id="@+id/textView_quantityProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/editTextValueProduct"
+            tools:text="Quantidade: 5"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView_text_description" />
+
+
+        <TextView
+            android:id="@+id/textView_EditPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@+id/editTextValueProduct"
+            android:text="@string/value_unit"
+            android:textSize="12sp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/textView_quantityProduct" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editTextValueProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:maxLines="1"
+            android:maxLength="17"
+            android:text="R$0,00"
+            android:backgroundTint="@color/white"
+            android:textColor="@color/black"
+            android:background="@drawable/shape_round_complete"
+            android:layout_marginVertical="8dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toTopOf="@+id/textViewValueTotal"
+            app:layout_constraintStart_toEndOf="@+id/textView_EditPrice"
+            app:layout_constraintTop_toBottomOf="@+id/textView_EditPrice" />
+
+        <TextView
+            android:id="@+id/textViewValueTotal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/editTextValueProduct"
+            app:layout_constraintStart_toStartOf="@+id/editTextValueProduct"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:textSize="12sp"
+            android:textColor="@color/white"
+            tools:text="Valor total : R$50,00"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

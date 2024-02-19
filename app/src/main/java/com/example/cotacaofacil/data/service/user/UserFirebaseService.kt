@@ -20,7 +20,7 @@ class UserFirebaseService(
         firestore.collection(USERS_TABLE)
     }
 
-    override suspend fun saveUser(cnpj: String, email: String, password: String, userTypeSelected : UserTypeSelected): Result<Any?> {
+    override suspend fun saveUser(cnpj: String, email: String, password: String, userTypeSelected : UserTypeSelected, nameUser : String): Result<Any?> {
         return try {
             val resultAuth = auth.createUserWithEmailAndPassword(email, password).await()
             val cnpjExisting =
@@ -30,7 +30,7 @@ class UserFirebaseService(
                 resultAuth.user?.delete()
                 Result.failure(CnpjExistingException())
             } else {
-                val newUser = UserResponse(resultAuth.user?.uid ?: "", cnpj, email, userTypeSelected)
+                val newUser = UserResponse(resultAuth.user?.uid ?: "", cnpj, email, userTypeSelected, nameUser)
 
                 val user = usersFirebase.document(newUser.id).set(newUser)
                 if (user.isSuccessful) {

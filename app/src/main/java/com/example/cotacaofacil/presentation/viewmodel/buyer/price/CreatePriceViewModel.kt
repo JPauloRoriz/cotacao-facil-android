@@ -7,7 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.domain.exception.*
-import com.example.cotacaofacil.domain.model.*
+import com.example.cotacaofacil.domain.model.PartnerModel
+import com.example.cotacaofacil.domain.model.PriorityPrice
+import com.example.cotacaofacil.domain.model.StatusIsMyPartner
+import com.example.cotacaofacil.domain.model.UserModel
 import com.example.cotacaofacil.domain.usecase.date.contract.CalculationDateFinishPriceUseCase
 import com.example.cotacaofacil.domain.usecase.date.contract.DateCurrentUseCase
 import com.example.cotacaofacil.domain.usecase.date.contract.ValidationNextCreatePriceUseCase
@@ -46,14 +49,11 @@ class CreatePriceViewModel(
         date = currentDate
         createPriceStateLiveData.postValue(
             createPriceStateLiveData.value?.copy(
-                showProgressBar = true,
-                dateFinishPrice = currentDate,
-                dateDelivery = calendar.timeInMillis.toFormattedDateTime()
+                showProgressBar = true, dateFinishPrice = currentDate, dateDelivery = calendar.timeInMillis.toFormattedDateTime()
             )
         )
         viewModelScope.launch(Dispatchers.IO) {
-            currentDateUseCase.invoke()
-                .onSuccess { date ->
+            currentDateUseCase.invoke().onSuccess { date ->
                     currentDate = calculationDateFinishPriceUseCase.invoke(date)
                     user?.id?.let { userId ->
                         user.cnpj.let { userCnpj ->
@@ -65,9 +65,7 @@ class CreatePriceViewModel(
                                         listAllPartners = result
                                         createPriceStateLiveData.postValue(
                                             createPriceStateLiveData.value?.copy(
-                                                listPartnersSelect = result,
-                                                showProgressBar = false,
-                                                messageErrorPartners = ""
+                                                listPartnersSelect = result, showProgressBar = false, messageErrorPartners = ""
                                             )
                                         )
                                     } else {
@@ -79,24 +77,20 @@ class CreatePriceViewModel(
                                             )
                                         )
                                     }
-                                }
-                                .onFailure {
+                                }.onFailure {
                                     createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(showProgressBar = false))
                                 }
                         }
                     }
-                }
-                .onFailure {
+                }.onFailure {
 
                 }
         }
     }
 
     fun tapOnSwitchAutoClose(checked: Boolean) {
-        if (checked)
-            createPriceEventLiveData.postValue(CreatePriceEvent.AutoChecked)
-        else
-            createPriceEventLiveData.postValue(CreatePriceEvent.NotAutoChecked)
+        if (checked) createPriceEventLiveData.postValue(CreatePriceEvent.AutoChecked)
+        else createPriceEventLiveData.postValue(CreatePriceEvent.NotAutoChecked)
     }
 
     fun tapOnSwitchAllPartners(checked: Boolean, listPartner: MutableList<PartnerModel>) {
@@ -131,8 +125,7 @@ class CreatePriceViewModel(
             } else {
                 createPriceStateLiveData.postValue(
                     createPriceStateLiveData.value?.copy(
-                        messageErrorPartners = context.getString(R.string.not_find_partner),
-                        listPartnersSelect = mutableListOf()
+                        messageErrorPartners = context.getString(R.string.not_find_partner), listPartnersSelect = mutableListOf()
                     )
                 )
             }
@@ -189,65 +182,62 @@ class CreatePriceViewModel(
         priority: PriorityPrice?
     ) {
         viewModelScope.launch(Dispatchers.IO) {
-            currentDateUseCase.invoke()
-                .onSuccess { currentDate ->
-                    validationNextCreatePriceUseCase.invoke(
-                        autoClose,
-                        allowAllPartners,
-                        date,
-                        dateDelivery,
-                        partners,
-                        description,
-                        priority,
-                        currentDate
-                    )
-                        .onSuccess { priceModel ->
-                            val priorityPrice: PriorityPrice? = priority
-                            user?.cnpj?.let { cnpj ->
+            currentDateUseCase.invoke().onSuccess { currentDate ->
+                    user?.nameCorporation?.let {
+                        validationNextCreatePriceUseCase.invoke(
+                            autoClose, allowAllPartners, date, dateDelivery, partners, description, priority, currentDate, it
+                        ).onSuccess { priceModel ->
+                                val priorityPrice: PriorityPrice? = priority
                                 priorityPrice?.let { priority ->
-                                    priceModel.cnpjBuyerCreator = cnpj
+                                    priceModel.cnpjBuyerCreator = user.cnpj
                                     priceModel.priority = priority
-                                    priceModel
+                                    priceModel.dateFinishPrice = date
+                                    priceModel.partnersAuthorized = listAllPartners
+                                    priceModel.description = description
+                                    priceModel.nameCompanyCreator = user.nameCorporation
                                 }
-                            } ?: PriceModel()
-                            createPriceEventLiveData.postValue(CreatePriceEvent.SuccessNext(priceModel))
+                                createPriceEventLiveData.postValue(CreatePriceEvent.SuccessNext(priceModel))
 
-                        }
-                        .onFailure { exception ->
-                            when (exception) {
-                                is ScheduleDateForPastException -> {
-                                    createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(messageError = context.getString(R.string.not_possible_adjust_date)))
-                                }
-                                is StLeastOneHourException -> {
-                                    createPriceStateLiveData.postValue(
-                                        createPriceStateLiveData.value?.copy(
-                                            messageError = context.getString(
-                                                R.string.not_possible_adjust_date_on_hour_later,
-                                                "1"
+                            }.onFailure { exception ->
+                                when (exception) {
+                                    is ScheduleDateForPastException -> {
+                                        createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(messageError = context.getString(R.string.not_possible_adjust_date)))
+                                    }
+                                    is StLeastOneHourException -> {
+                                        createPriceStateLiveData.postValue(
+                                            createPriceStateLiveData.value?.copy(
+                                                messageError = context.getString(
+                                                    R.string.not_possible_adjust_date_on_hour_later, "1"
+                                                )
                                             )
                                         )
-                                    )
-                                }
-                                is MinTwoProvidersInPriceException -> {
-                                    createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(messageError = context.getString(R.string.min_two_partners)))
-                                }
-                                is PriorityIsEmptyException -> {
-                                    createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(messageError = context.getString(R.string.priority_is_empty)))
-                                }
-                                is StLeastOneDayException -> {
-                                    createPriceStateLiveData.postValue(
-                                        createPriceStateLiveData.value?.copy(
-                                            messageError = context.getString(
-                                                R.string.not_possible_adjust_date_on_hour_later,
-                                                "24"
+                                    }
+                                    is MinTwoProvidersInPriceException -> {
+                                        createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(messageError = context.getString(R.string.min_two_partners)))
+                                    }
+                                    is PriorityIsEmptyException -> {
+                                        createPriceStateLiveData.postValue(createPriceStateLiveData.value?.copy(messageError = context.getString(R.string.priority_is_empty)))
+                                    }
+                                    is StLeastOneDayException -> {
+                                        createPriceStateLiveData.postValue(
+                                            createPriceStateLiveData.value?.copy(
+                                                messageError = context.getString(
+                                                    R.string.not_possible_adjust_date_on_hour_later, "24"
+                                                )
                                             )
                                         )
-                                    )
+                                    }
+                                    is DateDeliveryBeforeDateFinishPriceException -> {
+                                        createPriceStateLiveData.postValue(
+                                            createPriceStateLiveData.value?.copy(
+                                                messageError = context.getString(R.string.error_date_finish_before_date_delivery)
+                                            )
+                                        )
+                                    }
                                 }
                             }
-                        }
-                }
-                .onFailure {
+                    }
+                }.onFailure {
 
                 }
 

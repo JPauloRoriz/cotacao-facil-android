@@ -31,6 +31,7 @@
         android:clickable="true"
         android:focusable="true"
         android:textSize="12sp"
+        android:inputType="number"
         app:defaultQueryHint="@string/search_hint_code_product"
         app:iconifiedByDefault="false"
         app:layout_constraintEnd_toEndOf="parent"

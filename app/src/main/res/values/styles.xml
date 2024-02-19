@@ -33,4 +33,8 @@
         <item name="dialogCornerRadius">20dp</item>
     </style>
 
+    <style name="RoundedCornersThemeDialog" parent="@style/MyDialogTheme">
+        <item name="dialogCornerRadius">20dp</item>
+    </style>
+
 </resources>

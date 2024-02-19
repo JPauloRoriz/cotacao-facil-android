@@ -38,6 +38,7 @@ import com.example.cotacaofacil.data.service.settings.retrofitConfig
 import com.example.cotacaofacil.data.service.user.UserFirebaseService
 import com.example.cotacaofacil.data.service.user.contract.UserService
 import com.example.cotacaofacil.data.sharedPreferences.SharedPreferencesHelper
+import com.example.cotacaofacil.domain.model.PriceEditModel
 import com.example.cotacaofacil.domain.model.PriceModel
 import com.example.cotacaofacil.domain.usecase.date.CalculationDateFinishPriceUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.date.DateCurrentUseCaseImpl
@@ -57,10 +58,8 @@ import com.example.cotacaofacil.domain.usecase.login.LoginUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.login.contract.LoginUseCase
 import com.example.cotacaofacil.domain.usecase.partner.*
 import com.example.cotacaofacil.domain.usecase.partner.contract.*
-import com.example.cotacaofacil.domain.usecase.price.CreatePriceUseCaseImpl
-import com.example.cotacaofacil.domain.usecase.price.GetPricesBuyerUserCaseImpl
-import com.example.cotacaofacil.domain.usecase.price.contract.CreatePriceUseCase
-import com.example.cotacaofacil.domain.usecase.price.contract.GetPricesBuyerUserCase
+import com.example.cotacaofacil.domain.usecase.price.*
+import com.example.cotacaofacil.domain.usecase.price.contract.*
 import com.example.cotacaofacil.domain.usecase.product.*
 import com.example.cotacaofacil.domain.usecase.product.contract.*
 import com.example.cotacaofacil.domain.usecase.register.RegisterUseCaseImpl
@@ -70,9 +69,12 @@ import com.example.cotacaofacil.presentation.viewmodel.buyer.price.*
 import com.example.cotacaofacil.presentation.viewmodel.history.HistoryViewModel
 import com.example.cotacaofacil.presentation.viewmodel.login.LoginViewModel
 import com.example.cotacaofacil.presentation.viewmodel.partner.PartnerViewModel
+import com.example.cotacaofacil.presentation.viewmodel.price.PriceInfoViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.AddProductViewModel
 import com.example.cotacaofacil.presentation.viewmodel.product.StockBuyerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.provider.home.HomeProviderViewModel
+import com.example.cotacaofacil.presentation.viewmodel.provider.price.ParticipatePriceProviderViewModel
+import com.example.cotacaofacil.presentation.viewmodel.provider.price.PriceProviderViewModel
 import com.example.cotacaofacil.presentation.viewmodel.register.RegisterViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -92,13 +94,33 @@ val appModule = module {
     viewModel { PartnerViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { AddProductViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { StockBuyerViewModel(get(), get(), get(), get(), get()) }
-    viewModel { HomeBuyerViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { HomeBuyerViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { HomeProviderViewModel(get(), get(), get(), get(), get()) }
-    viewModel { PriceBuyerViewModel(get(), get(), get()) }
+    viewModel { PriceBuyerViewModel(get(), get(), get(), get(), get()) }
+    viewModel { PriceProviderViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { CreatePriceViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { EditDateHourViewModel(get(), get()) }
     viewModel { (priceModel: PriceModel) -> SelectProductsViewModel(get(), get(), get(), get(), priceModel = priceModel) }
-    viewModel { (priceModel: PriceModel) -> ReportInitPriceViewModel(priceModel = priceModel, get(), get(), get()) }
+    viewModel { (priceModel: PriceModel) -> ReportInitPriceViewModel(priceModel = priceModel, get(), get(), get(), get()) }
+    viewModel { (codePrice: String, cnpjBuyerCreator: String) ->
+        PriceInfoViewModel(
+            codePrice = codePrice,
+            cnpjBuyerCreator = cnpjBuyerCreator,
+            getPriceByCodeUseCase = get(),
+            context = get(),
+            currentUseCase = get(),
+            editPriceUseCase = get()
+        )
+    }
+    viewModel { (priceEditModel: PriceEditModel) ->
+        ParticipatePriceProviderViewModel(
+            userHelper = get(),
+            priceEditModel = priceEditModel,
+            context = get(),
+            dateCurrentUseCase = get(),
+            setPricePartnerUseCase = get(),
+        )
+    }
 
 
     //useCase
@@ -124,6 +146,13 @@ val appModule = module {
     factory<CreatePriceUseCase> { CreatePriceUseCaseImpl(get()) }
     factory<AddHistoricUseCase> { AddHistoricUseCaseImpl(get()) }
     factory<GetPricesBuyerUserCase> { GetPricesBuyerUserCaseImpl(get()) }
+    factory<GetPricesProviderUseCase> { GetPricesProviderUseCaseImpl(get()) }
+    factory<ValidationStatusPriceUseCase> { ValidationStatusPriceUseCaseImpl(get(), get()) }
+    factory<ValidationPricesProviderUseCase> { ValidationPricesProviderUseCaseImpl(get()) }
+    factory<UpdateHourPricesUseCase> { UpdateHourPricesUseCaseImpl(get(), get()) }
+    factory<EditPriceUseCase> { EditPriceUseCaseImpl(get()) }
+    factory<SetPricePartnerUseCase> { SetPricePartnerUseCaseUseCaseImpl(get()) }
+    factory<GetPriceByCodeUseCase> { GetPriceByCodeUseCaseImpl(get()) }
 
 
     //repository
@@ -158,9 +187,7 @@ val appModule = module {
     single<SharedPreferences> { androidContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE) }
     single {
         val context: Context = androidContext()
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
+        val masterKey = MasterKey.Builder(context).setKeyScheme(MasterKey.KeyScheme.AES256_GCM).build()
         EncryptedSharedPreferences.create(
             context,
             context.packageName + "_preferences",

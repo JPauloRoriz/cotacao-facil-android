@@ -17,7 +17,6 @@ import com.example.cotacaofacil.presentation.viewmodel.partner.model.PartnerEven
 import com.example.cotacaofacil.presentation.viewmodel.partner.model.PartnerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 class PartnerViewModel(
     private val context: Context,
     private val validationCnpjUseCase: ValidationCnpjUseCase,
@@ -172,8 +171,13 @@ class PartnerViewModel(
         eventLiveData.value = PartnerEvent.EnterCnpj
     }
 
-    suspend fun tapOnIconPartner(partner: PartnerModel) {
+    fun tapOnIconPartner(partner: PartnerModel) {
         viewModelScope.launch(Dispatchers.IO) {
+            stateLiveData.postValue(
+                stateLiveData.value?.copy(
+                     isLoading = true
+                )
+            )
             dateCurrentUseCase.invoke()
                 .onSuccess { currentDate ->
                     when (partner.isMyPartner) {
@@ -249,6 +253,7 @@ class PartnerViewModel(
                                 is NoConnectionInternetException -> {
                                     stateLiveData.postValue(
                                         stateLiveData.value?.copy(
+                                            isLoading = false,
                                             textTitleList = setTitleList(true),
                                             listPartnerModel = mutableListOf(),
                                             showImageError = true,
@@ -261,7 +266,7 @@ class PartnerViewModel(
                                 else -> {
                                     stateLiveData.postValue(
                                         stateLiveData.value?.copy(
-                                            isLoading = true,
+                                            isLoading = false,
                                             messageError = context.getString(
                                                 R.string.inpossible_reject_request_partner
                                             ),
@@ -289,12 +294,13 @@ class PartnerViewModel(
                 user?.cnpj?.let {
                     rejectRequestPartnerUseCase.invoke(it, partner, context, TypeDeletePartner.DELETE_PARTNER, currentDate)
                         .onSuccess {
+                            stateLiveData.postValue(stateLiveData.value?.copy(isLoading = false))
                             eventLiveData.postValue(PartnerEvent.SuccessDeletePartner)
                             loadListPartnerModel(true)
                         }.onFailure {
                             stateLiveData.postValue(
                                 stateLiveData.value?.copy(
-                                    textTitleList = setTitleList(true), isLoading = true, showImageError = true, messageError = context.getString(
+                                    textTitleList = setTitleList(true), isLoading = false, showImageError = true, messageError = context.getString(
                                         R.string.inpossible_delete_partner, partner.nameFantasy
                                     )
                                 )
@@ -308,7 +314,9 @@ class PartnerViewModel(
 
     }
 
-    suspend fun tapOnAcceptPartner(partner: PartnerModel) {
+    fun tapOnAcceptPartner(partner: PartnerModel) {
+        stateLiveData.postValue(stateLiveData.value?.copy(showImageError = false, isShowListMyPartners = true, isLoading = true))
+        viewModelScope.launch(Dispatchers.IO) {
         dateCurrentUseCase.invoke()
             .onSuccess { currentDate ->
                 user?.cnpj?.let {
@@ -317,20 +325,34 @@ class PartnerViewModel(
                             eventLiveData.postValue(PartnerEvent.SuccessAcceptPartner)
                             loadListPartnerModel(false)
                         }.onFailure {
-                            stateLiveData.postValue(
-                                stateLiveData.value?.copy(
-                                    textTitleList = setTitleList(true), isLoading = true, showImageError = true, messageError = context.getString(
-                                        R.string.inpossible_accept_request_partner
+                            when(it){
+                                is DefaultException -> {
+                                    stateLiveData.postValue(
+                                        stateLiveData.value?.copy(
+                                            textTitleList = setTitleList(true), isLoading = false, showImageError = true, messageError = context.getString(
+                                                R.string.inpossible_accept_request_partner
+                                            ), isShowListMyPartners = false
+                                        )
                                     )
-                                )
-                            )
+                                }
+                                else -> {
+                                    stateLiveData.postValue(
+                                        stateLiveData.value?.copy(
+                                            textTitleList = setTitleList(true), isLoading = false, showImageError = true, messageError = context.getString(
+                                                R.string.inpossible_accept_request_partner
+                                            ), isShowListMyPartners = false
+                                        )
+                                    )
+                                }
+                            }
+
                         }
                 }
             }
             .onFailure {
                 //todo tratamento para sem conexão
             }
-
+        }
     }
 
     private fun listRequests(listAllPartners: MutableList<PartnerModel>): MutableList<PartnerModel> {

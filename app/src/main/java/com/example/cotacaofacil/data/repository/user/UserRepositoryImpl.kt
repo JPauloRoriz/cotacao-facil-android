@@ -17,8 +17,8 @@ import java.io.IOException
 class UserRepositoryImpl(
     private val userService: UserService
 ) : UserRepository {
-    override suspend fun addUser(cnpj: String, login: String, password: String, userTypeSelected: UserTypeSelected): Result<Any?> {
-            return userService.saveUser(cnpj, login, password, userTypeSelected).recoverCatching { error ->
+    override suspend fun addUser(cnpj: String, login: String, password: String, userTypeSelected: UserTypeSelected, nameUser : String): Result<Any?> {
+            return userService.saveUser(cnpj, login, password, userTypeSelected, nameUser).recoverCatching { error ->
                 return when (error) {
                     is IOException -> Result.failure(NoConnectionInternetException())
                     is FirebaseAuthInvalidCredentialsException -> Result.failure(

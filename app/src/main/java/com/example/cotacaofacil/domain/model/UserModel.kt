@@ -12,5 +12,6 @@ data class UserModel(
     val userTypeSelected : UserTypeSelected = UserTypeSelected(
         userProviderSelected = false,
         userBuyerSelected = false
-    )
+    ),
+    var nameCorporation : String = ""
 ) : Parcelable

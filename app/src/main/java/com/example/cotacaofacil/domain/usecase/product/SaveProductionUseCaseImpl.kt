@@ -1,6 +1,7 @@
 package com.example.cotacaofacil.domain.usecase.product
 
 import android.content.Context
+import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.repository.product.contract.ProductRepository
 import com.example.cotacaofacil.domain.Extensions.Companion.isNetworkConnected
 import com.example.cotacaofacil.domain.exception.EmptyFildException
@@ -15,7 +16,7 @@ class SaveProductionUseCaseImpl(
         name: String,
         description: String,
         brand: String,
-        typeMeasurements: String,
+        typeMeasurements: String?,
         cnpjUser: String,
         quantity: String,
         context: Context,
@@ -23,16 +24,20 @@ class SaveProductionUseCaseImpl(
         isFavorite: Boolean,
         currentDate : Long
     ): Result<Any?> {
+        var typeMeasurementsNotNull = ""
+        if(typeMeasurements.isNullOrEmpty()){
+            typeMeasurementsNotNull = context.getString(R.string.kg)
+        }
         return if (context.isNetworkConnected()) {
             if (name.isEmpty()) {
                 Result.failure<Exception>(EmptyFildException())
             } else if (isConfirmationDataEmpty) {
-                repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite, currentDate)
+                repository.saveProduct(name, description, brand, typeMeasurementsNotNull, cnpjUser, quantity, isFavorite, currentDate)
             } else {
                 if (description.isEmpty() || brand.isEmpty()) {
                     Result.failure(SaveDataEmptyConfirmationException())
                 } else {
-                    repository.saveProduct(name, description, brand, typeMeasurements, cnpjUser, quantity, isFavorite, currentDate)
+                    repository.saveProduct(name, description, brand, typeMeasurementsNotNull, cnpjUser, quantity, isFavorite, currentDate)
                 }
             }
 

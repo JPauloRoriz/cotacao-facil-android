@@ -53,7 +53,7 @@ class CreatePriceSelectProductsFragment : Fragment() {
     private fun setupListeners() {
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                  viewModel.filterList(tab?.position, binding.searchView.query.toString())
+                viewModel.filterList(tab?.position, binding.searchView.query.toString())
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -102,7 +102,7 @@ class CreatePriceSelectProductsFragment : Fragment() {
         }
 
         viewModel.eventLiveData.observe(viewLifecycleOwner) { event ->
-            when(event){
+            when (event) {
                 SelectProductsEvent.UpdateList -> {}
                 is SelectProductsEvent.ErrorSelectMinOneProduct -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
                 is SelectProductsEvent.UpdateListProducts -> adapter.updateList(event.products)
@@ -123,7 +123,6 @@ class CreatePriceSelectProductsFragment : Fragment() {
     }
 
     override fun onResume() {
-        viewModel.updateListProducts(adapter.products)
         super.onResume()
     }
 

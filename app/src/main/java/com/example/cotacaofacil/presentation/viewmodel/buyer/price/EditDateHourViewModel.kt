@@ -10,6 +10,7 @@ import com.example.cotacaofacil.domain.usecase.date.contract.DateCurrentUseCase
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
 import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractDateHourPrice.DateEvent
 import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractDateHourPrice.DateState
+import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractDateHourPrice.TimeOfDay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
@@ -23,25 +24,29 @@ class EditDateHourViewModel(
     val event = SingleLiveEvent<DateEvent>()
     val state = MutableLiveData(DateState())
 
-    fun setupView(dateFinishPrice: Long?, hour: Int) {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = dateFinishPrice ?: System.currentTimeMillis()
+    fun setupView(dateFinishPrice: Long, hour: Int) {
+        val hourDay = (Date(dateFinishPrice)).hours
+        changeHour(hourDay)
+            state.postValue(state.value?.copy(messageError = ""))
 
-        if (hour < 12) {
-            state.postValue(state.value?.copy(isNight = false, messageError = ""))
-        } else {
-            state.postValue(state.value?.copy(isNight = true, messageError = ""))
-        }
-        state.postValue(state.value?.copy(messageError = "", date = calendar))
-        event.postValue(DateEvent.UpdateDate(calendar))
+            state.postValue(state.value?.copy(messageError = ""))
+
+        state.postValue(state.value?.copy(messageError = "", date = dateFinishPrice))
+        event.postValue(DateEvent.UpdateDate(Date(dateFinishPrice)))
 
     }
 
     fun changeHour(hourOfDay: Int) {
-        if (hourOfDay < 12) {
-            state.postValue(state.value?.copy(isNight = false, messageError = ""))
-        } else {
-            state.postValue(state.value?.copy(isNight = true, messageError = ""))
+        when (hourOfDay) {
+            in 0 until 12 -> {
+                state.postValue(state.value?.copy(periodDay = TimeOfDay.MORNING, messageError = ""))
+            }
+            in 12..17 -> {
+                state.postValue(state.value?.copy(periodDay = TimeOfDay.AFTERNOON, messageError = ""))
+            }
+            else -> {
+                state.postValue(state.value?.copy(periodDay = TimeOfDay.NIGHT, messageError = ""))
+            }
         }
     }
 

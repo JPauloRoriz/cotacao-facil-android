@@ -40,7 +40,7 @@ fun Long.dateEmpty(context: Context, isCloseAutomatic: Boolean): String {
     return if (!isCloseAutomatic) {
         context.getString(R.string.finish_price_not_auto)
     } else {
-        toFormattedDateTime()
+        context.getString(R.string.date_finish_price_adapter_price, toFormattedDateTime())
     }
 }
 

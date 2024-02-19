@@ -30,10 +30,9 @@ class RegisterUseCaseImpl(
             Result.failure(PasswordLenghtException())
         } else if (password != confirmPassword) {
             Result.failure(PasswordNotConfirmException())
-        } else if(!userTypeSelected.userBuyerSelected && !userTypeSelected.userProviderSelected){
+        } else if (!userTypeSelected.userBuyerSelected && !userTypeSelected.userProviderSelected) {
             Result.failure(UserTypeEmptyException())
-        }
-        else {
+        } else {
             val result = bodyCompanyRepository.getBodyCompanyModel(cnpj.convertCnpj())
             if (result.isSuccess) {
                 val bodyCompanyModel = result.getOrNull()
@@ -43,9 +42,15 @@ class RegisterUseCaseImpl(
                 } else {
                     try {
                         bodyCompanyRepository.addBodyCompanyModel(userTypeSelected, cnpj.convertCnpj(), bodyCompanyModel)
-                        return userRepository.addUser(cnpj.convertCnpj(), login, password, userTypeSelected)
-                    } catch (e : Exception){
-                        if(e == ErrorSaveBodyCompany()){
+                        return userRepository.addUser(
+                            cnpj = cnpj.convertCnpj(),
+                            login = login,
+                            password = password,
+                            userTypeSelected = userTypeSelected,
+                            nameUser = bodyCompanyModel?.nome ?: ""
+                        )
+                    } catch (e: Exception) {
+                        if (e == ErrorSaveBodyCompany()) {
                             return Result.failure(ErrorSaveBodyCompany())
                         } else {
                             return Result.failure(DefaultException())
@@ -54,17 +59,17 @@ class RegisterUseCaseImpl(
                 }
 
             } else {
-               return when(result.exceptionOrNull()){
+                return when (result.exceptionOrNull()) {
                     is UnknownHostException -> {
                         Result.failure(NoConnectionInternetException())
                     }
-                   is CnpjExistingExceptionResponse -> {
-                       Result.failure(CnpjExistingException())
-                   }
-                   else -> {
-                       return Result.failure(result.exceptionOrNull() ?: Exception())
-                   }
-               }
+                    is CnpjExistingExceptionResponse -> {
+                        Result.failure(CnpjExistingException())
+                    }
+                    else -> {
+                        return Result.failure(result.exceptionOrNull() ?: Exception())
+                    }
+                }
             }
 
 

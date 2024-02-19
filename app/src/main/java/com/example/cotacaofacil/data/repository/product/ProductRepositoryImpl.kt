@@ -52,6 +52,13 @@ class ProductRepositoryImpl(
         }
     }
 
+    override suspend fun getProductsByCode(cnpjUser: String, codeProduct: String): Result<ProductModel> {
+        val result = productService.getProductsByCode(cnpjUser, codeProduct)
+        return result.map {
+            it.toProductModel()
+        }
+    }
+
     override suspend fun editProduct(product: ProductModel): Result<Unit> {
         return productService.editProduct(product.toProductResponse())
     }

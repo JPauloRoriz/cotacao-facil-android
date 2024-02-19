@@ -7,7 +7,7 @@ interface SaveProductionUseCase {
         name: String,
         description: String,
         brand: String,
-        typeMeasurements: String,
+        typeMeasurements: String?,
         cnpjUser: String,
         quantity: String,
         context: Context,

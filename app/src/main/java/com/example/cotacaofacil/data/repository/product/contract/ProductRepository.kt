@@ -16,6 +16,7 @@ interface ProductRepository {
         currentDate : Long
     ): Result<Any?>
     suspend fun getAllProducts(cnpjUser : String) : Result<MutableList<ProductModel>>
+    suspend fun getProductsByCode(cnpjUser : String, codeProduct : String) : Result<ProductModel>
     suspend fun editProduct(product: ProductModel): Result<Unit>
     suspend fun deleteProduct(productModel: ProductModel): Result<Unit>?
 }

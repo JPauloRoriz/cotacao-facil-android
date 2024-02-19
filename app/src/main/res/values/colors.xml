@@ -26,9 +26,13 @@
     <color name="blackAlpha">#86000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#0DBF07</color>
+    <color name="green_price">#630CF804</color>
+    <color name="red_price">#6FFF0000</color>
+    <color name="gray_price">#9EEDE5E5</color>
     <color name="greenButton">#0DAC58</color>
     <color name="white_dark">#FDFBFB</color>
     <color name="white_dark_button">#CAC3C3</color>
     <color name="white_bottom_navigation">#FAF9F9</color>
     <color name="item_bottom_navigation">#538C8C</color>
+    <color name="color_product_edit">#052327</color>
 </resources>

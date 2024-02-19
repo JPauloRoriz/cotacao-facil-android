@@ -100,17 +100,33 @@ class Extensions {
             )
         }
 
-        fun MutableList<ProductModel>.toProductPriceModel() : MutableList<ProductPriceModel>{
+        fun MutableList<ProductModel>.toProductPriceModel(products: MutableList<ProductPriceModel>): MutableList<ProductPriceModel> {
             val listProductPriceModel = mutableListOf<ProductPriceModel>()
-            this.forEach {
-                listProductPriceModel.add(ProductPriceModel(it,mutableListOf(), false))
+            this.forEach { productModel ->
+                val product = products.find { productModel.code == it.productModel.code } ?: ProductPriceModel()
+                listProductPriceModel.add(ProductPriceModel(productModel, product.usersPrice, product.isSelected))
             }
             return listProductPriceModel
         }
 
-        fun Long.verifyAutoClose(autoClose : Boolean) : Long{
-           return if(autoClose) -1L else this
+        fun Long.verifyAutoClose(autoClose: Boolean): Long {
+            return if (autoClose) this else -1L
         }
 
+        fun PriceModel.getCnpjProviders(): MutableList<String> {
+            val providers = mutableListOf<String>()
+             productsPrice.forEach {
+                it.usersPrice.forEach {
+                    if (!providers.contains(it.cnpjProvider)) {
+                        providers.add(it.cnpjProvider)
+                    }
+                }
+            }
+            return providers
+        }
+
+
     }
+
+
 }

@@ -34,7 +34,7 @@ class RegisterViewModel(
                 login = login,
                 password = password,
                 confirmPassword = confirmPassword,
-                stateLiveData.value?.userTypeSelected ?: UserTypeSelected()
+                userTypeSelected = stateLiveData.value?.userTypeSelected ?: UserTypeSelected()
             ).onSuccess {
                 stateLiveData.setLoadingRegister(false)
                 eventLiveData.value =

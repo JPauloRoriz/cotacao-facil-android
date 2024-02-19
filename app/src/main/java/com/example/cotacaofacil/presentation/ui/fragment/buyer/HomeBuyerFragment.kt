@@ -12,13 +12,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.databinding.FragmentHomeBuyerBinding
-import com.example.cotacaofacil.presentation.util.BottomNavigationListener
 import com.example.cotacaofacil.presentation.ui.activity.StockBuyerActivity
 import com.example.cotacaofacil.presentation.ui.activity.StockBuyerActivity.Companion.ADD_PRODUCT_BOTTOM_SHEET
 import com.example.cotacaofacil.presentation.ui.dialog.AddProductBottomSheetDialogFragment
+import com.example.cotacaofacil.presentation.util.BottomNavigationListener
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.HomeBuyerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,7 +29,8 @@ class HomeBuyerFragment() : Fragment() {
     private lateinit var binding: FragmentHomeBuyerBinding
     private var backPressedOnce: Boolean = false
     private var bottomNavigationListener: BottomNavigationListener? = null
-    private var addProductBottomSheetDialogFragment = AddProductBottomSheetDialogFragment()
+
+    private var fragmentManager: FragmentManager? = null
 
 
     override fun onCreateView(
@@ -39,6 +41,10 @@ class HomeBuyerFragment() : Fragment() {
         return binding.root
     }
 
+    override fun onAttach(activity: Activity) {
+        fragmentManager = this.childFragmentManager
+        super.onAttach(activity)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,11 +70,13 @@ class HomeBuyerFragment() : Fragment() {
                 }
                 is HomeBuyerEvent.ListEmptyProducts -> {
                     Toast.makeText(requireContext(), context?.getString(R.string.products_empty_toast_add), Toast.LENGTH_SHORT).show()
-                    addProductBottomSheetDialogFragment.cnpjUser = event.user?.cnpj
-                    addProductBottomSheetDialogFragment.productModel =  null
-                    addProductBottomSheetDialogFragment.updateListProducts = { }
-                    addProductBottomSheetDialogFragment.show(childFragmentManager, ADD_PRODUCT_BOTTOM_SHEET)
-                    activity?.supportFragmentManager?.let { it1 -> addProductBottomSheetDialogFragment.show(it1, "") }
+                    fragmentManager?.let {
+                        AddProductBottomSheetDialogFragment.newInstance(
+                            cnpjUser = event.user?.cnpj,
+                            productModel = null,
+                            {}
+                        ) {}.show(it, ADD_PRODUCT_BOTTOM_SHEET)
+                    }
                 }
                 is HomeBuyerEvent.SuccessListProducts -> {
                     val intent = Intent(requireContext(), StockBuyerActivity::class.java)
@@ -84,10 +92,11 @@ class HomeBuyerFragment() : Fragment() {
                     requireActivity().finishAffinity()
                 }
                 HomeBuyerEvent.ClickPartner -> {
-                    bottomNavigationListener?.onChangeFragmentBottomNavigation(R.id.partnerBuyerFragment)
+                    openFragment(R.id.partnerBuyerFragment)
                 }
                 is HomeBuyerEvent.ErrorLoadInformation -> Toast.makeText(requireContext(), event.message, Toast.LENGTH_SHORT).show()
                 HomeBuyerEvent.Logout -> activity?.finish()
+                HomeBuyerEvent.ClickCardPrices -> openFragment(R.id.priceBuyerFragment)
             }
         }
 
@@ -105,6 +114,9 @@ class HomeBuyerFragment() : Fragment() {
     private fun setupListeners() {
         binding.textViewLogoff.setOnClickListener {
             viewModel.tapOnLogout()
+        }
+        binding.cardViewPrice.setOnClickListener {
+            viewModel.tapOnCardPrices()
         }
 
         binding.constraintLayoutProvider.setOnClickListener {
@@ -135,6 +147,10 @@ class HomeBuyerFragment() : Fragment() {
                 viewModel.loadDataUser()
             }
         }
+    }
+
+    private fun openFragment(idFragment: Int) {
+        bottomNavigationListener?.onChangeFragmentBottomNavigation(idFragment)
     }
 
     companion object {

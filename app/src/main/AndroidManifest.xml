@@ -49,6 +49,17 @@
             android:exported="true"
             android:theme="@style/Theme.CotacaoFacil">
         </activity>
+
+        <activity
+            android:name=".presentation.ui.activity.ParticipatePriceProviderActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CotacaoFacil">
+        </activity>
+        <activity
+            android:name=".presentation.ui.activity.PriceInfoActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CotacaoFacil">
+        </activity>
     </application>
 
 </manifest>

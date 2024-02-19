@@ -22,7 +22,7 @@
     </fragment>
     <fragment
         android:id="@+id/priceProviderFragment"
-        android:name="com.example.cotacaofacil.presentation.ui.fragment.provider.PriceProviderFragment"
+        android:name="com.example.cotacaofacil.presentation.ui.fragment.provider.PricesProviderFragment"
         android:label="fragment_price_buyer"
         tools:layout="@layout/fragment_price_provider" >
 

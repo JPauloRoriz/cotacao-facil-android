@@ -174,14 +174,6 @@
             app:layout_constraintTop_toTopOf="@+id/icon_cnpj"
             tools:text="452.457\0001-22" />
 
-        <View
-            android:id="@+id/view_line_top"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintTop_toBottomOf="@+id/textView_cnpj" />
 
 
         <com.google.android.material.card.MaterialCardView
@@ -194,8 +186,8 @@
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toStartOf="@+id/cardView_stock"
-            app:layout_constraintStart_toStartOf="@+id/view_line_top"
-            app:layout_constraintTop_toTopOf="@+id/view_line_top">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_cnpj">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -235,14 +227,13 @@
             android:id="@+id/cardView_stock"
             android:layout_width="120dp"
             android:layout_height="100dp"
-            android:layout_marginTop="20dp"
             android:clickable="true"
             android:focusable="true"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="10dp"
-            app:layout_constraintEnd_toEndOf="@+id/view_line_top"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cardView_price"
-            app:layout_constraintTop_toTopOf="@+id/view_line_top">
+            app:layout_constraintTop_toTopOf="@+id/cardView_price">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -276,17 +267,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <View
-            android:id="@+id/view_line_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginHorizontal="30dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardView_price" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout_provider"
             android:layout_width="wrap_content"
@@ -298,7 +278,7 @@
             android:focusable="true"
             android:padding="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_line_bottom">
+            app:layout_constraintTop_toBottomOf="@+id/cardView_price">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon_provider"
@@ -318,7 +298,7 @@
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="@+id/icon_provider"
                 app:layout_constraintStart_toEndOf="@+id/icon_provider"
-                app:layout_constraintTop_toTopOf="@+id/icon_provider" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

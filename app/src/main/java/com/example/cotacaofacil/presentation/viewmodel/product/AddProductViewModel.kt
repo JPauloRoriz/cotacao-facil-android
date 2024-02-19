@@ -1,5 +1,6 @@
 package com.example.cotacaofacil.presentation.viewmodel.product
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,8 +17,7 @@ import com.example.cotacaofacil.domain.usecase.product.contract.SaveProductionUs
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
 import com.example.cotacaofacil.presentation.viewmodel.product.model.ProductAddEvent
 import com.example.cotacaofacil.presentation.viewmodel.product.model.ProductAddState
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.net.ConnectException
 
 class AddProductViewModel(
@@ -26,13 +26,18 @@ class AddProductViewModel(
     private val editProductUseCase: EditProductUseCase,
     private val deleteProductUseCase: DeleteProductUseCase,
     private val dateCurrentUseCase: DateCurrentUseCase,
-    private val context: Context
+    private val context: Application
 ) : ViewModel() {
     val stateLiveData = MutableLiveData(ProductAddState())
     val eventLiveData = SingleLiveEvent<ProductAddEvent>()
-
+    private var listSpinner = mutableListOf<String>()
     init {
-        eventLiveData.postValue(ProductAddEvent.GetListSpinner(getAllListSpinnerOptionsUseCase.invoke()))
+        getListSpinner()
+    }
+
+     private fun getListSpinner() {
+        listSpinner = getAllListSpinnerOptionsUseCase.invoke()
+         stateLiveData.postValue(stateLiveData.value?.copy(typeMeasurement = "kg", listSpinner = listSpinner))
     }
 
     fun createOrEdit(productModel: ProductModel?) {
@@ -43,11 +48,12 @@ class AddProductViewModel(
                     descriptionText = productModel.description,
                     brandText = productModel.brand,
                     quantityText = productModel.quantity,
-                    typeFilter = productModel.typeMeasurement,
                     titleBottomNavigation = context.getString(R.string.edit_product),
                     textButton = context.getString(R.string.edit_product),
                     isFavorite = productModel.isFavorite,
-                    trashIsGone = false
+                    trashIsGone = false,
+                    typeMeasurement = productModel.typeMeasurement,
+                    listSpinner = listSpinner
                 )
             )
         } else {
@@ -55,7 +61,13 @@ class AddProductViewModel(
                 stateLiveData.value?.copy(
                     titleBottomNavigation = context.getString(R.string.add_product),
                     textButton = context.getString(R.string.save_product),
-                    trashIsGone = true
+                    trashIsGone = true,
+                    isFavorite = false,
+                    descriptionText = "",
+                    brandText = "",
+                    quantityText = "",
+                    nameText = "",
+                    listSpinner = listSpinner
                 )
             )
         }
@@ -72,45 +84,48 @@ class AddProductViewModel(
         isFavorite: Boolean,
         productModel: ProductModel?
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
             if (productModel == null) {
-                dateCurrentUseCase.invoke().onSuccess { currentDate ->
-                    saveProductionUseCase.invoke(
-                        name,
-                        description,
-                        brand,
-                        typeMeasurements,
-                        cnpjUser,
-                        quantity,
-                        context,
-                        isConfirmationDataEmpty,
-                        isFavorite,
-                        currentDate
-                    )
-                        .onSuccess {
-                            eventLiveData.postValue(ProductAddEvent.ModificationProduct(context.getString(R.string.product_add_success)))
-                        }.onFailure {
-                            when (it) {
-                                is SaveDataEmptyConfirmationException -> {
-                                    eventLiveData.postValue(
-                                        ProductAddEvent.ShowDialogConfirmationDataEmpty(
-                                            name,
-                                            description,
-                                            brand,
-                                            typeMeasurements,
-                                            cnpjUser,
-                                            quantity
+                viewModelScope.launch(Dispatchers.IO) {
+                dateCurrentUseCase.invoke()
+                    .onSuccess { currentDate ->
+                        saveProductionUseCase.invoke(
+                            name,
+                            description,
+                            brand,
+                            typeMeasurements,
+                            cnpjUser,
+                            quantity,
+                            context,
+                            isConfirmationDataEmpty,
+                            isFavorite,
+                            currentDate
+                        )
+                            .onSuccess {
+                                stateLiveData.postValue(stateLiveData.value?.copy(typeMeasurement = typeMeasurements))
+                                eventLiveData.postValue(ProductAddEvent.ModificationProduct(context.getString(R.string.product_add_success)))
+                            }.onFailure {
+                                when (it) {
+                                    is SaveDataEmptyConfirmationException -> {
+                                        eventLiveData.postValue(
+                                            ProductAddEvent.ShowDialogConfirmationDataEmpty(
+                                                name,
+                                                description,
+                                                brand,
+                                                typeMeasurements,
+                                                cnpjUser,
+                                                quantity
+                                            )
                                         )
-                                    )
-                                }
-                                is EmptyFildException -> {
-                                    stateLiveData.postValue(stateLiveData.value?.copy(messageError = context.getString(R.string.name_is_mandatory)))
-                                }
-                                is ConnectException -> {
-                                    stateLiveData.postValue(stateLiveData.value?.copy(messageError = context.getString(R.string.not_internet)))
+                                    }
+                                    is EmptyFildException -> {
+                                        stateLiveData.postValue(stateLiveData.value?.copy(messageError = context.getString(R.string.name_is_mandatory)))
+                                    }
+                                    is ConnectException -> {
+                                        stateLiveData.postValue(stateLiveData.value?.copy(messageError = context.getString(R.string.not_internet)))
+                                    }
                                 }
                             }
-                        }
+                    }
                 }
             } else {
                 viewModelScope.launch(Dispatchers.IO) {
@@ -128,7 +143,7 @@ class AddProductViewModel(
                         )
                     )
                         ?.onSuccess {
-                            eventLiveData.postValue(ProductAddEvent.ModificationProduct(context.getString(R.string.edit_product)))
+                            eventLiveData.postValue(ProductAddEvent.ModificationProduct(context.getString(R.string.edited_product)))
                         }
                         ?.onFailure {
                             when (it) {
@@ -155,12 +170,27 @@ class AddProductViewModel(
                 }
 
             }
-        }
-
     }
-
-    fun tapOnIconFavorite(isFavorite: Boolean) {
-        stateLiveData.postValue(stateLiveData.value?.copy(isFavorite = !isFavorite))
+    fun tapOnIconFavorite(
+        isFavorite: Boolean,
+        productModel: ProductModel?,
+        name: String,
+        description: String,
+        brand: String,
+        typeMeasurements: String,
+        quantity: String
+    ) {
+        stateLiveData.postValue(
+            stateLiveData.value?.copy(
+                isFavorite = !isFavorite,
+                nameText = name,
+                descriptionText = description,
+                brandText = brand,
+                typeMeasurement = typeMeasurements,
+                quantityText = quantity,
+                listSpinner = listSpinner
+            )
+        )
     }
 
     fun tapOnTrash(productModel: ProductModel?) {

@@ -2,6 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardViewRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -12,8 +13,10 @@
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayoutRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        tools:background="@color/gray_price"
         android:padding="16dp">
 
         <TextView
@@ -29,25 +32,15 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Cotação 50068" />
 
-<!--        <androidx.appcompat.widget.AppCompatImageView-->
-<!--            android:id="@+id/ivExpand"-->
-<!--            android:layout_width="36dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:clickable="true"-->
-<!--            android:padding="4dp"-->
-<!--            android:tint="@color/colorPrimary"-->
-<!--            android:src="@drawable/ic_edit"-->
-<!--            app:layout_constraintTop_toTopOf="@+id/tvCompanyName"-->
-<!--            app:layout_constraintEnd_toEndOf="parent" />-->
-
 
         <TextView
             android:id="@+id/tvClosingDateLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:textSize="8sp"
-            tools:text="Criada em 10/05/2023 10:14"
+            android:textSize="10sp"
+            android:minLines="2"
+            tools:text="Encerra em 10/05/2023 10:14"
             app:layout_constraintStart_toStartOf="@id/tvCodePrice"
             app:layout_constraintTop_toBottomOf="@id/tvCodePrice" />
 
@@ -68,7 +61,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:textAllCaps="true"
-            android:textColor="@color/blackAlpha"
+            android:textStyle="bold"
+            android:textColor="@color/black"
             android:textIsSelectable="true"
             android:textSize="10sp"
             app:layout_constraintStart_toEndOf="@id/tvStatusLabel"
@@ -103,7 +97,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textSize="8sp"
-            tools:text="Encerra em 15/10/2013 10:14"
+            tools:text="Criada em 15/10/2013 10:14"
             app:layout_constraintStart_toStartOf="@id/tvCodePrice"
             app:layout_constraintTop_toBottomOf="@id/tvStatusLabel" />
 
