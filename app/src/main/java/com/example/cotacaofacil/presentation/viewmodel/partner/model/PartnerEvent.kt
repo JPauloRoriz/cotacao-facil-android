@@ -1,5 +1,6 @@
 package com.example.cotacaofacil.presentation.viewmodel.partner.model
 
+import com.example.cotacaofacil.databinding.ItemPartnerBinding
 import com.example.cotacaofacil.domain.model.PartnerModel
 
 sealed class PartnerEvent {

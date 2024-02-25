@@ -12,6 +12,9 @@ sealed class HomeBuyerEvent{
     object Logout : HomeBuyerEvent()
     object AskAgain : HomeBuyerEvent()
     object ClickCardPrices : HomeBuyerEvent()
+    object EditImage : HomeBuyerEvent()
+    object ShowCamera : HomeBuyerEvent()
+    object ShowGallery : HomeBuyerEvent()
 
 
 }

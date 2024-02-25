@@ -22,7 +22,8 @@ fun BodyCompanyResponse.toPartnerModel(idUser: String, cnpj: String, date: Long)
         nameFantasy = fantasia,
         cnpjCorporation = cnpj,
         isMyPartner = StatusIsMyPartner.TRUE,
-        date = date
+        date = date,
+        imageProfile = null
     )
 }
 

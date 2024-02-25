@@ -6,10 +6,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.helper.UserHelper
-import com.example.cotacaofacil.databinding.ActivityBuyerHomeBinding
 import com.example.cotacaofacil.databinding.ActivityProviderHomeBinding
-import com.example.cotacaofacil.domain.model.UserModel
-import com.example.cotacaofacil.presentation.ui.fragment.buyer.HomeBuyerFragment
 import com.example.cotacaofacil.presentation.util.BottomNavigationListener
 import org.koin.android.ext.android.inject
 
@@ -35,13 +32,13 @@ class HomeProviderActivity : AppCompatActivity(), BottomNavigationListener {
     private fun changeToSecondFragment(idFragment: Int) {
         try {
             binding.bottomNavigationProvider.selectedItemId = idFragment
-        } catch (e : Exception){
+        } catch (e: Exception) {
             binding.bottomNavigationProvider.selectedItemId = R.id.fragment_provider_buyer
         }
     }
 
     override fun onResume() {
-        if(user == null){
+        if (user == null) {
             //criar uma viewmodel e se for nulo buscar o user da mesma forma que o login buscou para passar para cá
             finish()
         }

@@ -12,7 +12,8 @@ data class PartnerModel(
     val cnpjCorporation: String = "",
     var isChecked: Boolean = false,
     var date: Long = 0,
-    var isMyPartner: StatusIsMyPartner = StatusIsMyPartner.FALSE
+    var isMyPartner: StatusIsMyPartner = StatusIsMyPartner.FALSE,
+    var imageProfile : String? = null
 ) : Parcelable
 
 enum class StatusIsMyPartner {

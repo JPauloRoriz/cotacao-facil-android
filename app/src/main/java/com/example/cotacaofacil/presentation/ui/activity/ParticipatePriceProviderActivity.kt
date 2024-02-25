@@ -96,6 +96,14 @@ class ParticipatePriceProviderActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        if(user == null){
+            //criar uma viewmodel e se for nulo buscar o user da mesma forma que o login buscou para passar para cá
+            finish()
+        }
+        super.onResume()
+    }
+
     companion object {
         const val PRICE_MODEL = "price_model"
     }

@@ -1,12 +1,21 @@
 package com.example.cotacaofacil.presentation.ui.fragment.buyer
 
+import android.Manifest
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.cotacaofacil.databinding.FragmentPriceBuyerBinding
@@ -15,8 +24,10 @@ import com.example.cotacaofacil.presentation.ui.activity.CreatePriceActivity.Com
 import com.example.cotacaofacil.presentation.ui.activity.PriceInfoActivity
 import com.example.cotacaofacil.presentation.ui.activity.PriceInfoActivity.Companion.CNPJ_USER
 import com.example.cotacaofacil.presentation.ui.activity.PriceInfoActivity.Companion.CODE_PRICE_SHOW
+import com.example.cotacaofacil.presentation.ui.activity.PriceInfoActivity.Companion.UPDATE_PRICES
 import com.example.cotacaofacil.presentation.ui.adapter.PriceBuyerAdapter
 import com.example.cotacaofacil.presentation.ui.dialog.ConfirmationCreatePriceDialog
+import com.example.cotacaofacil.presentation.ui.extension.getBitmapFromUri
 import com.example.cotacaofacil.presentation.viewmodel.buyer.price.PriceBuyerViewModel
 import com.example.cotacaofacil.presentation.viewmodel.buyer.price.contractPrice.PriceEvent
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -71,7 +82,7 @@ class PriceBuyerFragment : Fragment() {
         bundle.putString(CODE_PRICE_SHOW, codePrice)
         bundle.putString(CNPJ_USER, cnpjBuyerCreator)
         intent.putExtras(bundle)
-        startActivity(intent)
+        startActivityForResult(intent, UPDATE_PRICES)
     }
 
     private fun setupListeners() {
@@ -98,16 +109,6 @@ class PriceBuyerFragment : Fragment() {
         }
     }
 
-
-//    override fun onAttach(context: Context) {
-//        super.onAttach(context)
-//        this.context = requireActivity()
-//    }
-//
-//    override fun onDetach() {
-//        super.onDetach()
-//        context = null
-//    }
 
     companion object {
         const val CODE_PRICE = "CODE_PRICE"

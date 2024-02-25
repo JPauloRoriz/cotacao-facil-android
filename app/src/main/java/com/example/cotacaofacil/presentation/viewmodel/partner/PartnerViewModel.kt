@@ -1,6 +1,7 @@
 package com.example.cotacaofacil.presentation.viewmodel.partner
 
 import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,6 +11,7 @@ import com.example.cotacaofacil.domain.exception.*
 import com.example.cotacaofacil.domain.model.PartnerModel
 import com.example.cotacaofacil.domain.model.StatusIsMyPartner
 import com.example.cotacaofacil.domain.usecase.date.contract.DateCurrentUseCase
+import com.example.cotacaofacil.domain.usecase.home.contract.GetImageProfileUseCase
 import com.example.cotacaofacil.domain.usecase.partner.contract.*
 import com.example.cotacaofacil.domain.usecase.partner.util.TypeDeletePartner
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
@@ -17,6 +19,7 @@ import com.example.cotacaofacil.presentation.viewmodel.partner.model.PartnerEven
 import com.example.cotacaofacil.presentation.viewmodel.partner.model.PartnerState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 class PartnerViewModel(
     private val context: Context,
     private val validationCnpjUseCase: ValidationCnpjUseCase,
@@ -25,6 +28,7 @@ class PartnerViewModel(
     private val rejectRequestPartnerUseCase: RejectRequestPartnerUseCase,
     private val acceptRequestPartnerUseCase: AcceptRequestPartnerUseCase,
     private val dateCurrentUseCase: DateCurrentUseCase,
+    private val getImageProfileUseCase: GetImageProfileUseCase,
     private val userHelper: UserHelper
 ) : ViewModel() {
     val stateLiveData = MutableLiveData(PartnerState())
@@ -61,15 +65,23 @@ class PartnerViewModel(
                                     isLoading = false,
                                     showImageError = false,
                                     listPartnerModel = listFilter,
-                                    numberNotifications = listPartnersFilter(false, listPartnerModel).size.toString()
+                                    numberNotifications = listPartnersFilter(isAllPartners = false, listAllPartners = listPartnerModel).size.toString()
                                 )
                             )
+                            getImageProfile(listFilter = listFilter)
                         }
-                    }.onFailure {
-                        it.message
-
-                    }
+                    }.onFailure { it.message }
             }
+        }
+    }
+
+    private suspend fun getImageProfile(listFilter : MutableList<PartnerModel>) {
+        listFilter.forEach { partnerModel ->
+            getImageProfileUseCase.invoke(partnerModel.cnpjCorporation)
+                .onSuccess { imageUrl ->
+                    partnerModel.imageProfile = imageUrl
+                    stateLiveData.postValue(stateLiveData.value?.copy(listPartnerModel = listFilter))
+                }
         }
     }
 
@@ -77,13 +89,13 @@ class PartnerViewModel(
         isAllPartners: Boolean,
         listAllPartners: MutableList<PartnerModel>
     ): MutableList<PartnerModel> {
-        return if (isAllPartners) {
+        return if(isAllPartners){
             listAllPartners.filter { partnerModel ->
-                partnerModel.isMyPartner != StatusIsMyPartner.TO_RESPOND
+                partnerModel.isMyPartner != StatusIsMyPartner.TO_RESPOND && partnerModel.isMyPartner != StatusIsMyPartner.TO_RESPOND
             }.toMutableList()
         } else {
             listAllPartners.filter { partnerModel ->
-                partnerModel.isMyPartner == StatusIsMyPartner.TO_RESPOND
+                partnerModel.isMyPartner == StatusIsMyPartner.WAIT_ANSWER || partnerModel.isMyPartner == StatusIsMyPartner.TO_RESPOND
             }.toMutableList()
         }
     }
@@ -175,7 +187,7 @@ class PartnerViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             stateLiveData.postValue(
                 stateLiveData.value?.copy(
-                     isLoading = true
+                    isLoading = true
                 )
             )
             dateCurrentUseCase.invoke()
@@ -317,41 +329,49 @@ class PartnerViewModel(
     fun tapOnAcceptPartner(partner: PartnerModel) {
         stateLiveData.postValue(stateLiveData.value?.copy(showImageError = false, isShowListMyPartners = true, isLoading = true))
         viewModelScope.launch(Dispatchers.IO) {
-        dateCurrentUseCase.invoke()
-            .onSuccess { currentDate ->
-                user?.cnpj?.let {
-                    acceptRequestPartnerUseCase.invoke(it, partner, currentDate)
-                        .onSuccess {
-                            eventLiveData.postValue(PartnerEvent.SuccessAcceptPartner)
-                            loadListPartnerModel(false)
-                        }.onFailure {
-                            when(it){
-                                is DefaultException -> {
-                                    stateLiveData.postValue(
-                                        stateLiveData.value?.copy(
-                                            textTitleList = setTitleList(true), isLoading = false, showImageError = true, messageError = context.getString(
-                                                R.string.inpossible_accept_request_partner
-                                            ), isShowListMyPartners = false
+            dateCurrentUseCase.invoke()
+                .onSuccess { currentDate ->
+                    user?.cnpj?.let {
+                        acceptRequestPartnerUseCase.invoke(it, partner, currentDate)
+                            .onSuccess {
+                                eventLiveData.postValue(PartnerEvent.SuccessAcceptPartner)
+                                loadListPartnerModel(false)
+                            }.onFailure {
+                                when (it) {
+                                    is DefaultException -> {
+                                        stateLiveData.postValue(
+                                            stateLiveData.value?.copy(
+                                                textTitleList = setTitleList(true),
+                                                isLoading = false,
+                                                showImageError = true,
+                                                messageError = context.getString(
+                                                    R.string.inpossible_accept_request_partner
+                                                ),
+                                                isShowListMyPartners = false
+                                            )
                                         )
-                                    )
-                                }
-                                else -> {
-                                    stateLiveData.postValue(
-                                        stateLiveData.value?.copy(
-                                            textTitleList = setTitleList(true), isLoading = false, showImageError = true, messageError = context.getString(
-                                                R.string.inpossible_accept_request_partner
-                                            ), isShowListMyPartners = false
+                                    }
+                                    else -> {
+                                        stateLiveData.postValue(
+                                            stateLiveData.value?.copy(
+                                                textTitleList = setTitleList(true),
+                                                isLoading = false,
+                                                showImageError = true,
+                                                messageError = context.getString(
+                                                    R.string.inpossible_accept_request_partner
+                                                ),
+                                                isShowListMyPartners = false
+                                            )
                                         )
-                                    )
+                                    }
                                 }
-                            }
 
-                        }
+                            }
+                    }
                 }
-            }
-            .onFailure {
-                //todo tratamento para sem conexão
-            }
+                .onFailure {
+                    //todo tratamento para sem conexão
+                }
         }
     }
 

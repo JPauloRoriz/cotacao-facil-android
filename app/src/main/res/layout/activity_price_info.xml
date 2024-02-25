@@ -162,6 +162,7 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginHorizontal="@dimen/dimen_1"
+        android:visibility="gone"
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/finish_price"
         app:layout_constraintBottom_toTopOf="@+id/btn_cancel_price"
@@ -177,6 +178,7 @@
         android:layout_marginBottom="20dp"
         android:backgroundTint="@color/white"
         android:text="@string/cancel_price"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

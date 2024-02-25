@@ -22,7 +22,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PartnerFragment : Fragment() {
     private val viewModel: PartnerViewModel by viewModel()
-
     private lateinit var binding: FragmentPartnerBinding
     private val adapter by lazy { PartnerAdapter() }
 
@@ -55,17 +54,17 @@ class PartnerFragment : Fragment() {
         }
 
         adapter.clickPartner = { partner ->
-                viewModel.tapOnIconPartner(partner)
+            viewModel.tapOnIconPartner(partner)
 
         }
 
         adapter.clickAcceptPartner = { partner ->
-                viewModel.tapOnAcceptPartner(partner)
+            viewModel.tapOnAcceptPartner(partner)
 
         }
 
         adapter.clickRejectPartner = { partner ->
-                viewModel.tapOnRejectPartner(partner)
+            viewModel.tapOnRejectPartner(partner)
         }
 
         binding.arrow.setOnClickListener {

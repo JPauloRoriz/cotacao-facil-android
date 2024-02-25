@@ -1,12 +1,16 @@
 package com.example.cotacaofacil.presentation.ui.activity
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.example.cotacaofacil.R
 import com.example.cotacaofacil.data.helper.UserHelper
 import com.example.cotacaofacil.databinding.ActivityPriceInfoBinding
+import com.example.cotacaofacil.domain.model.StatusPrice
 import com.example.cotacaofacil.presentation.ui.adapter.ItemTableProductAdapter
 import com.example.cotacaofacil.presentation.viewmodel.price.PriceInfoViewModel
+import com.example.cotacaofacil.presentation.viewmodel.price.model.PriceEvent
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -44,11 +48,41 @@ class PriceInfoActivity : AppCompatActivity() {
                 tvQuantityProvider.text = state.quantityProviders
             }
         }
+
+        viewModel.eventLiveData.observe(this){event ->
+            when(event){
+                is PriceEvent.FinishActivity -> {
+                    setResult(RESULT_OK)
+                    finish()
+                }
+            }
+        }
     }
 
     private fun setupListeners() {
         binding.btnCancelPrice.setOnClickListener {
-            viewModel.tapOnCancelPrice()
+            val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
+            alert.setMessage(
+                getString(
+                    R.string.confirmation_cancel_price
+                )
+            ).setTitle(getString(R.string.attention)).setNegativeButton(getString(R.string.not)) { dialog, int -> }
+                .setPositiveButton(R.string.yes) { dialog, int ->
+                    viewModel.tapOnCancelPrice(statusPrice = StatusPrice.CANCELED)
+                }.show()
+        }
+
+        binding.btnFinishPrice.setOnClickListener {
+            val alert = AlertDialog.Builder(this, R.style.MyDialogTheme)
+            alert.setMessage(
+                getString(
+                    R.string.confirmation_finish_price
+                )
+            ).setTitle(getString(R.string.attention)).setNegativeButton(getString(R.string.not)) { dialog, int -> }
+                .setPositiveButton(R.string.yes) { dialog, int ->
+                    viewModel.tapOnCancelPrice(statusPrice = StatusPrice.FINISHED)
+                }.show()
+
         }
     }
 
@@ -57,8 +91,17 @@ class PriceInfoActivity : AppCompatActivity() {
         allProductsPriceAdapter.isEditable = false
     }
 
+    override fun onResume() {
+        if(user == null){
+            //criar uma viewmodel e se for nulo buscar o user da mesma forma que o login buscou para passar para cá
+            finish()
+        }
+        super.onResume()
+    }
+
     companion object {
         const val CODE_PRICE_SHOW = "CODE_PRICE_SHOW"
         const val CNPJ_USER = "CNPJ_USER"
+        const val UPDATE_PRICES = 557
     }
 }

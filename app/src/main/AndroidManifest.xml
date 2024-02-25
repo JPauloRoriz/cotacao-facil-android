@@ -5,6 +5,29 @@
 
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.IMAGE_CAPTURE" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.front" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <queries>
+    <intent>
+        <action android:name="android.media.action.IMAGE_CAPTURE" />
+    </intent>
+    <!-- Gallery -->
+    <intent>
+        <action android:name="android.intent.action.GET_CONTENT" />
+        <data android:mimeType="image/*" />
+    </intent>
+    <intent>
+        <action android:name="android.intent.action.PICK" />
+        <data android:mimeType="image/*" />
+    </intent>
+    <intent>
+        <action android:name="android.intent.action.CHOOSER" />
+    </intent>
+    </queries>
     <application
         android:allowBackup="true"
         android:name=".BaseApplication"
@@ -16,6 +39,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CotacaoFacil"
         tools:targetApi="31">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".presentation.ui.activity.MainActivity"
             android:exported="true"
@@ -31,6 +65,7 @@
             android:name=".presentation.ui.activity.HomeProviderActivity"
             android:exported="true"
             android:theme="@style/Theme.CotacaoFacil">
+
         </activity>
 
         <activity

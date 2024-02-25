@@ -84,23 +84,27 @@ class PriceInfoViewModel(
         )
     }
 
-    fun tapOnCancelPrice() {
+    fun tapOnCancelPrice(statusPrice: StatusPrice) {
         priceModelInit?.let { priceModel ->
             viewModelScope.launch {
                 currentUseCase.invoke()
                     .onSuccess { date ->
                         priceModelInit?.apply {
-                            status = StatusPrice.CANCELED
+                            status = statusPrice
                             dateFinishPrice = date
                         }
                         editPriceUseCase.invoke(priceModel)
+                            .onSuccess {
+                                val statusPriceCurrent = if (statusPrice == StatusPrice.FINISHED) context.getString(R.string.finish)
+                                else context.getString(R.string.cancelled)
+
+                                eventLiveData.postValue(PriceEvent.FinishActivity("A cotação de número $it foi $statusPriceCurrent"))
+                            }
+                            .onFailure {
+                                //todo tratamento de erro
+                            }
                     }
-                    .onSuccess {
-
-                    }.onFailure {
-                        //todo tratamento de erro
-
-                    }.onFailure {
+                    .onFailure {
                         //todo tratamento de erro
                     }
             }

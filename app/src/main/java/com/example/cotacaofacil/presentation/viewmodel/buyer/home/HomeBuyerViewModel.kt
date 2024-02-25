@@ -1,6 +1,8 @@
 package com.example.cotacaofacil.presentation.viewmodel.buyer.home
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,12 +20,16 @@ import com.example.cotacaofacil.domain.model.BodyCompanyModel
 import com.example.cotacaofacil.domain.model.ProductModel
 import com.example.cotacaofacil.domain.model.StatusPrice
 import com.example.cotacaofacil.domain.model.UserModel
+import com.example.cotacaofacil.domain.usecase.home.contract.EditImageProfileUseCase
 import com.example.cotacaofacil.domain.usecase.home.contract.GetBodyCompanyModelUseCase
+import com.example.cotacaofacil.domain.usecase.home.contract.GetImageProfileUseCase
 import com.example.cotacaofacil.domain.usecase.price.contract.GetPricesBuyerUserCase
 import com.example.cotacaofacil.domain.usecase.product.contract.GetAllByCnpjProductsUseCase
+import com.example.cotacaofacil.presentation.ui.dialog.OptionPhoto
 import com.example.cotacaofacil.presentation.viewmodel.base.SingleLiveEvent
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerEvent
 import com.example.cotacaofacil.presentation.viewmodel.buyer.home.contract.HomeBuyerState
+import com.example.cotacaofacil.presentation.viewmodel.provider.home.contract.HomeProviderEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -35,13 +41,16 @@ class HomeBuyerViewModel(
     private val sharedPreferences: SharedPreferencesHelper,
     private val context: Context,
     private val bodyCompanyHelper: BodyCompanyHelper,
-    private val getPricesBuyerUserCase: GetPricesBuyerUserCase
+    private val getPricesBuyerUserCase: GetPricesBuyerUserCase,
+    private val editImageProfileUseCase: EditImageProfileUseCase,
+    private val getImageProfileUseCase: GetImageProfileUseCase,
 ) : ViewModel() {
 
-    val homeBuyerEventLiveData = SingleLiveEvent<HomeBuyerEvent>()
-    val homeBuyerStateLiveData = MutableLiveData(HomeBuyerState())
+    val event = SingleLiveEvent<HomeBuyerEvent>()
+    val state = MutableLiveData(HomeBuyerState())
 
     init {
+        state.postValue(state.value?.copy(isLoading = true, loadingImageProfile = true))
         userHelper.user?.let { user ->
             loadDataUser()
             loadDataPrice(user)
@@ -53,8 +62,8 @@ class HomeBuyerViewModel(
             getPricesBuyerUserCase.invoke(cnpjUser = user.cnpj, userTypeSelected = user.userTypeSelected, userModel = user)
                 .onSuccess { prices ->
                     val pricesStatusOpen = prices.filter { it.status == StatusPrice.OPEN }
-                    homeBuyerStateLiveData.postValue(
-                        homeBuyerStateLiveData.value?.copy(
+                    state.postValue(
+                        state.value?.copy(
                             quantityPrice = pricesStatusOpen.size.toString()
                         )
                     )
@@ -73,6 +82,7 @@ class HomeBuyerViewModel(
                 getBodyCompanyModelUseCase.invoke(it)
                     .onSuccess { bodyCompanyModel ->
                         handleSuccessBodyCompany(bodyCompanyModel, user)
+                        getImageUser(cnpj = user.cnpj)
                     }
                     .onFailure { exception ->
                         when (exception) {
@@ -86,8 +96,8 @@ class HomeBuyerViewModel(
     }
 
     private fun handlerErrorHttp(user: UserModel) {
-        homeBuyerStateLiveData.postValue(
-            homeBuyerStateLiveData.value?.copy(
+        state.postValue(
+            state.value?.copy(
                 isLoading = false,
                 fone = bodyCompanyHelper.bodyCompany?.telefone.foneNotIsEmpty(context),
                 email = bodyCompanyHelper.bodyCompany?.email.emailNotIsEmpty(context),
@@ -111,8 +121,8 @@ class HomeBuyerViewModel(
 
     private fun successGetProducts(bodyCompanyModel: BodyCompanyModel, user: UserModel, productsModelList: MutableList<ProductModel>) {
         bodyCompanyModel.apply {
-            homeBuyerStateLiveData.postValue(
-                homeBuyerStateLiveData.value?.copy(
+            state.postValue(
+                state.value?.copy(
                     isLoading = false,
                     fone = telefone.foneNotIsEmpty(context),
                     email = email.emailNotIsEmpty(context),
@@ -130,15 +140,15 @@ class HomeBuyerViewModel(
             userHelper.user?.cnpj?.let {
                 getAllProductsUseCase.invoke(it)
                     .onSuccess {
-                        homeBuyerEventLiveData.postValue(HomeBuyerEvent.SuccessListProducts(userHelper.user))
+                        event.postValue(HomeBuyerEvent.SuccessListProducts(userHelper.user))
                     }
                     .onFailure { exception ->
                         when (exception) {
                             is ListEmptyException -> {
-                                homeBuyerEventLiveData.postValue(HomeBuyerEvent.ListEmptyProducts(userHelper.user))
+                                event.postValue(HomeBuyerEvent.ListEmptyProducts(userHelper.user))
                             }
                             is DefaultException -> {
-                                homeBuyerEventLiveData.postValue(HomeBuyerEvent.ErrorLoadListProducts)
+                                event.postValue(HomeBuyerEvent.ErrorLoadListProducts)
                             }
 
                         }
@@ -150,22 +160,59 @@ class HomeBuyerViewModel(
 
     fun tapOnArrowBack(backPressedOnce: Boolean) {
         if (backPressedOnce) {
-            homeBuyerEventLiveData.postValue(HomeBuyerEvent.FinishApp)
+            event.postValue(HomeBuyerEvent.FinishApp)
         } else {
-            homeBuyerEventLiveData.postValue(HomeBuyerEvent.AskAgain)
+            event.postValue(HomeBuyerEvent.AskAgain)
         }
     }
 
     fun tapOnPartner() {
-        homeBuyerEventLiveData.postValue(HomeBuyerEvent.ClickPartner)
+        event.postValue(HomeBuyerEvent.ClickPartner)
     }
 
     fun tapOnLogout() {
         sharedPreferences.setStringSecret(sharedPreferences.KEY_USER_LOGIN, null, context)
-        homeBuyerEventLiveData.postValue(HomeBuyerEvent.Logout)
+        event.postValue(HomeBuyerEvent.Logout)
     }
 
     fun tapOnCardPrices() {
-        homeBuyerEventLiveData.postValue(HomeBuyerEvent.ClickCardPrices)
+        event.postValue(HomeBuyerEvent.ClickCardPrices)
+    }
+
+    fun saveImage(image: Bitmap?) {
+        state.postValue(state.value?.copy(loadingImageProfile = true))
+        viewModelScope.launch {
+            userHelper.user?.cnpj?.let { cnpj ->
+                image?.let { bitmap ->
+                    editImageProfileUseCase.invoke(imageBitmap = bitmap, cnpj = cnpj)
+                        .onSuccess {
+                            getImageUser(cnpj)
+                        }
+                        .onFailure {
+                            //todo tratamento para erro ao carregar imagem
+                        }
+                }
+            }
+        }
+    }
+
+    private suspend fun getImageUser(cnpj: String) {
+        getImageProfileUseCase.invoke(cnpj)
+            .onSuccess {
+                state.postValue(state.value?.copy(imageProfile = it, loadingImageProfile = false))
+            }.onFailure {
+                state.postValue(state.value?.copy(imageProfile = null, loadingImageProfile = false))
+            }
+    }
+
+    fun tapOnSelectTypePhoto(optionImage: OptionPhoto) {
+        when (optionImage) {
+            OptionPhoto.CAMERA -> event.postValue(HomeBuyerEvent.ShowCamera)
+            OptionPhoto.GALLERY -> event.postValue(HomeBuyerEvent.ShowGallery)
+        }
+    }
+
+    fun tapOnImageProfile() {
+        event.postValue(HomeBuyerEvent.EditImage)
     }
 }

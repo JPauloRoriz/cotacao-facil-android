@@ -19,6 +19,8 @@ import com.example.cotacaofacil.data.repository.price.PriceRepository
 import com.example.cotacaofacil.data.repository.price.PriceRepositoryImpl
 import com.example.cotacaofacil.data.repository.product.ProductRepositoryImpl
 import com.example.cotacaofacil.data.repository.product.contract.ProductRepository
+import com.example.cotacaofacil.data.repository.storage.StorageRepositoryImpl
+import com.example.cotacaofacil.data.repository.storage.contract.StorageRepository
 import com.example.cotacaofacil.data.repository.user.UserRepositoryImpl
 import com.example.cotacaofacil.data.repository.user.contract.UserRepository
 import com.example.cotacaofacil.data.service.cnpj.BodyCompanyServiceImpl
@@ -35,6 +37,8 @@ import com.example.cotacaofacil.data.service.price.contract.PriceService
 import com.example.cotacaofacil.data.service.product.ProductServiceImpl
 import com.example.cotacaofacil.data.service.product.contract.ProductService
 import com.example.cotacaofacil.data.service.settings.retrofitConfig
+import com.example.cotacaofacil.data.service.storage.StorageServiceImpl
+import com.example.cotacaofacil.data.service.storage.contract.StorageService
 import com.example.cotacaofacil.data.service.user.UserFirebaseService
 import com.example.cotacaofacil.data.service.user.contract.UserService
 import com.example.cotacaofacil.data.sharedPreferences.SharedPreferencesHelper
@@ -52,8 +56,14 @@ import com.example.cotacaofacil.domain.usecase.historic.GetAllItemHistoricUseCas
 import com.example.cotacaofacil.domain.usecase.historic.contract.AddHistoricUseCase
 import com.example.cotacaofacil.domain.usecase.historic.contract.DeleteHistoricUseCase
 import com.example.cotacaofacil.domain.usecase.historic.contract.GetAllItemHistoricUseCase
+import com.example.cotacaofacil.domain.usecase.home.EditImageProfileUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.home.GetAllImageProfileUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.home.GetBodyCompanyModelUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.home.GetImageProfileUseCaseImpl
+import com.example.cotacaofacil.domain.usecase.home.contract.EditImageProfileUseCase
+import com.example.cotacaofacil.domain.usecase.home.contract.GetAllImageProfileUseCase
 import com.example.cotacaofacil.domain.usecase.home.contract.GetBodyCompanyModelUseCase
+import com.example.cotacaofacil.domain.usecase.home.contract.GetImageProfileUseCase
 import com.example.cotacaofacil.domain.usecase.login.LoginUseCaseImpl
 import com.example.cotacaofacil.domain.usecase.login.contract.LoginUseCase
 import com.example.cotacaofacil.domain.usecase.partner.*
@@ -79,6 +89,8 @@ import com.example.cotacaofacil.presentation.viewmodel.register.RegisterViewMode
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -91,11 +103,11 @@ val appModule = module {
     viewModel { LoginViewModel(get(), get(), get(), get()) }
     viewModel { RegisterViewModel(get(), get()) }
     viewModel { HistoryViewModel(get(), get(), get(), get()) }
-    viewModel { PartnerViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { PartnerViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { AddProductViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { StockBuyerViewModel(get(), get(), get(), get(), get()) }
-    viewModel { HomeBuyerViewModel(get(), get(), get(), get(), get(), get(), get()) }
-    viewModel { HomeProviderViewModel(get(), get(), get(), get(), get()) }
+    viewModel { HomeBuyerViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { HomeProviderViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { PriceBuyerViewModel(get(), get(), get(), get(), get()) }
     viewModel { PriceProviderViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { CreatePriceViewModel(get(), get(), get(), get(), get(), get()) }
@@ -153,6 +165,9 @@ val appModule = module {
     factory<EditPriceUseCase> { EditPriceUseCaseImpl(get()) }
     factory<SetPricePartnerUseCase> { SetPricePartnerUseCaseUseCaseImpl(get()) }
     factory<GetPriceByCodeUseCase> { GetPriceByCodeUseCaseImpl(get()) }
+    factory<EditImageProfileUseCase> { EditImageProfileUseCaseImpl(get()) }
+    factory<GetImageProfileUseCase> { GetImageProfileUseCaseImpl(get()) }
+    factory<GetAllImageProfileUseCase> { GetAllImageProfileUseCaseImpl(get()) }
 
 
     //repository
@@ -163,6 +178,7 @@ val appModule = module {
     factory<ProductRepository> { ProductRepositoryImpl(get(), get(), get()) }
     factory<DateCurrentRepository> { DateCurrentRepositoryImpl(get()) }
     factory<PriceRepository> { PriceRepositoryImpl(get()) }
+    factory<StorageRepository> { StorageRepositoryImpl(get()) }
 
 
     //service
@@ -173,6 +189,7 @@ val appModule = module {
     single<ProductService> { ProductServiceImpl(get()) }
     single<DateCurrentService> { DateCurrentServiceServiceImpl() }
     single<PriceService> { PriceServiceImpl(get(), get()) }
+    single<StorageService> { StorageServiceImpl(get()) }
 
     //helper
     single { SpinnerListHelper() }
@@ -184,6 +201,7 @@ val appModule = module {
     single { get<Retrofit>().create(CnpjServiceImpl::class.java) }
     single { Firebase.firestore }
     single { Firebase.auth }
+    single { FirebaseStorage.getInstance()}
     single<SharedPreferences> { androidContext().getSharedPreferences("my_prefs", Context.MODE_PRIVATE) }
     single {
         val context: Context = androidContext()

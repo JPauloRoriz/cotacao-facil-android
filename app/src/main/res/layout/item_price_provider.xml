@@ -20,19 +20,19 @@
         android:textSize="12sp"
         android:textStyle="bold"
         android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardViewRoot"
         android:layout_width="match_parent"
+        app:cardCornerRadius="8dp"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:clipToPadding="true"
-        android:background="@android:color/white"
-        app:cardCornerRadius="18dp"
+        app:cardBackgroundColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -220,6 +220,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

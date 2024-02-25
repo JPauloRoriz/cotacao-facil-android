@@ -51,6 +51,13 @@ class PartnerServiceImpl(
         }
     }
 
+    override suspend fun getPartnerByCnpj(cnpjUser: String, cnpjFind : String): PartnerResponse? {
+        return runCatching {
+           val result = firestore.collection(PARTNER).document(cnpjUser).collection(MY_PARTNERS).document(cnpjFind).get()
+                result.await().toObject(PartnerResponse::class.java)
+        }.getOrNull()
+    }
+
     override suspend fun addRequestPartnerResponse(
         cnpjUser: String,
         partnerResponse: PartnerResponse
@@ -80,14 +87,12 @@ class PartnerServiceImpl(
     }
 
     override suspend fun isMyPartner(cnpjUser: String, cnpjFind: String): StatusIsMyPartner {
-        val partner = getPartnersByCnpj(cnpjUser).getOrNull()?: emptyList()
-        val partnerSelected = partner.filter { it.cnpjUser == cnpjFind }
-        return if (partner.isNotEmpty() && (partnerSelected.isNotEmpty() || cnpjFind.isEmpty())) {
-            val partnerFind = partnerSelected.ifEmpty { partner }
-            if (partnerFind[0].approved) {
+        val partner = getPartnerByCnpj(cnpjUser, cnpjFind)
+        return if (partner != null ) {
+            if (partner.approved) {
                 StatusIsMyPartner.TRUE
             } else {
-                if (partnerFind[0].cnpjRequestingUser == cnpjUser) {
+                if (partner.cnpjRequestingUser == cnpjUser) {
                     StatusIsMyPartner.WAIT_ANSWER
                 } else {
                     StatusIsMyPartner.TO_RESPOND

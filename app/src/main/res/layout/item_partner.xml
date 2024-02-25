@@ -10,42 +10,68 @@
     app:cardElevation="@dimen/dimen_10"
     app:cardUseCompatPadding="true"
     app:contentPadding="8dp">
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewImageUser"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:cardCornerRadius="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/imageViewUser"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@drawable/ic_person" />
+
+
+        </androidx.cardview.widget.CardView>
+
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_name_partner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:textColor="@color/black"
+            android:maxLines="1"
             android:textSize="14sp"
             android:textStyle="bold"
             android:ellipsize="end"
             android:maxLength="29"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout_accept_partner"
+            app:layout_constraintStart_toEndOf="@+id/cardViewImageUser"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Super-mercado Comper" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_name_complete_partner"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:maxLines="1"
             android:textColor="@color/blackAlpha"
             android:ellipsize="end"
             android:maxLength="29"
             android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout_accept_partner"
             app:layout_constraintStart_toStartOf="@+id/textView_name_partner"
             app:layout_constraintTop_toBottomOf="@+id/textView_name_partner"
             tools:text="Super-mercado Comper" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textView_cnpj"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textColor="@color/blackAlpha"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintEnd_toStartOf="@+id/constraintLayout_accept_partner"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/textView_name_partner"
             app:layout_constraintTop_toBottomOf="@+id/textView_name_complete_partner"

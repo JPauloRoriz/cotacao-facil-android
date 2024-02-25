@@ -15,7 +15,7 @@ import com.google.firebase.FirebaseNetworkException
 import java.io.IOException
 
 class PartnerRepositoryImpl(
-    private val partnerService: PartnerService
+    private val partnerService: PartnerService,
 ) : PartnerRepository {
     override suspend fun getPartnerByCnpj(
         userTypeSelected: UserTypeSelected,
@@ -52,7 +52,10 @@ class PartnerRepositoryImpl(
         listPartners.forEach { patnerResponse ->
             partnerService.getBodyCompanyFirebaseByCnpj(userTypeSelected, "", patnerResponse.cnpjUser)
                 .onSuccess {
-                    val partnerModel = it?.cnpj?.let { it1 -> it.toPartnerModel(idUser, cnpj = it1, patnerResponse.date) }
+                    val partnerModel = it?.cnpj?.let { it1 ->
+                        it.toPartnerModel(idUser = idUser, cnpj = it1, date = patnerResponse.date)
+
+                    }
                     partnerModel?.isMyPartner = partnerService.isMyPartner(cnpjUser, patnerResponse.cnpjUser)
                     partnerModel?.let { it1 -> listBodyPartnerModel.add(it1) }
                 }
@@ -61,9 +64,9 @@ class PartnerRepositoryImpl(
     }
 
     override suspend fun addRequestPartner(cnpj: String, partner: PartnerModel): Result<Unit?> {
-            val partnerResponse = partner.mapperPartner(cnpj)
-            return partnerService.addRequestPartnerResponse(cnpj, partnerResponse)
-        }
+        val partnerResponse = partner.mapperPartner(cnpj)
+        return partnerService.addRequestPartnerResponse(cnpj, partnerResponse)
+    }
 
     override suspend fun rejectPartner(cnpj: String, partnerModel: PartnerModel): Result<Boolean> {
         return partnerService.rejectPartner(
